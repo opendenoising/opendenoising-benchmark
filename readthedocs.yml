@@ -8,6 +8,5 @@ python:
    version: 3.7
    install:
       - requirements: Documentation/docs_requirements.txt
-      - requirements: docs_requirements.txt
    system_packages: true
       
