@@ -56,4 +56,4 @@ folder, run,
 $ make html
 ```
 
-to run the process of compilation.
+to run the process of compilation. We remark that the generated files will be available at "./Documentation/\_build/html".
