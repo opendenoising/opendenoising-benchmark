@@ -6,6 +6,13 @@ Here we present the steps to install the OpenDenoising benchmark.
 Creating a virtual environment
 ------------------------------
 
+On a directory of your choice, clone the OpenDenoising benchmark repository by using,
+
+.. code-block:: bash
+    
+    $ git clone https://github.com/opendenoising/benchmark
+
+
 In order to use the present benchmark, we recommend creating a virtual environment for it. On a computer having Python3
 installed, a GPU CUDA-compatible, CUDA installed:
 
@@ -307,7 +314,8 @@ and **line 359** to:
 For more informations, consult `this github page <https://github.com/vlfeat/matconvnet/issues/1143>`_. After compiling the
 libary, you should consider adding Matconvnet to Matlab's path by using `Set Path <https://fr.mathworks.com/help/matlab/matlab_env/add-remove-or-reorder-folders-on-the-search-path.html>`_.
 
-## 4. Check Driver requirements
+Check Driver requirements
+-------------------------
 
 * `Tensorflow requirements <https://www.tensorflow.org/install/source#tested_build_configurations>`_
 * `Pytorch requirements <https://pytorch.org/get-started/locally/>`_
