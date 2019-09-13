@@ -38,7 +38,6 @@ keras2onnx==1.5.0
 kiwisolver==1.1.0
 Markdown==2.6.11
 MarkupSafe==1.1.1
-matlabengineforpython===R2018a
 matplotlib==3.1.0
 mistune==0.8.4
 mock==3.0.5
