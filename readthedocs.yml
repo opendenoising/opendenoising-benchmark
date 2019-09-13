@@ -1,0 +1,5 @@
+python:
+   version: 3.6.8
+   install:
+      - requirements: Documentation/doc_requirements.txt
+      - requirements: doc_requirements.txt
