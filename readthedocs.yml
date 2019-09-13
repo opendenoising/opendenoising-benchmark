@@ -1,5 +1,5 @@
 python:
-   version: 3.6.8
+   version: 3.7
    install:
       - requirements: Documentation/doc_requirements.txt
       - requirements: doc_requirements.txt
