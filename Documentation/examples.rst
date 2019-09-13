@@ -36,4 +36,12 @@ These tutorials cover the details of each wrapper class. It covers both implemen
 Jupyter Notebooks
 -----------------
 
-...
+* `Example: Benchmark Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/BenchmarkTutorial.ipynb>`_
+* `Example: Dataset Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/DataTutorial.ipynb`_
+* `Example: Filtering Model Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/Filtering%20Model.ipynb>`_
+* `Example: Keras Model Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/KerasModel.ipynb>`_
+* `Example: Tensorflow Model Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/TensorflowModel.ipynb>`_
+* `Example: Pytorch Model Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/PytorchModel.ipynb>`_
+* `Example: Matconvnet Model Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/MatconvnetModel.ipynb>`_
+* `Example: Matlab Model Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/MatlabModel.ipynb>`_
+* `Example: Onnx Model Tutorial <https://nbviewer.jupyter.org/github/opendenoising/benchmark/blob/master/Examples/JupyterNotebooks/OnnxModel.ipynb>`_
