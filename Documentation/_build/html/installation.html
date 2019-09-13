@@ -1,0 +1,527 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation guide. &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Benchmark API" href="benchmark_api_doc.html" />
+    <link rel="prev" title="OpenDenoising: An Open Benchmark for Image Restoration Methods" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation guide.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-virtual-environment">1. Creating a virtual environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-package-requirements">2. Python package requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-matlab-dependencies">3. [Optional] Matlab dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-the-benchmark-to-matlab-s-path">3.1. Adding the Benchmark to matlab’s path.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-matlab-s-python-engine">3.2. Installing Matlab’s Python engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matconvnet-installation">3.3. Matconvnet installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-multiple-cuda-versions">3.3.1. Setting up multiple CUDA versions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compiling-matconvnet-library">3.3.2. Compiling Matconvnet library</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#check-driver-requirements">4. Check Driver requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark_api_doc.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation guide.</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installation.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="installation-guide">
+<h1>Installation guide.<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h1>
+<p>Here we present the steps to install the OpenDenoising benchmark.</p>
+<div class="section" id="creating-a-virtual-environment">
+<h2>1. Creating a virtual environment<a class="headerlink" href="#creating-a-virtual-environment" title="Permalink to this headline">¶</a></h2>
+<p>In order to use the present benchmark, we recommend creating a virtual environment for it. On a computer having Python3
+installed, a GPU CUDA-compatible, CUDA installed:</p>
+<ul class="simple">
+<li><p>Install virtualenv:</p></li>
+</ul>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo apt install virtualenv
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Create a virtual environment anywhere with VENV-NAME the name given to the environment:</p></li>
+</ul>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>virtualenv --system-site-packages -p python3 ~/virtualenvironments/VENV_NAME
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Activate the venv:</p></li>
+</ul>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ~/virtualenvironments/VENV_NAME/bin/activate
+</pre></div>
+</div>
+<p>If the last command succeeded, the command line should now be preceded by (VENV_NAME).
+The virtual environment can be exited using:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>deactivate
+</pre></div>
+</div>
+</div>
+<div class="section" id="python-package-requirements">
+<h2>2. Python package requirements<a class="headerlink" href="#python-package-requirements" title="Permalink to this headline">¶</a></h2>
+<p>Here is a list of required packages to run OpenDenoising benchmark:</p>
+<p><strong>Requirements for GPU Users</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Keras</span><span class="o">==</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">4</span>
+<span class="n">Keras</span><span class="o">-</span><span class="n">Applications</span><span class="o">==</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">8</span>
+<span class="n">Keras</span><span class="o">-</span><span class="n">Preprocessing</span><span class="o">==</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">keras2onnx</span><span class="o">==</span><span class="mf">1.5</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">matplotlib</span><span class="o">==</span><span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">numpy</span><span class="o">==</span><span class="mf">1.16</span><span class="o">.</span><span class="mi">4</span>
+<span class="n">onnx</span><span class="o">==</span><span class="mf">1.5</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">onnx</span><span class="o">-</span><span class="n">tf</span><span class="o">==</span><span class="mf">1.3</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">onnxruntime</span><span class="o">-</span><span class="n">gpu</span><span class="o">==</span><span class="mf">0.5</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">opencv</span><span class="o">-</span><span class="n">python</span><span class="o">==</span><span class="mf">4.1</span><span class="o">.</span><span class="mf">0.25</span>
+<span class="n">pandas</span><span class="o">==</span><span class="mf">0.24</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">Pillow</span><span class="o">==</span><span class="mf">6.0</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">PyGithub</span><span class="o">==</span><span class="mf">1.43</span><span class="o">.</span><span class="mi">8</span>
+<span class="n">scikit</span><span class="o">-</span><span class="n">image</span><span class="o">==</span><span class="mf">0.15</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">scipy</span><span class="o">==</span><span class="mf">1.3</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">seaborn</span><span class="o">==</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">six</span><span class="o">==</span><span class="mf">1.12</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">tensorboard</span><span class="o">==</span><span class="mf">1.14</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">tensorflow</span><span class="o">-</span><span class="n">gpu</span><span class="o">==</span><span class="mf">1.14</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">tf2onnx</span><span class="o">==</span><span class="mf">1.5</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">torch</span><span class="o">==</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">torchvision</span><span class="o">==</span><span class="mf">0.4</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">tqdm</span><span class="o">==</span><span class="mf">4.32</span><span class="o">.</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>To install them, you can simply go to the project’s root, and run the following command,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements_gpu</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p><strong>Requirements for CPU Users</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Keras</span><span class="o">==</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">4</span>
+<span class="n">Keras</span><span class="o">-</span><span class="n">Applications</span><span class="o">==</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">8</span>
+<span class="n">Keras</span><span class="o">-</span><span class="n">Preprocessing</span><span class="o">==</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">keras2onnx</span><span class="o">==</span><span class="mf">1.5</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">matplotlib</span><span class="o">==</span><span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">numpy</span><span class="o">==</span><span class="mf">1.16</span><span class="o">.</span><span class="mi">4</span>
+<span class="n">onnx</span><span class="o">==</span><span class="mf">1.5</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">onnx</span><span class="o">-</span><span class="n">tf</span><span class="o">==</span><span class="mf">1.3</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">onnxruntime</span><span class="o">==</span><span class="mf">0.5</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">opencv</span><span class="o">-</span><span class="n">python</span><span class="o">==</span><span class="mf">4.1</span><span class="o">.</span><span class="mf">0.25</span>
+<span class="n">pandas</span><span class="o">==</span><span class="mf">0.24</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">Pillow</span><span class="o">==</span><span class="mf">6.0</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">PyGithub</span><span class="o">==</span><span class="mf">1.43</span><span class="o">.</span><span class="mi">8</span>
+<span class="n">scikit</span><span class="o">-</span><span class="n">image</span><span class="o">==</span><span class="mf">0.15</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">scipy</span><span class="o">==</span><span class="mf">1.3</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">seaborn</span><span class="o">==</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">six</span><span class="o">==</span><span class="mf">1.12</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">tensorboard</span><span class="o">==</span><span class="mf">1.14</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">tensorflow</span><span class="o">==</span><span class="mf">1.14</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">tf2onnx</span><span class="o">==</span><span class="mf">1.5</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">torch</span><span class="o">==</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">torchvision</span><span class="o">==</span><span class="mf">0.4</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">tqdm</span><span class="o">==</span><span class="mf">4.32</span><span class="o">.</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>To install them, you can simply go to the project’s root, and run the following command,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements_cpu</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>We recommend you to use a Virtual Environment to run the benchmark.</p>
+<p><strong>Note:</strong> If you want to run Matlab code in the benchmark, you need to have a Matlab of version at least 2018b, with a valid license.
+You need to install <a class="reference external" href="https://www.mathworks.com/help/matlab/matlab-engine-for-python.html">Matlab’s Python Engine</a>.</p>
+</div>
+<div class="section" id="optional-matlab-dependencies">
+<h2>3. [Optional] Matlab dependencies<a class="headerlink" href="#optional-matlab-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Our Matlab support covers Matlab Deep Learning Toolbox (training and inference) and Matconvnet (only inference). Here
+we detail the steps for installing Matlab’s dependencies.</p>
+<p><strong>Warning for Matlab users:</strong></p>
+<p>If you will use Matlab Deep Learning toolbox with recent GPU cards (such as RTX 2080 ti), you should add the Following
+lines to your startup script:</p>
+<div class="highlight-Matlab notranslate"><div class="highlight"><pre><span></span><span class="n">warning</span> <span class="n">off</span> <span class="n">parallel</span><span class="p">:</span><span class="n">gpu</span><span class="p">:</span><span class="n">device</span><span class="p">:</span><span class="n">DeviceLibsNeedsRecompiling</span>
+<span class="k">try</span>
+    <span class="n">gpuArray</span><span class="p">.</span><span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>^<span class="mi">2</span><span class="p">;</span>
+<span class="k">catch</span> <span class="n">ME</span>
+<span class="k">end</span>
+<span class="k">try</span>
+    <span class="n">nnet</span><span class="p">.</span><span class="n">internal</span><span class="p">.</span><span class="n">cnngpu</span><span class="p">.</span><span class="n">reluForward</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">catch</span> <span class="n">ME</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>otherwise, when you run a MatlabModel you can run into errors. For more informations, <a class="reference external" href="https://fr.mathworks.com/matlabcentral/answers/439616-does-matlab-2018b-support-nvidia-geforce-2080-ti-rtx-for-creating-training-implementing-deep-learnin">take a look on this post</a>.
+You should also add “./OpenDenoising/data/” to Matlab’s Path by using <a class="reference external" href="https://fr.mathworks.com/help/matlab/matlab_env/add-remove-or-reorder-folders-on-the-search-path.html">Set Path</a>.</p>
+<div class="section" id="adding-the-benchmark-to-matlab-s-path">
+<h3>3.1. Adding the Benchmark to matlab’s path.<a class="headerlink" href="#adding-the-benchmark-to-matlab-s-path" title="Permalink to this headline">¶</a></h3>
+<p>Let “PATH_TO_BENCHMARK” denote the path to the OpenDenoising folder in your computer. To add it to Matlab’s main path,
+you need to modify the file “pathdef.m”. If you are on Windows, all you have to do is use “set path” tool on Matlab’s
+main window. However if you are using Linux and you do not have the rights to modify it, you can run the following commands
+on the terminal,</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo nano /usr/local/MATLAB/R2018b/toolbox/local/pathdef.m
+</pre></div>
+</div>
+<p>This will open nano on the needed file with the right permissions. You need to write the following line before the default
+entries,</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;PATH_TO_BENCHMARK/data:&#39;</span>, ...
+</pre></div>
+</div>
+<p><strong>Remark:</strong> If you are using any third-party software that depends on Matlab (such as BM3D), you also need to include it to the
+pathdef.</p>
+</div>
+<div class="section" id="installing-matlab-s-python-engine">
+<h3>3.2. Installing Matlab’s Python engine<a class="headerlink" href="#installing-matlab-s-python-engine" title="Permalink to this headline">¶</a></h3>
+<p>Open an terminal, then, go to matlab engine setup folder,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">MATLAB</span><span class="o">/</span><span class="n">R2018b</span><span class="o">/</span><span class="n">extern</span><span class="o">/</span><span class="n">engines</span><span class="o">/</span><span class="n">python</span>
+</pre></div>
+</div>
+<p>Following <a class="reference external" href="https://fr.mathworks.com/help/matlab/matlab_external/install-matlab-engine-api-for-python-in-nondefault-locations.html">matlab’s instructions</a>,
+install the engine on your venv folder,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sudo $VENVROOT/bin/python setup.py install --prefix=&quot;$VENVROOT/&quot;
+</pre></div>
+</div>
+<p>Notice that, since we are running the sudo command, the command line will <a class="reference external" href="https://stackoverflow.com/questions/15441440/sudo-python-runs-old-python-version">“ignore”</a>
+all your aliases, so you need to specify the path to your venv python. Equally, the –prefix option specify where matlab
+will output its files, so that you can run its engine. To test if your installation was succesfull, you can try to execute the following
+python script:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matlab.engine</span>
+<span class="n">eng</span> <span class="o">=</span> <span class="n">matlab</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">start_matlab</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mf">4.0</span>
+<span class="n">eng</span><span class="o">.</span><span class="n">workspace</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">eng</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;sqrt(y)&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="matconvnet-installation">
+<h3>3.3. Matconvnet installation<a class="headerlink" href="#matconvnet-installation" title="Permalink to this headline">¶</a></h3>
+<p><strong>Remark:</strong> be sure to add Matconvnet to Matlab default path.</p>
+<div class="section" id="setting-up-multiple-cuda-versions">
+<h4>3.3.1. Setting up multiple CUDA versions<a class="headerlink" href="#setting-up-multiple-cuda-versions" title="Permalink to this headline">¶</a></h4>
+<p>If you will use <a class="reference external" href="http://www.vlfeat.org/matconvnet/">Matconvnet toolbox</a>, you need to install gcc-6 by running</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">gcc</span><span class="o">-</span><span class="mi">6</span> <span class="n">g</span><span class="o">++-</span><span class="mi">6</span>
+</pre></div>
+</div>
+<p>before compiling the library on Matlab. Moreover, since the toolbox requires CUDA 9.1 (which is a different version from
+Tensorflow’s requirement), you need to install multiple CUDA’s on your system (which are independent from each other).
+Assuming you already have on your system a CUDA version different from 9.1, you need to follow these steps,</p>
+<ul class="simple">
+<li><p>Download CUDA Toolkit 9.1 from NVIDIA’s <a class="reference external" href="https://developer.nvidia.com/cuda-91-download-archive">website</a>, then execute
+it using the ‘–override’ option, as follows:</p></li>
+</ul>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./cuda_9.1.85_387.26_linux.run --override
+</pre></div>
+</div>
+<p>The override option is needed, so that the installer won’t fail because of driver version
+(if you have a newer version of CUDA, it is likely that you have a more recent driver). Once you run the previous line,
+the installer will ask you the following questions,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>You are attempting to install on an unsupported configuration. Do you wish to continue?
+&gt; y
+Install NVIDIA Accelerated Graphics Driver for Linux-x86_64 387.26?
+&gt; n
+Install the CUDA 9.1 Toolkit?
+&gt; y
+Install the CUDA 9.1 Samples?
+&gt; y
+Enter CUDA Samples Location
+&gt; Default location
+Enter Toolkit Location
+&gt; Default location
+Do you want to install a symbolic link at /usr/local/cuda?
+&gt; n
+</pre></div>
+</div>
+<p>By doing this, CUDA 9.1 will be installed on /usr/local/cuda-9.1. The crucial part of having two CUDAs installed,
+without messing your previous installation, is to not create the symbolic link between cuda-9.1 folder and CUDA folder.
+Moreover, such choice does not stop you from using CUDA-9.1 in Matconvnet.</p>
+<ul class="simple">
+<li><p>Add the different CUDA paths to LD_LIBRARY_PATH:</p></li>
+</ul>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/cuda-10.1/lib64:/usr/local/cuda-9.1/lib64:<span class="se">\$</span>LD_LIBRARY_PATH
+</pre></div>
+</div>
+<p>At the end of this process, your LD_LIBRARY_PATH should contain the following line as substring:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">lib64</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="mf">10.1</span><span class="o">/</span><span class="n">lib64</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="mf">9.1</span><span class="o">/</span><span class="n">lib64</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compiling-matconvnet-library">
+<h4>3.3.2. Compiling Matconvnet library<a class="headerlink" href="#compiling-matconvnet-library" title="Permalink to this headline">¶</a></h4>
+<p>Go to the directory where you extracted matconvnet files, then, after lauching matlab, use the following commands,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">matlab</span>
+<span class="n">CudaPath</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/cuda-9.1&quot;</span><span class="p">;</span>
+<span class="n">vl_compilenn</span><span class="p">(</span><span class="s1">&#39;EnableGpu&#39;</span><span class="p">,</span> <span class="n">true</span><span class="p">,</span> <span class="s1">&#39;CudaRoot&#39;</span><span class="p">,</span> <span class="n">CudaPath</span><span class="p">,</span> <span class="s1">&#39;EnableCudnn&#39;</span><span class="p">,</span> <span class="n">true</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>vl_compilenn is a matlab function that will compilate matconvnet library. Here’s what each option means,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EnableGpu</span><span class="p">:</span> <span class="n">enables</span> <span class="n">GPU</span> <span class="n">usage</span> <span class="n">by</span> <span class="n">matconvnet</span><span class="o">.</span>
+<span class="n">CudaRoot</span><span class="p">:</span> <span class="n">indicates</span> <span class="n">the</span> <span class="n">path</span> <span class="n">to</span> <span class="n">Cuda</span><span class="s1">&#39;s root folder.</span>
+<span class="n">EnableCudnn</span><span class="p">:</span> <span class="n">enables</span> <span class="n">matconvnet</span> <span class="n">to</span> <span class="n">use</span> <span class="n">cudnn</span> <span class="n">acceleration</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><strong>obs (27.06.19):</strong> For matlab 2018b users, matconvnet compiling script happens to have a bug, which can be easily corrected by replacing <strong>line 620</strong> by,</p>
+<div class="highlight-Matlab notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="p">=</span> <span class="n">horzcat</span><span class="p">({</span><span class="s">&#39;-outdir&#39;</span><span class="p">,</span> <span class="n">mex_dir</span><span class="p">},</span> <span class="c">...</span>
+<span class="n">flags</span><span class="p">.</span><span class="n">base</span><span class="p">,</span> <span class="n">flags</span><span class="p">.</span><span class="n">mexlink</span><span class="p">,</span> <span class="c">...</span>
+<span class="s">&#39;-R2018a&#39;</span><span class="p">,</span><span class="c">...</span>
+<span class="p">{[</span><span class="s">&#39;LDFLAGS=$LDFLAGS &#39;</span> <span class="n">strjoin</span><span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">mexlink_ldflags</span><span class="p">)]},</span> <span class="c">...</span>
+<span class="p">{[</span><span class="s">&#39;LDOPTIMFLAGS=$LDOPTIMFLAGS &#39;</span> <span class="n">strjoin</span><span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">mexlink_ldoptimflags</span><span class="p">)]},</span> <span class="c">...</span>
+<span class="p">{[</span><span class="s">&#39;LINKLIBS=&#39;</span> <span class="n">strjoin</span><span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">mexlink_linklibs</span><span class="p">)</span> <span class="s">&#39; $LINKLIBS&#39;</span><span class="p">]},</span> <span class="c">...</span>
+<span class="n">objs</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>and <strong>line 359</strong> to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">flags</span><span class="o">.</span><span class="n">mexlink</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;-lmwblas&#39;</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>For more informations, consult <a class="reference external" href="https://github.com/vlfeat/matconvnet/issues/1143">this github page</a>. After compiling the
+libary, you should consider adding Matconvnet to Matlab’s path by using <a class="reference external" href="https://fr.mathworks.com/help/matlab/matlab_env/add-remove-or-reorder-folders-on-the-search-path.html">Set Path</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="check-driver-requirements">
+<h2>4. Check Driver requirements<a class="headerlink" href="#check-driver-requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.tensorflow.org/install/source#tested_build_configurations">Tensorflow requirements</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/get-started/locally/">Pytorch requirements</a></p></li>
+<li><p><a class="reference external" href="https://fr.mathworks.com/help/parallel-computing/gpu-support-by-release.html">Matlab requirements</a></p></li>
+<li><p><a class="reference external" href="https://github.com/microsoft/onnxruntime">OnnxRuntime requirements</a></p></li>
+</ul>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="center">Framework</th>
+<th align="center">Cuda Version</th>
+<th align="center">Gcc Compiler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Tensorflow 1.14</td>
+<td align="center">10.0</td>
+<td align="center">7</td>
+</tr>
+<tr>
+<td align="center">Matlab 2018b</td>
+<td align="center">9.1</td>
+<td align="center">6</td>
+</tr>
+<tr>
+<td align="center">Pytorch</td>
+<td align="center">10.0</td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">Onnxruntime</td>
+<td align="center">10.0</td>
+<td align="center">-</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="benchmark_api_doc.html" class="btn btn-neutral float-right" title="Benchmark API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="OpenDenoising: An Open Benchmark for Image Restoration Methods" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

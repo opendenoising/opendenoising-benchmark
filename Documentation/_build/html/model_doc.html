@@ -1,0 +1,1826 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>model module &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="data module" href="data_doc.html" />
+    <link rel="prev" title="Benchmark API" href="benchmark_api_doc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="benchmark_api_doc.html">Benchmark API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#denoising-models">Denoising Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-model">Interface Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#wrapper-classes">Wrapper Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#built-in-architectures">Built-in Architectures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-model.architectures.keras">Keras Architectures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-model.architectures.tensorflow">Tensorflow Architectures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-model.architectures.pytorch">Pytorch Architectures</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#filtering-functions">Filtering functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-model.filtering">Matlab-based functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-model.utils">Model utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_doc.html">data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_doc.html">evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmarking_doc.html">Benchmark Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="benchmark_api_doc.html">Benchmark API</a> &raquo;</li>
+        
+      <li>model module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/model_doc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="model-module">
+<h1>model module<a class="headerlink" href="#model-module" title="Permalink to this headline">¶</a></h1>
+<p>This module contains classes used for wrapping denoising algorithms in order to provide common functionality and behavior.
+The frst distinction we make is between deep learning based denoising algorithms, and filtering algorithms. The functionality
+of these two models is standardized by <a class="reference internal" href="#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a>.</p>
+<p>Deep Learning models, however, are based on frameworks such as <a class="reference external" href="https://keras.io">Keras</a> and <a class="reference external" href="https://pytorch.org/">Pytorch</a> which differ in syntax. To standardize the behavior of Deep Learning models across frameworks,
+we propose the
+<a class="reference internal" href="#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a> interface, which unifies three kinds of functionalities that all deep learning models
+should provide:</p>
+<ol class="arabic simple">
+<li><p>charge_model, which builds the computational graph of the network.</p></li>
+<li><p>train, which trains the network on data.</p></li>
+<li><p>inference, which denoises data.</p></li>
+</ol>
+<p>To give a better idea of the class structure and its relations to the other modules, we show the following UML class diagram,</p>
+<img alt="" src="_images/ClassDiagram.png" />
+<p>The documentation of this module is divided as follows,</p>
+<ol class="arabic simple">
+<li><p><strong>Interface Classes:</strong> Documents the two main abstract classes which are AbstractDenoiser and AbstractDeepLearningModel.</p></li>
+<li><p><strong>Wrapper Classes:</strong> Documents the 6 wrapper classes in the benchmark, which are FilteringModel, KerasModel,
+PytorchModel, TfModel, MatlabModel, OnnxModel, MatconvnetModel.</p></li>
+<li><p><strong>Built-in Architectures:</strong> Documents the neural network architectures already provided by the benchmark.</p></li>
+<li><p><strong>Filtering functions:</strong> Documents the filtering functions already provided by the benchmark.</p></li>
+<li><p><strong>Model utilities:</strong> Documents functions for model conversion and graph editing.</p></li>
+</ol>
+<div class="section" id="denoising-models">
+<h2>Denoising Models<a class="headerlink" href="#denoising-models" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-model">
+<span id="interface-classes"></span><h3>Interface Classes<a class="headerlink" href="#module-model" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="model.AbstractDenoiser">
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">AbstractDenoiser</code><span class="sig-paren">(</span><em class="sig-param">model_name='DenoisingModel'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/abstract_denoiser.html#AbstractDenoiser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.AbstractDenoiser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/abc.html#abc.ABC" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<p>Common interface for Denoiser classes. This class defines the basic functionalities that a Denoiser needs to
+have, such as __call__ function, which takes as input a noised image, and returns its reconstruction.</p>
+<dl class="attribute">
+<dt id="model.AbstractDenoiser.model_name">
+<code class="sig-name descname">model_name</code><a class="headerlink" href="#model.AbstractDenoiser.model_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model string identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="model.AbstractDenoiser.__call__">
+<em class="property">abstract </em><code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/abstract_denoiser.html#AbstractDenoiser.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.AbstractDenoiser.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denoises a given image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Batch of noisy images. Expected a 4D array with shape (batch_size, height, width, channels).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="model.AbstractDenoiser.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='DenoisingModel'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/abstract_denoiser.html#AbstractDenoiser.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.AbstractDenoiser.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="model.AbstractDenoiser.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/abstract_denoiser.html#AbstractDenoiser.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.AbstractDenoiser.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns denoising model name.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="model.AbstractDeepLearningModel">
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">AbstractDeepLearningModel</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">logdir='./training_logs/'</em>, <em class="sig-param">framework=None</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/abstract_deep_learning_model.html#AbstractDeepLearningModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.AbstractDeepLearningModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.model.abstract_denoiser.AbstractDenoiser</span></code></p>
+<p>Common interface for Deep Learning based image denoisers.</p>
+<dl class="method">
+<dt id="model.AbstractDeepLearningModel.__call__">
+<em class="property">abstract </em><code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/abstract_deep_learning_model.html#AbstractDeepLearningModel.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.AbstractDeepLearningModel.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denoises a given image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Batch of noisy images. Expected a 4D array with shape (batch_size, height, width, channels).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="model.AbstractDeepLearningModel.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">logdir='./training_logs/'</em>, <em class="sig-param">framework=None</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/abstract_deep_learning_model.html#AbstractDeepLearningModel.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.AbstractDeepLearningModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Common interface for Deep Learning based image denoisers.</p>
+<dl class="attribute">
+<dt id="model.AbstractDeepLearningModel.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#model.AbstractDeepLearningModel.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object representing the Denoiser Model in the framework used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.AbstractDeepLearningModel.logdir">
+<code class="sig-name descname">logdir</code><a class="headerlink" href="#model.AbstractDeepLearningModel.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to the model log directory. Such directory will contain training information,
+as well as model checkpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.AbstractDeepLearningModel.train_info">
+<code class="sig-name descname">train_info</code><a class="headerlink" href="#model.AbstractDeepLearningModel.train_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the time spent on training, how much parameters the network has, and if it has been
+trained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.AbstractDeepLearningModel.framework">
+<code class="sig-name descname">framework</code><a class="headerlink" href="#model.AbstractDeepLearningModel.framework" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the name of the chosen framework (e.g. Keras, Tensorflow, Pytorch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.AbstractDeepLearningModel.return_diff">
+<code class="sig-name descname">return_diff</code><a class="headerlink" href="#model.AbstractDeepLearningModel.return_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, return the difference between predicted image, and image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="model.AbstractDeepLearningModel.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/abstract_deep_learning_model.html#AbstractDeepLearningModel.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.AbstractDeepLearningModel.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="wrapper-classes">
+<h3>Wrapper Classes<a class="headerlink" href="#wrapper-classes" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">FilteringModel</code><span class="sig-paren">(</span><em class="sig-param">model_name='FilteringModel'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/filtering_model.html#FilteringModel"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.model.abstract_denoiser.AbstractDenoiser</span></code></p>
+<p>FilteringModel represents a Denoising Model that does not depend on Neural Networks.</p>
+<dl class="attribute">
+<dt id="model.FilteringModel.model_function">
+<code class="sig-name descname">model_function</code><a class="headerlink" href="#model.FilteringModel.model_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filtering denoising function. It should accept at least one argument, a image batch <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>.
+It should also have only one return, another <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with same shape, corresponding to the
+denoising result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/filtering_model.html#FilteringModel.__call__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Denoises a batch of images noised_image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – batch of images with shape (batch_size, height, width, channels)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>batch of images denoised by model_func, with shape (b, h ,w , c)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='FilteringModel'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/filtering_model.html#FilteringModel.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/filtering_model.html#FilteringModel.__repr__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">charge_model</code><span class="sig-paren">(</span><em class="sig-param">model_function</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/filtering_model.html#FilteringModel.charge_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Charges the denoising function into the class wrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_function</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code>) – Filtering denoising function. It should accept at least one argument, a image batch <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>.
+It should also have only one return, another <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with same shape, corresponding to the
+denoising result. Notice that, if your function needs more arguments than the noisy image batch, these can
+be passed through keyword arguments to charge_model (see examples section).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">KerasModel</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">logdir='./logs/Keras'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/keras_model.html#KerasModel"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.model.abstract_deep_learning_model.AbstractDeepLearningModel</span></code></p>
+<p>KerasModel wrapper class.</p>
+<dl class="attribute">
+<dt id="model.KerasModel.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#model.KerasModel.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denoiser Keras model used for training and inference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">keras.models.Model</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.KerasModel.return_diff">
+<code class="sig-name descname">return_diff</code><a class="headerlink" href="#model.KerasModel.return_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, return the difference between predicted image, and image at inference time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a></dt><dd><p>for the basic functionalities of Image Denoisers.</p>
+</dd>
+<dt><a class="reference internal" href="#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a></dt><dd><p>for the basic functionalities of Deep Learning based Denoisers.</p>
+</dd>
+</dl>
+</div>
+<dl class="method">
+<dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/keras_model.html#KerasModel.__call__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Denoises a batch of images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D batch of noised images. It has shape: (batch_size, height, width, channels)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Restored batch of images, with same shape as the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">logdir='./logs/Keras'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/keras_model.html#KerasModel.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Common interface for Deep Learning based image denoisers.</p>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">model</code></dt>
+<dd><p>Object representing the Denoiser Model in the framework used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.KerasModel.logdir">
+<code class="sig-name descname">logdir</code><a class="headerlink" href="#model.KerasModel.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to the model log directory. Such directory will contain training information,
+as well as model checkpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.KerasModel.train_info">
+<code class="sig-name descname">train_info</code><a class="headerlink" href="#model.KerasModel.train_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the time spent on training, how much parameters the network has, and if it has been
+trained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.KerasModel.framework">
+<code class="sig-name descname">framework</code><a class="headerlink" href="#model.KerasModel.framework" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the name of the chosen framework (e.g. Keras, Tensorflow, Pytorch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">return_diff</code></dt>
+<dd><p>If True, return the difference between predicted image, and image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/keras_model.html#KerasModel.__len__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Counts the number of parameters in the networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>nparams</strong> – Number of parameters in the network.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">charge_model</code><span class="sig-paren">(</span><em class="sig-param">model_function=None</em>, <em class="sig-param">model_path=None</em>, <em class="sig-param">model_weights=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/keras_model.html#KerasModel.charge_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Keras model charging function.</p>
+<p>There are four main cases for “charge_model” function:</p>
+<ol class="arabic simple">
+<li><p>Charge model architecture by using a function “model_function”.</p></li>
+<li><p>Charge model using .json file, previously saved from an existing architecture through the method
+keras.models.Model.to_json().</p></li>
+<li><p>Charge model using .yaml file, previously saved from an existing architecture through the method
+keras.models.Model.to_yaml()</p></li>
+<li><p>Charge model using .hdf5 file, previously saved from an existing architecture through the method
+keras.models.Model.save().</p></li>
+</ol>
+<p>From these four cases, notice that only the last loads the model and the weights at the same time. Therefore,
+at the moment you are loading your model, you should consider specify “model_weights” so that this class can
+find and charge your model weights, which can be saved in both .h5 and .hdf5 formats.</p>
+<p>If this is not the case, and your architecture has not been previously trained, you can run the training and
+then save the weights by using keras.models.Model.save_weights() method, or by using KerasModel.train(),
+method present on this class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_function</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code>) – reference to a function that outputs an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">keras.models.Model</span></code> class.</p></li>
+<li><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – path to model .json, .yaml or .hdf5 file.</p></li>
+<li><p><strong>model_weights</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – path to model .hdf5 weights file.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If your building function accepts optional arguments, you can specify them by using kwargs.</p>
+<p class="rubric">Examples</p>
+<p>Loading Keras DnCNN from class. Notice that in our implementation, depth is an optional argument.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="k">import</span> <span class="n">model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">KerasModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;mymodel&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_function</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">architectures</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">dncnn</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Loading Keras DnCNN from a .hdf5 file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="k">import</span> <span class="n">model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">PytorchModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;mymodel&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="n">PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Loading Keras DnCNN from a .json + .hdf5 file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="k">import</span> <span class="n">model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">PytorchModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;mymodel&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="n">PATH_TO_JSON</span><span class="p">,</span> <span class="n">model_weights</span><span class="o">=</span><span class="n">PATH_TO_HDF5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">train_generator</em>, <em class="sig-param">valid_generator=None</em>, <em class="sig-param">n_epochs=100.0</em>, <em class="sig-param">n_stages=500.0</em>, <em class="sig-param">learning_rate=0.001</em>, <em class="sig-param">optimizer_name=None</em>, <em class="sig-param">metrics=None</em>, <em class="sig-param">kcallbacks=None</em>, <em class="sig-param">loss=None</em>, <em class="sig-param">valid_steps=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/keras_model.html#KerasModel.train"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to run the training of a Keras Model.</p>
+<p class="rubric">Notes</p>
+<p>There are two cases where training should be launched:</p>
+<ol class="arabic simple">
+<li><p>You only loaded your model architecture. In that case, this function will train your model from scratch
+using the dataset specified by train_generator and valid_generator.</p></li>
+<li><p>You loaded an architecture and weights for your model, but you want to reuse them. It may be the case
+where you want to run your training for a few more epochs, or even perform transfer learning.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_generator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">data.AbstractDataset</span></code>) – Train data generator. Notice that these generators should output paired image samples, the first, a noised
+version of the image, and the second, the ground-truth.</p></li>
+<li><p><strong>valid_generator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">data.AbstractDataset</span></code>) – Validation data generator</p></li>
+<li><p><strong>n_epochs</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of epochs for which the training will be executed</p></li>
+<li><p><strong>n_stages</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of batches of data are drawn per epoch.</p></li>
+<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)"><em>float</em></a>) – Initial value for learning rate value for optimization</p></li>
+<li><p><strong>optimizer_name</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – Name of optimizer employed. Check Keras documentation for more information.</p></li>
+<li><p><strong>metrics</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of tensorflow functions implementing scalar metrics (see metrics in evaluation).</p></li>
+<li><p><strong>kcallbacks</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of keras callback instances. Consult Keras documentation and evaluation module for more
+information.</p></li>
+<li><p><strong>loss</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code>) – Tensorflow-based loss function. It should take as input two Tensors and output a scalar Tensor holding
+the loss computation.</p></li>
+<li><p><strong>valid_steps</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of batches drawn during evaluation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">PytorchModel</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">logdir='./logs/Pytorch'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/pytorch_model.html#PytorchModel"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.model.abstract_deep_learning_model.AbstractDeepLearningModel</span></code></p>
+<p>Pytorch wrapper class.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a></dt><dd><p>for the basic functionalities of Image Denoisers.</p>
+</dd>
+<dt><a class="reference internal" href="#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a></dt><dd><p>for the basic functionalities of Deep Learning based Denoisers.</p>
+</dd>
+</dl>
+</div>
+<dl class="method">
+<dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/pytorch_model.html#PytorchModel.__call__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Denoises a batch of images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D batch of noised images. It has shape: (batch_size, height, width, channels)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Restored batch of images, with same shape as the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">logdir='./logs/Pytorch'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/pytorch_model.html#PytorchModel.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Common interface for Deep Learning based image denoisers.</p>
+<dl class="attribute">
+<dt id="model.PytorchModel.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#model.PytorchModel.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object representing the Denoiser Model in the framework used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.PytorchModel.logdir">
+<code class="sig-name descname">logdir</code><a class="headerlink" href="#model.PytorchModel.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to the model log directory. Such directory will contain training information,
+as well as model checkpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.PytorchModel.train_info">
+<code class="sig-name descname">train_info</code><a class="headerlink" href="#model.PytorchModel.train_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the time spent on training, how much parameters the network has, and if it has been
+trained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.PytorchModel.framework">
+<code class="sig-name descname">framework</code><a class="headerlink" href="#model.PytorchModel.framework" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the name of the chosen framework (e.g. Keras, Tensorflow, Pytorch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.PytorchModel.return_diff">
+<code class="sig-name descname">return_diff</code><a class="headerlink" href="#model.PytorchModel.return_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, return the difference between predicted image, and image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/pytorch_model.html#PytorchModel.__len__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Counts the number of parameters in the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>nparams</strong> – Number of parameters in the network.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">charge_model</code><span class="sig-paren">(</span><em class="sig-param">model_function=None</em>, <em class="sig-param">model_path=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/pytorch_model.html#PytorchModel.charge_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Pytorch model charging function. You can charge a model either by specifying a class that implements the
+network architecture (passing it through model_function) or by specifying the path to a .pt or .pth file.
+If you class constructor accepts optional arguments, you can specify these by using Keyword arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_function</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>) – Pytorch network Class implementing the network architecture.</p></li>
+<li><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to a .pt or .pth file.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Loading Pytorch DnCNN from class. Notice that in our implementation, depth is an optional argument.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="k">import</span> <span class="n">model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">PytorchModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;mymodel&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_function</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">architectures</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">DnCNN</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Loading Pytorch DnCNN from a file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="k">import</span> <span class="n">model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">PytorchModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;mymodel&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="n">PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">train_generator</em>, <em class="sig-param">valid_generator=None</em>, <em class="sig-param">n_epochs=250</em>, <em class="sig-param">n_stages=500</em>, <em class="sig-param">learning_rate=0.001</em>, <em class="sig-param">metrics=None</em>, <em class="sig-param">optimizer_name=None</em>, <em class="sig-param">kcallbacks=None</em>, <em class="sig-param">loss=None</em>, <em class="sig-param">valid_steps=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/pytorch_model.html#PytorchModel.train"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Trains a Pytorch model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_generator</strong> (<em>data.AbstractDataset</em>) – dataset object inheriting from AbstractDataset class. It is a generator object that yields
+data from train dataset folder.</p></li>
+<li><p><strong>valid_generator</strong> (<em>data.AbstractDataset</em>) – dataset object inheriting from AbstractDataset class. It is a generator object that yields
+data from valid dataset folder.</p></li>
+<li><p><strong>n_epochs</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – number of training epochs.</p></li>
+<li><p><strong>n_stages</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – number of batches seen per epoch.</p></li>
+<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)"><em>float</em></a>) – constant multiplication constant for optimizer or initial value for training with
+dynamic learning rate (see callbacks)</p></li>
+<li><p><strong>metrics</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of metric functions. These functions should have two inputs, two instances of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>.
+It outputs a float corresponding to the metric computed on those two arrays. For more information, take a
+look on the Benchmarking module.</p></li>
+<li><p><strong>optimizer_name</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – Name of optimizer to use. Check Pytorch documentation for a complete list.</p></li>
+<li><p><strong>kcallbacks</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of custom_callbacks.</p></li>
+<li><p><strong>loss</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.loss</span></code>) – Pytorch loss function.</p></li>
+<li><p><strong>valid_steps</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – If valid_generator was specified, valid_steps determines the number of valid batches
+that will be seen per validation run.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">TfModel</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">logdir='./logs/Tensorflow'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/tf_model.html#TfModel"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.model.abstract_deep_learning_model.AbstractDeepLearningModel</span></code></p>
+<p>Tensorflow model class wrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loss</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor holding the computation for the loss function.</p></li>
+<li><p><strong>saver</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.train.Saver</span></code>) – Object for saving the model at each epoch iteration.</p></li>
+<li><p><strong>metrics</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of <code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code> objects holding the computation for each metric.</p></li>
+<li><p><strong>opt_step</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Operation</span></code>) – Tensorflow operation corresponding to the update performed on model’s variables.</p></li>
+<li><p><strong>tf_session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Session</span></code>) – Instance of tensorflow session.</p></li>
+<li><p><strong>model_input</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to model’s input.</p></li>
+<li><p><strong>is_training</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – If batch normalization is used, corresponds to a tf placeholder controlling training and inference phases of
+batch normalization.</p></li>
+<li><p><strong>model_output</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to model’s output.</p></li>
+<li><p><strong>ground_truth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.placeholder</span></code>) – Placeholder corresponding to original training images (clean).</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a></dt><dd><p>for the basic functionalities of Image Denoisers.</p>
+</dd>
+<dt><a class="reference internal" href="#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a></dt><dd><p>for the basic functionalities of Deep Learning based Denoisers.</p>
+</dd>
+</dl>
+</div>
+<dl class="method">
+<dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/tf_model.html#TfModel.__call__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Denoises a batch of images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – 4D batch of noised images. It has shape: (batch_size, height, width, channels)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Restored batch of images, with same shape as the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">logdir='./logs/Tensorflow'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/tf_model.html#TfModel.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Common interface for Deep Learning based image denoisers.</p>
+<dl class="attribute">
+<dt id="model.TfModel.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#model.TfModel.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object representing the Denoiser Model in the framework used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.TfModel.logdir">
+<code class="sig-name descname">logdir</code><a class="headerlink" href="#model.TfModel.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to the model log directory. Such directory will contain training information,
+as well as model checkpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.TfModel.train_info">
+<code class="sig-name descname">train_info</code><a class="headerlink" href="#model.TfModel.train_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the time spent on training, how much parameters the network has, and if it has been
+trained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.TfModel.framework">
+<code class="sig-name descname">framework</code><a class="headerlink" href="#model.TfModel.framework" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the name of the chosen framework (e.g. Keras, Tensorflow, Pytorch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.TfModel.return_diff">
+<code class="sig-name descname">return_diff</code><a class="headerlink" href="#model.TfModel.return_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, return the difference between predicted image, and image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/tf_model.html#TfModel.__len__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Counts the number of parameters in the networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>nparams</strong> – Number of parameters in the network.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">charge_model</code><span class="sig-paren">(</span><em class="sig-param">model_function=None</em>, <em class="sig-param">model_path=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/tf_model.html#TfModel.charge_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Charges Tensorflow model into the wrapper class by using a model file, or a building architecture function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_function</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code>) – Building architecture function, which returns at least two tensors: one for the graph input, and another for
+the graph output.</p></li>
+<li><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – <p>String containing the path to a .pb or .meta file, holding the computational graph for the model. Note that
+each of these files correspond to a different tensorflow saving API.</p>
+<ul>
+<li><p>.pb files correspond to saved_model API. This API saves the model in a folder containing the .pb file,
+along with a folder called “variables”, holding the weight values.</p></li>
+<li><p>.meta files correspond to tf.train API. This API saves the model through four files (.meta, .index, .data
+and checkpoint).</p></li>
+</ul>
+<p>You can save your models in one of these two formats.</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function accepts Keyword arguments which can be used to pass additional parameters to model_function.</p>
+<p class="rubric">Examples</p>
+<p>Loading Tensorflow DnCNN from class. Notice that in our implementation, depth is an optional argument.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="k">import</span> <span class="n">model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">TfModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;mymodel&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_function</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">architectures</span><span class="o">.</span><span class="n">tensorflow</span><span class="o">.</span><span class="n">DnCNN</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Loading Tensorflow DnCNN from a file. Note that the file which you are going to charge on TfModel need to be a
+.pb or a .meta file. In the first case, we assume you have used the <a class="reference external" href="https://www.tensorflow.org/guide/saved_model">SavedModel API</a>, while in the second case, we assume the <a class="reference external" href="https://www.tensorflow.org/guide/checkpoints">Checkpoint API</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="k">import</span> <span class="n">model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">PytorchModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;mymodel&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mymodel</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="n">PATH_TO_PB_OR_META</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">train_generator</em>, <em class="sig-param">valid_generator=None</em>, <em class="sig-param">n_epochs=250</em>, <em class="sig-param">n_stages=500</em>, <em class="sig-param">learning_rate=0.001</em>, <em class="sig-param">metrics=None</em>, <em class="sig-param">optimizer_name=None</em>, <em class="sig-param">kcallbacks=None</em>, <em class="sig-param">loss=None</em>, <em class="sig-param">valid_steps=10</em>, <em class="sig-param">saving_api='SavedModel'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/tf_model.html#TfModel.train"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Trains a tensorflow model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_generator</strong> (<em>data.AbstractDataset</em>) – Dataset object inheriting from AbstractDataset class. It is a generator object that yields
+data from train dataset folder.</p></li>
+<li><p><strong>valid_generator</strong> (<em>data.AbstractDataset</em>) – Dataset object inheriting from AbstractDataset class. It is a generator object that yields
+data from valid dataset folder.</p></li>
+<li><p><strong>n_epochs</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of training epochs.</p></li>
+<li><p><strong>n_stages</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of batches seen per epoch.</p></li>
+<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)"><em>float</em></a>) – Constant multiplication constant for optimizer or initial value for training with
+dynamic learning rate (see callbacks)</p></li>
+<li><p><strong>metrics</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of tensorflow functions implementing scalar metrics (see metrics in evaluation).</p></li>
+<li><p><strong>optimizer_name</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – Name of optimizer to use. Check tf.train documentation for a complete list.</p></li>
+<li><p><strong>kcallbacks</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of callbacks.</p></li>
+<li><p><strong>loss</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code>) – Tensorflow-based loss function. It should take as input two Tensors and output a scalar Tensor holding
+the loss computation.</p></li>
+<li><p><strong>valid_steps</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – If valid_generator was specified, valid_steps determines the number of valid batches
+that will be seen per validation run.</p></li>
+<li><p><strong>saving_api</strong> (<em>string</em>) – If training_api = “tftrain”, uses tf.train.Saver as the model saver. Otherwise, uses saved_model API.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">MatlabModel</code><span class="sig-paren">(</span><em class="sig-param">model_name='MatlabModel'</em>, <em class="sig-param">logdir='./logs/Matlab'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matlab_model.html#MatlabModel"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.model.abstract_deep_learning_model.AbstractDeepLearningModel</span></code></p>
+<p>Matlab Deep Learning toolbox wrapper class.</p>
+<p class="rubric">Notes</p>
+<p>To use this class you need a Matlab license with access to the Deep Learning toolbox.</p>
+<dl class="attribute">
+<dt id="model.MatlabModel.logdir">
+<code class="sig-name descname">logdir</code><a class="headerlink" href="#model.MatlabModel.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the directory where training logs will be saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a></dt><dd><p>for the basic functionalities of Image Denoisers.</p>
+</dd>
+<dt><a class="reference internal" href="#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a></dt><dd><p>for the basic functionalities of Deep Learning based Denoisers.</p>
+</dd>
+</dl>
+</div>
+<dl class="method">
+<dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matlab_model.html#MatlabModel.__call__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Denoises a batch of images.</p>
+<p class="rubric">Notes</p>
+<p>To perform inference on MatlabModels, you need to have a variable on Matlab’s workspace called ‘net’. This
+variable is the output of a training session, or the result of a load(‘obj’).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D batch of noised images. It has shape: (batch_size, height, width, channels)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Restored batch of images, with same shape as the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='MatlabModel'</em>, <em class="sig-param">logdir='./logs/Matlab'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matlab_model.html#MatlabModel.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Common interface for Deep Learning based image denoisers.</p>
+<dl class="attribute">
+<dt id="model.MatlabModel.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#model.MatlabModel.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object representing the Denoiser Model in the framework used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">logdir</code></dt>
+<dd><p>String containing the path to the model log directory. Such directory will contain training information,
+as well as model checkpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatlabModel.train_info">
+<code class="sig-name descname">train_info</code><a class="headerlink" href="#model.MatlabModel.train_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the time spent on training, how much parameters the network has, and if it has been
+trained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatlabModel.framework">
+<code class="sig-name descname">framework</code><a class="headerlink" href="#model.MatlabModel.framework" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the name of the chosen framework (e.g. Keras, Tensorflow, Pytorch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatlabModel.return_diff">
+<code class="sig-name descname">return_diff</code><a class="headerlink" href="#model.MatlabModel.return_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, return the difference between predicted image, and image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matlab_model.html#MatlabModel.__len__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Counts the number of parameters in the networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>nparams</strong> – Number of parameters in the network.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">charge_model</code><span class="sig-paren">(</span><em class="sig-param">model_function=None</em>, <em class="sig-param">model_path=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matlab_model.html#MatlabModel.charge_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>MatlabModel model charging functions</p>
+<p>This function works by using Matlab’s Python engine to make Matlab internal calls. You can either specify the
+path to a Matlab function that will build the model, or to a .mat file holding the pretrained model.</p>
+<p class="rubric">Notes</p>
+<p>You may specify optional arguments to the model building function through keyword arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_function</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to the matlab .m function that will build the model. Note that this function
+should return a list of layers.</p></li>
+<li><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to the .mat file holding the trained network object.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://mathworks.com/products/deep-learning.html">Matlab Deep Learning Toolbox documentation</a>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">train_generator</em>, <em class="sig-param">valid_generator=None</em>, <em class="sig-param">n_epochs=250</em>, <em class="sig-param">n_stages=500</em>, <em class="sig-param">learning_rate=0.001</em>, <em class="sig-param">optimizer_name='adam'</em>, <em class="sig-param">valid_steps=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matlab_model.html#MatlabModel.train"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Trains a Matlab denoiser model.</p>
+<p class="rubric">Notes</p>
+<p>Instead of using Clean/Full/Blind dataset Python classes, you should use the class MatlabDatasetWrapper,
+which exports a dataset to matlab workspace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_generator</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – Name of the matlab imageDatastore variable (for instance, if you have train_imds in your workspace you
+should pass ‘train_imds’ for train_generator).</p></li>
+<li><p><strong>valid_generator</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – Name of the matlab imageDatastore variable (for instance, if you have train_imds in your workspace you
+should pass ‘valid_imds’ for valid_generator).</p></li>
+<li><p><strong>n_epochs</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of training epochs.</p></li>
+<li><p><strong>n_stages</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of image batches are drawn during a training epoch.</p></li>
+<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)"><em>float</em></a>) – Initial value for learning rate value for optimization.</p></li>
+<li><p><strong>optimizer_name</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – One among {‘sgdm’, ‘adam’, ‘rmsprop’}</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="data_doc.html#data.MatlabDatasetWrapper" title="data.MatlabDatasetWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">data.MatlabDatasetWrapper</span></code></a></dt><dd><p>for the class providing data to train such kinds of models.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">OnnxModel</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/onnx_model.html#OnnxModel"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.model.abstract_deep_learning_model.AbstractDeepLearningModel</span></code></p>
+<p>Onnx models class wrapper. Note that Onnx models only support inference, so training is unavailable.</p>
+<dl class="attribute">
+<dt id="model.OnnxModel.runtime_session">
+<code class="sig-name descname">runtime_session</code><a class="headerlink" href="#model.OnnxModel.runtime_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>onnxruntime session to run inference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">onnxruntime.capi.session.InferenceSession</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.OnnxModel.model_input">
+<code class="sig-name descname">model_input</code><a class="headerlink" href="#model.OnnxModel.model_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>onnxruntime input tensor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">onnxruntime.capi.onnxruntime_pybind11_state.NodeArg</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.OnnxModel.model_output">
+<code class="sig-name descname">model_output</code><a class="headerlink" href="#model.OnnxModel.model_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>onnxruntime output tensor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">onnxruntime.capi.onnxruntime_pybind11_state.NodeArg</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a></dt><dd><p>for the basic functionalities of Image Denoisers.</p>
+</dd>
+<dt><a class="reference internal" href="#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a></dt><dd><p>for the basic functionalities of Deep Learning based Denoisers.</p>
+</dd>
+</dl>
+</div>
+<dl class="method">
+<dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/onnx_model.html#OnnxModel.__call__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Denoises a batch of images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D batch of noised images. It has shape: (batch_size, height, width, channels)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Restored batch of images, with same shape as the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='DeepLearningModel'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/onnx_model.html#OnnxModel.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Common interface for Deep Learning based image denoisers.</p>
+<dl class="attribute">
+<dt id="model.OnnxModel.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#model.OnnxModel.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object representing the Denoiser Model in the framework used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.OnnxModel.logdir">
+<code class="sig-name descname">logdir</code><a class="headerlink" href="#model.OnnxModel.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to the model log directory. Such directory will contain training information,
+as well as model checkpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.OnnxModel.train_info">
+<code class="sig-name descname">train_info</code><a class="headerlink" href="#model.OnnxModel.train_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the time spent on training, how much parameters the network has, and if it has been
+trained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.OnnxModel.framework">
+<code class="sig-name descname">framework</code><a class="headerlink" href="#model.OnnxModel.framework" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the name of the chosen framework (e.g. Keras, Tensorflow, Pytorch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.OnnxModel.return_diff">
+<code class="sig-name descname">return_diff</code><a class="headerlink" href="#model.OnnxModel.return_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, return the difference between predicted image, and image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/onnx_model.html#OnnxModel.__len__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Counts the number of parameters in the networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>nparams</strong> – Number of parameters in the network.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">charge_model</code><span class="sig-paren">(</span><em class="sig-param">model_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/onnx_model.html#OnnxModel.charge_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This method charges a onnx model into the class wrapper. It uses onnx module to load the model graph from
+a .onnx file, then creates a runtime session from onnxruntime module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to the .onnx model file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">model.</code><code class="sig-name descname">MatconvnetModel</code><span class="sig-paren">(</span><em class="sig-param">model_name='MatconvnetModel'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matconvnet_model.html#MatconvnetModel"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.model.abstract_deep_learning_model.AbstractDeepLearningModel</span></code></p>
+<p>Matlab Matconvnet wrapper class.</p>
+<p class="rubric">Notes</p>
+<p>Matconvnet models are available only for inference.</p>
+<dl class="attribute">
+<dt id="model.MatconvnetModel.model_path">
+<code class="sig-name descname">model_path</code><a class="headerlink" href="#model.MatconvnetModel.model_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to model files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatconvnetModel.denoising_func">
+<code class="sig-name descname">denoising_func</code><a class="headerlink" href="#model.MatconvnetModel.denoising_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function object representing the Matlab function responsable for denoising images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatconvnetModel.model_file_path">
+<code class="sig-name descname">model_file_path</code><a class="headerlink" href="#model.MatconvnetModel.model_file_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to the model saved weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a></dt><dd><p>for the basic functionalities of Image Denoisers.</p>
+</dd>
+<dt><a class="reference internal" href="#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a></dt><dd><p>for the basic functionalities of Deep Learning based Denoisers.</p>
+</dd>
+</dl>
+</div>
+<dl class="method">
+<dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matconvnet_model.html#MatconvnetModel.__call__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Denoises a batch of images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D batch of noised images. It has shape: (batch_size, height, width, channels)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Restored batch of images, with same shape as the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_name='MatconvnetModel'</em>, <em class="sig-param">return_diff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matconvnet_model.html#MatconvnetModel.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Common interface for Deep Learning based image denoisers.</p>
+<dl class="attribute">
+<dt id="model.MatconvnetModel.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#model.MatconvnetModel.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object representing the Denoiser Model in the framework used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatconvnetModel.logdir">
+<code class="sig-name descname">logdir</code><a class="headerlink" href="#model.MatconvnetModel.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to the model log directory. Such directory will contain training information,
+as well as model checkpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatconvnetModel.train_info">
+<code class="sig-name descname">train_info</code><a class="headerlink" href="#model.MatconvnetModel.train_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the time spent on training, how much parameters the network has, and if it has been
+trained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatconvnetModel.framework">
+<code class="sig-name descname">framework</code><a class="headerlink" href="#model.MatconvnetModel.framework" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the name of the chosen framework (e.g. Keras, Tensorflow, Pytorch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="model.MatconvnetModel.return_diff">
+<code class="sig-name descname">return_diff</code><a class="headerlink" href="#model.MatconvnetModel.return_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, return the difference between predicted image, and image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matconvnet_model.html#MatconvnetModel.__len__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Counts the number of parameters in the networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>nparams</strong> – Number of parameters in the network.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">charge_model</code><span class="sig-paren">(</span><em class="sig-param">model_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/matconvnet_model.html#MatconvnetModel.charge_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This method charges a matlab function corresponding to the denoising action into the class wrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to the Matlab denoising function, as well as the networks weights (saved as a
+.mat file)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="built-in-architectures">
+<h2>Built-in Architectures<a class="headerlink" href="#built-in-architectures" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-model.architectures.keras">
+<span id="keras-architectures"></span><h3>Keras Architectures<a class="headerlink" href="#module-model.architectures.keras" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="model.architectures.keras.dncnn">
+<code class="sig-prename descclassname">model.architectures.keras.</code><code class="sig-name descname">dncnn</code><span class="sig-paren">(</span><em class="sig-param">depth=17</em>, <em class="sig-param">n_filters=64</em>, <em class="sig-param">kernel_size=(3</em>, <em class="sig-param">3)</em>, <em class="sig-param">n_channels=1</em>, <em class="sig-param">channels_first=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/architectures/keras/dncnn.html#dncnn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.architectures.keras.dncnn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keras implementation of DnCNN. Implementation followed the original paper [1]. Authors original code can be
+found on <a class="reference external" href="https://github.com/cszn/DnCNN/">their Github Page</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depth</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of fully convolutional layers in dncnn. In the original paper, the authors have used depth=17 for non-
+blind denoising and depth=20 for blind denoising.</p></li>
+<li><p><strong>n_filters</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of filters on each convolutional layer.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int tuple</em>) – 2D Tuple specifying the size of the kernel window used to compute activations.</p></li>
+<li><p><strong>n_channels</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of image channels that the network processes (1 for grayscale, 3 for RGB)</p></li>
+<li><p><strong>channels_first</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) – Whether channels comes first (NCHW, True) or last (NHWC, False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Keras model object representing the Neural Network.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">keras.models.Model</span></code></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id1"><span class="brackets">1</span></dt>
+<dd><p>Zhang K, Zuo W, Chen Y, Meng D, Zhang L. Beyond a gaussian denoiser: Residual learning of deep cnn
+for image denoising. IEEE Transactions on Image Processing. 2017</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising.model.architectures.keras</span> <span class="k">import</span> <span class="n">dncnn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dncnn_s</span> <span class="o">=</span> <span class="n">dncnn</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dncnn_b</span> <span class="o">=</span> <span class="n">dncnn</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="model.architectures.keras.rednet">
+<code class="sig-prename descclassname">model.architectures.keras.</code><code class="sig-name descname">rednet</code><span class="sig-paren">(</span><em class="sig-param">depth=20</em>, <em class="sig-param">n_filters=64</em>, <em class="sig-param">kernel_size=(5</em>, <em class="sig-param">5)</em>, <em class="sig-param">skip_step=2</em>, <em class="sig-param">n_channels=1</em>, <em class="sig-param">channels_first=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/architectures/keras/rednet.html#rednet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.architectures.keras.rednet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keras implementation of RedNet. Implementation following the paper [1].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depth</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of fully convolutional layers in dncnn. In the original paper, the authors have used depth=17
+for non-blind denoising and depth=20 for blind denoising.</p></li>
+<li><p><strong>n_filters</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of filters at each convolutional layer.</p></li>
+<li><p><strong>kernel_size</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – 2D Tuple specifying the size of the kernel window used to compute activations.</p></li>
+<li><p><strong>skip_step</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Step for connecting encoder layers with decoder layers through add. For skip_step=2, at each
+2 layers, the j-th encoder layer E_j is connected with the  i = (depth - j) th decoder layer D_i.</p></li>
+<li><p><strong>n_channels</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of image channels that the network processes (1 for grayscale, 3 for RGB)</p></li>
+<li><p><strong>channels_first</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) – Whether channels comes first (NCHW) or last (NHWC)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Keras Model representing the Denoiser neural network</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">keras.models.Model</span></code></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets">1</span></dt>
+<dd><p>Mao XJ, Shen C, Yang YB. Image restoration using convolutional auto-encoders with symmetric skip connections.
+arXiv preprint, 2016.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="model.architectures.keras.mwcnn_1">
+<code class="sig-prename descclassname">model.architectures.keras.</code><code class="sig-name descname">mwcnn_1</code><span class="sig-paren">(</span><em class="sig-param">n_levels=3</em>, <em class="sig-param">kernel_size=3</em>, <em class="sig-param">n_conv_blocks=4</em>, <em class="sig-param">n_channels=1</em>, <em class="sig-param">channels_first=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/architectures/keras/mwcnn.html#mwcnn_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.architectures.keras.mwcnn_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keras implementation of Multilevel Wavelet-CNN from [1].</p>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the Pytorch version, available on <a class="reference external" href="https://github.com/lpj0/MWCNN">this Github page</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_levels</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of Discrete Wavelet Transforms in the network.</p></li>
+<li><p><strong>kernel_size</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – 2D Tuple specifying the size of the kernel window used to compute activations.</p></li>
+<li><p><strong>n_conv_blocks</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of convolutional blocks (Conv + BN + ReLU) following each DWT.</p></li>
+<li><p><strong>n_channels</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of image channels that the network processes (1 for grayscale, 3 for RGB)</p></li>
+<li><p><strong>channels_first</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) – Whether channels comes first (NCHW) or last (NHWC)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Keras model object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">keras.models.Model</span></code></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets">1</span></dt>
+<dd><p>Liu P, Zhang H, Zhang K, Lin L, Zuo W. Multi-level wavelet-CNN for image restoration. InProceedings of the
+IEEE Conference on Computer Vision and Pattern Recognition Workshops 2018</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-model.architectures.tensorflow">
+<span id="tensorflow-architectures"></span><h3>Tensorflow Architectures<a class="headerlink" href="#module-model.architectures.tensorflow" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="model.architectures.tensorflow.dncnn">
+<code class="sig-prename descclassname">model.architectures.tensorflow.</code><code class="sig-name descname">dncnn</code><span class="sig-paren">(</span><em class="sig-param">depth=17</em>, <em class="sig-param">n_filters=64</em>, <em class="sig-param">kernel_size=3</em>, <em class="sig-param">n_channels=1</em>, <em class="sig-param">channels_first=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/architectures/tensorflow/dncnn.html#dncnn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.architectures.tensorflow.dncnn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tensorflow implementation of DnCNN. Implementation followed the original paper [1]. Authors original code can be
+found on <a class="reference external" href="https://github.com/cszn/DnCNN/">their Github Page</a>.</p>
+<p class="rubric">Notes</p>
+<p>Implementation was based on the following <a class="reference external" href="https://github.com/wbhu/DnCNN-tensorflow">Github page</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depth</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of fully convolutional layers in dncnn. In the original paper, the authors have used depth=17 for non-
+blind denoising and depth=20 for blind denoising.</p></li>
+<li><p><strong>n_filters</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of filters on each convolutional layer.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int tuple</em>) – 2D Tuple specifying the size of the kernel window used to compute activations.</p></li>
+<li><p><strong>n_channels</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of image channels that the network processes (1 for grayscale, 3 for RGB)</p></li>
+<li><p><strong>channels_first</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) – Whether channels comes first (NCHW, True) or last (NHWC, False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>input_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Network graph input tensor</p></li>
+<li><p><strong>is_training</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Placeholder indicating if the network is being trained or evaluated</p></li>
+<li><p><strong>output_tensor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Network graph output tensor</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id5"><span class="brackets">1</span></dt>
+<dd><p>Zhang K, Zuo W, Chen Y, Meng D, Zhang L. Beyond a gaussian denoiser: Residual learning of deep cnn
+for image denoising. IEEE Transactions on Image Processing. 2017</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising.model.architectures.tensorflow</span> <span class="k">import</span> <span class="n">dncnn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">dncnn_s_input</span><span class="p">,</span> <span class="n">dncnn_s_is_training</span><span class="p">,</span> <span class="n">dncnn_s_output</span><span class="p">)</span> <span class="o">=</span> <span class="n">dncnn</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">dncnn_b_input</span><span class="p">,</span> <span class="n">dncnn_b_is_training</span><span class="p">,</span> <span class="n">dncnn_b_output</span><span class="p">)</span> <span class="o">=</span> <span class="n">dncnn</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-model.architectures.pytorch">
+<span id="pytorch-architectures"></span><h3>Pytorch Architectures<a class="headerlink" href="#module-model.architectures.pytorch" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="model.architectures.pytorch.DnCNN">
+<em class="property">class </em><code class="sig-prename descclassname">model.architectures.pytorch.</code><code class="sig-name descname">DnCNN</code><span class="sig-paren">(</span><em class="sig-param">depth=17</em>, <em class="sig-param">n_filters=64</em>, <em class="sig-param">kernel_size=3</em>, <em class="sig-param">n_channels=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/architectures/pytorch/dncnn.html#DnCNN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.architectures.pytorch.DnCNN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="model.architectures.pytorch.DnCNN.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">depth=17</em>, <em class="sig-param">n_filters=64</em>, <em class="sig-param">kernel_size=3</em>, <em class="sig-param">n_channels=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/architectures/pytorch/dncnn.html#DnCNN.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.architectures.pytorch.DnCNN.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pytorch implementation of DnCNN. Implementation followed the original paper [1]. Authors original code can be
+found on <a class="reference external" href="https://github.com/cszn/DnCNN/">their Github Page</a>.</p>
+<p class="rubric">Notes</p>
+<p>This implementation is based on the following <a class="reference external" href="https://github.com/SaoYan/DnCNN-PyTorch">Github page</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depth</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of fully convolutional layers in dncnn. In the original paper, the authors have used depth=17 for non-
+blind denoising and depth=20 for blind denoising.</p></li>
+<li><p><strong>n_filters</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of filters on each convolutional layer.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int tuple</em>) – 2D Tuple specifying the size of the kernel window used to compute activations.</p></li>
+<li><p><strong>n_channels</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of image channels that the network processes (1 for grayscale, 3 for RGB)</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id8"><span class="brackets">1</span></dt>
+<dd><p>Zhang K, Zuo W, Chen Y, Meng D, Zhang L. Beyond a gaussian denoiser: Residual learning of deep cnn
+for image denoising. IEEE Transactions on Image Processing. 2017</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising.model.architectures.pytorch</span> <span class="k">import</span> <span class="n">DnCNN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dncnn_s</span> <span class="o">=</span> <span class="n">DnCNN</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dncnn_b</span> <span class="o">=</span> <span class="n">DnCNN</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="model.architectures.pytorch.DnCNN.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/architectures/pytorch/dncnn.html#DnCNN.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.architectures.pytorch.DnCNN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="filtering-functions">
+<h2>Filtering functions<a class="headerlink" href="#filtering-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-model.filtering">
+<span id="matlab-based-functions"></span><h3>Matlab-based functions<a class="headerlink" href="#module-model.filtering" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="model.filtering.BM3D">
+<code class="sig-prename descclassname">model.filtering.</code><code class="sig-name descname">BM3D</code><span class="sig-paren">(</span><em class="sig-param">z</em>, <em class="sig-param">sigma=25.0</em>, <em class="sig-param">profile='np'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/filtering/bm3d.html#BM3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.filtering.BM3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function wraps MATLAB’s BM3D [1] implementation available on <a class="reference external" href="http://www.cs.tut.fi/~foi/GCF-BM3D/">author’s website</a>.</p>
+<p class="rubric">Notes</p>
+<p>In order to be able to use their code, you need to download it
+from the website and add the root folder to Matlab’s path through “set_path”. By using this function,
+and consequently their code, you are agreeing with the <a class="reference external" href="http://www.cs.tut.fi/~foi/GCF-BM3D/legal_notice.html">license term</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D batch of noised images. It has shape: (batch_size, height, width, channels).</p></li>
+<li><p><strong>sigma</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)"><em>float</em></a>) – Level of gaussian noise.</p></li>
+<li><p><strong>profile</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – <p>One between {‘np’, ‘lc’, ‘high’, ‘vn’, ‘vn_old’}. Algorithm’s profile.</p>
+<p>Available for grayscale:</p>
+<ul>
+<li><p>’np’: Normal profile.</p></li>
+<li><p>’lc’: Fast profile.</p></li>
+<li><p>’high’: High quality profile.</p></li>
+<li><p>’vn’: High noise profile (sigma &gt; 40.0)</p></li>
+<li><p>’vn_old’: old ‘vn’ profile. Yields inferior results than ‘vn’.</p></li>
+</ul>
+<p>Available for RGB:</p>
+<ul>
+<li><p>’np’: Normal profile.</p></li>
+<li><p>’lc’: Fast profile.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>y_est</strong> – 4D batch of denoised images. It has shape: (batch_size, height, width, channels).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id9"><span class="brackets">1</span></dt>
+<dd><p>Dabov K, Foi A, Katkovnik V, Egiazarian K. Image denoising by sparse 3-D transform-domain collaborative
+filtering. IEEE Transactions on image processing. 2007</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-model.utils">
+<span id="model-utilities"></span><h2>Model utilities<a class="headerlink" href="#module-model.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="model.utils.pb2onnx">
+<code class="sig-prename descclassname">model.utils.</code><code class="sig-name descname">pb2onnx</code><span class="sig-paren">(</span><em class="sig-param">path_to_pb, path_to_onnx, input_node_names=['input'], output_node_names=['output']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/utils/model_conversion.html#pb2onnx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.utils.pb2onnx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts Tensorflow’s ProtoBuf file to Onnx model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_to_pb</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to the .pb file containing the tensorflow graph to convert to onnx.</p></li>
+<li><p><strong>path_to_onnx</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to the location where the .onnx file will be saved.</p></li>
+<li><p><strong>input_node_names</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of strings containing the input node names</p></li>
+<li><p><strong>output_node_names</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of strings containing the output node names</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="model.utils.freeze_tf_graph">
+<code class="sig-prename descclassname">model.utils.</code><code class="sig-name descname">freeze_tf_graph</code><span class="sig-paren">(</span><em class="sig-param">model_file=None</em>, <em class="sig-param">output_filepath='./output_graph.pb'</em>, <em class="sig-param">output_node_names=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/utils/model_conversion.html#freeze_tf_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.utils.freeze_tf_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Freezes tensorflow graph, then writes it in a new .pb file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_file</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String to the checkpoint or saved_model file containing the target graph. If None, assumes that the graph was
+already loaded.</p></li>
+<li><p><strong>output_filename</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – Path of the output file.</p></li>
+<li><p><strong>output_node_names</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – Name of the identifier of output nodes.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="model.utils.onnx_dynamic_shapes">
+<code class="sig-prename descclassname">model.utils.</code><code class="sig-name descname">onnx_dynamic_shapes</code><span class="sig-paren">(</span><em class="sig-param">input_filepath</em>, <em class="sig-param">output_filepath</em>, <em class="sig-param">channels_first=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/utils/model_conversion.html#onnx_dynamic_shapes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.utils.onnx_dynamic_shapes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts inputs and outputs static shapes of an Onnx graph to dynamic shapes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_filepath</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to the .onnx file you want to convert</p></li>
+<li><p><strong>output_filepath</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path for the new onnx model to be saved.</p></li>
+<li><p><strong>channels_first</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) – If True, interprets input shapes as NCHW. If False, interprets input shapes as NHWC.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="data_doc.html" class="btn btn-neutral float-right" title="data module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="benchmark_api_doc.html" class="btn btn-neutral float-left" title="Benchmark API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

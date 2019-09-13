@@ -1,0 +1,455 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Example: running evaluation &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example: creating datasets" href="DataTutorial.html" />
+    <link rel="prev" title="Examples" href="../examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark_api_doc.html">Benchmark API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#basic-examples">Basic Examples</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Example: running evaluation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#defining-datasets">Defining Datasets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#defining-models">Defining Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metrics">Metrics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualisations">Visualisations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#evaluation">Evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DataTutorial.html">Example: creating datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#in-depth-tutorials">In-depth Tutorials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#jupyter-notebooks">Jupyter Notebooks</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../examples.html">Examples</a> &raquo;</li>
+        
+      <li>Example: running evaluation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/Examples/BenchmarkTutorial.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="example-running-evaluation">
+<h1>Example: running evaluation<a class="headerlink" href="#example-running-evaluation" title="Permalink to this headline">¶</a></h1>
+<p>Here we present a tutorial on how you can use the OpenDenoising benchmark to compare the performance of denoising
+algorithms. You can run through this examples running the code snippets sequentially.</p>
+<p>First, being on the project’s root, you need to import the modules provided by the OpenDenoising benchmark:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="kn">import</span> <span class="n">data</span>
+<span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="kn">import</span> <span class="n">model</span>
+<span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="kn">import</span> <span class="n">evaluation</span>
+<span class="kn">from</span> <span class="nn">OpenDenoising</span> <span class="kn">import</span> <span class="n">Benchmark</span>
+</pre></div>
+</div>
+<p>To execute multiple models that access the GPU, you need to allow Tensorflow/Keras to allocate memory only when
+needed. This is done through,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">keras</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="c1"># Configures Tensorflow session</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ConfigProto</span><span class="p">()</span>
+<span class="n">config</span><span class="o">.</span><span class="n">gpu_options</span><span class="o">.</span><span class="n">allow_growth</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+<span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">set_session</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The rest of the tutorial is divided as follows,</p>
+<div class="section" id="defining-datasets">
+<h2>Defining Datasets<a class="headerlink" href="#defining-datasets" title="Permalink to this headline">¶</a></h2>
+<p>To define a dataset to evaluate your algorithms, you need to have at hand saved image files in the following folder
+structure:</p>
+<p><strong>Clean Dataset (only references)</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatasetName</span><span class="o">/</span>
+<span class="o">|--</span> <span class="n">Train</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">ref</span>
+<span class="o">|--</span> <span class="n">Valid</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">ref</span>
+</pre></div>
+</div>
+<p><strong>Full Dataset (references and noisy images)</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatasetName</span><span class="o">/</span>
+<span class="o">|--</span> <span class="n">Train</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="ow">in</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">ref</span>
+<span class="o">|--</span> <span class="n">Valid</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="ow">in</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">ref</span>
+</pre></div>
+</div>
+<p>To run this example, you can use the <a class="reference internal" href="../data_doc.html#module-data" title="data"><code class="xref py py-mod docutils literal notranslate"><span class="pre">data</span></code></a> module to download test datasets,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">download_dncnn_testsets</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;./tmp/TestSets&quot;</span><span class="p">,</span> <span class="n">testset</span><span class="o">=</span><span class="s2">&quot;BSD68&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">download_dncnn_testsets</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;./tmp/TestSets&quot;</span><span class="p">,</span> <span class="n">testset</span><span class="o">=</span><span class="s2">&quot;Set12&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This snippet will create the entire folder structure for these two test datasets. To actually create the object for
+generating image samples, you can use the following,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># BSD Dataset</span>
+<span class="n">BSD68</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">DatasetFactory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;../../tmp/TestSets/BSD68/&quot;</span><span class="p">,</span>
+                                   <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                   <span class="n">n_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                   <span class="n">noise_config</span><span class="o">=</span><span class="p">{</span><span class="n">data</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">gaussian_noise</span><span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">]},</span>
+                                   <span class="n">name</span><span class="o">=</span><span class="s2">&quot;BSD68&quot;</span><span class="p">)</span>
+<span class="c1"># Set12 Dataset</span>
+<span class="n">Set12</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">DatasetFactory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;../../tmp/TestSets/Set12/&quot;</span><span class="p">,</span>
+                                   <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                   <span class="n">n_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                   <span class="n">noise_config</span><span class="o">=</span><span class="p">{</span><span class="n">data</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">gaussian_noise</span><span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">]},</span>
+                                   <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Set12&quot;</span><span class="p">)</span>
+<span class="n">datasets</span> <span class="o">=</span> <span class="p">[</span><span class="n">BSD68</span><span class="p">,</span> <span class="n">Set12</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-models">
+<h2>Defining Models<a class="headerlink" href="#defining-models" title="Permalink to this headline">¶</a></h2>
+<p><strong>Deep Learning Models</strong></p>
+<p>In “./Additional Files”, you have at your disposal various pre-trained models. To load them, you only need to specify
+the path to the file containing their architecture/weights. For more details about how the model module works, you can
+look the Model module tutorial.</p>
+<p>Bellow, we charge each model using the respective wrapper class for its framework.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Keras rednet30</span>
+<span class="n">keras_rednet30</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">KerasModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Keras_Rednet30&quot;</span><span class="p">,</span> <span class="n">logdir</span><span class="o">=</span><span class="s2">&quot;../../training_logs/Keras&quot;</span><span class="p">)</span>
+<span class="n">keras_rednet30</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;./Additional Files/Keras Models/rednet30.hdf5&quot;</span><span class="p">)</span>
+
+<span class="c1"># Keras rednet20</span>
+<span class="n">keras_rednet20</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">KerasModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Keras_Rednet20&quot;</span><span class="p">,</span> <span class="n">logdir</span><span class="o">=</span><span class="s2">&quot;../../training_logs/Keras&quot;</span><span class="p">)</span>
+<span class="n">keras_rednet20</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;./Additional Files/Keras Models/rednet20.hdf5&quot;</span><span class="p">)</span>
+
+<span class="c1"># Keras rednet10</span>
+<span class="n">keras_rednet10</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">KerasModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Keras_Rednet10&quot;</span><span class="p">,</span> <span class="n">logdir</span><span class="o">=</span><span class="s2">&quot;../../training_logs/Keras&quot;</span><span class="p">)</span>
+<span class="n">keras_rednet10</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;./Additional Files/Keras Models/rednet10.hdf5&quot;</span><span class="p">)</span>
+
+<span class="c1"># Onnx dncnn from Matlab</span>
+<span class="n">onnx_dncnn</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">OnnxModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Onnx_DnCNN&quot;</span><span class="p">)</span>
+<span class="n">onnx_dncnn</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;./Additional Files/Onnx Models/dncnn.onnx&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Filtering Models</strong></p>
+<p>The specification of filtering models is made the same way. Since these kinds of model do not need to be trained, you
+only need to specify the function that will perform the denoising. Bellow, we specify BM3D implemented on Python through
+Matlab’s engine.</p>
+<p><strong>Note</strong> If you have not installed Matlab support, or have not installed BM3D library from <a class="reference external" href="http://www.cs.tut.fi/~foi/GCF-BM3D/">the author’s website</a>, do not execute the next snippet.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># BM3D from Matlab</span>
+<span class="n">bm3d_filter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">FilteringModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;BM3D_filter&quot;</span><span class="p">)</span>
+<span class="n">bm3d_filter</span><span class="o">.</span><span class="n">charge_model</span><span class="p">(</span><span class="n">model_function</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">filtering</span><span class="o">.</span><span class="n">BM3D</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">25.0</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;np&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>List of Models</strong></p>
+<p>If you have instantiated BM3D model,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="n">bm3d_filter</span><span class="p">,</span> <span class="n">onnx_dncnn</span><span class="p">,</span> <span class="n">keras_rednet10</span><span class="p">,</span> <span class="n">keras_rednet20</span><span class="p">,</span> <span class="n">keras_rednet30</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Otherwise,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="n">onnx_dncnn</span><span class="p">,</span> <span class="n">keras_rednet10</span><span class="p">,</span> <span class="n">keras_rednet20</span><span class="p">,</span> <span class="n">keras_rednet30</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="metrics">
+<h2>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h2>
+<p>Metrics are mathematical functions that allow the assessment of image quality. The <a class="reference internal" href="../evaluation_doc.html#module-evaluation" title="evaluation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">evaluation</span></code></a> module contains
+a list of built-in metrics commonly used on image processing.</p>
+<div class="section" id="mse">
+<h3>MSE<a class="headerlink" href="#mse" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Mean_squared_error">Mean Squared Error</a> metric is a metric used to calculate
+the mean deviation of pixels between two images <span class="math notranslate nohighlight">\(y_{true}\)</span> and <span class="math notranslate nohighlight">\(y_{pred}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[MSE = \dfrac{1}{N \times H \times W \times C}\sum_{n=0}^{N}\sum_{i=0}^{H}\sum_{j=0}^{W}\sum_{k=0}^{C}(y_{true}
+(n, i, j, k)-y_{pred}(n, i, j, k))^{2}\]</div>
+</div>
+<div class="section" id="ssim">
+<h3>SSIM<a class="headerlink" href="#ssim" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Structural_similarity">Structural Similarity Index</a> is a metric that evaluates the
+perceived quality of a given image, with respect to a reference image. Let <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> be image patches,
+the SSIM between them is,</p>
+<div class="math notranslate nohighlight">
+\[SSIM(x, y) = \dfrac{(2\mu_{x}\mu_{y}+C_{1})(2\sigma_{xy}+C_{2})}{(\mu_{x}^{2}+\mu_{y}^{2}+C_{1})(\sigma_{x}^{2}+\sigma_{y}^{2}+C_{2})}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mu_{x}\)</span>, <span class="math notranslate nohighlight">\(\mu_{y}\)</span> are respectively the mean of pixels in each patch.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma_{x}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{y}\)</span> are respectively the variance of pixels in each patch.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma_{xy}\)</span> is the covariance between patches <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(c_{1} = 0.01\)</span>, <span class="math notranslate nohighlight">\(c_{2} = 0.03\)</span></p></li>
+</ul>
+</div>
+<div class="section" id="psnr">
+<h3>PSNR<a class="headerlink" href="#psnr" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio">Peak Signal to Noise Ratio</a> is metric used for measuring
+noise present on signals. Its computation is based on the MSE metric,</p>
+<div class="math notranslate nohighlight">
+\[PSNR(y_{true}, y_{pred}) = 10log_{10}\Bigg(\dfrac{max(y_{true})}{MSE(y_{true}, y_{pred})}\Bigg)\]</div>
+<p>where <span class="math notranslate nohighlight">\(max(y_{true})\)</span> corresponds to the maximum pixel value on <span class="math notranslate nohighlight">\(y_{true}\)</span>.</p>
+</div>
+<div class="section" id="creating-custom-metrics">
+<h3>Creating Custom Metrics<a class="headerlink" href="#creating-custom-metrics" title="Permalink to this headline">¶</a></h3>
+<p>The OpenDenoising benchmark has two types of functions: those that act on symbolic tensors, and those that act on
+actual numeric arrays (from numpy). The backend used to process tensors is Tensorflow, and its functions cannot be called
+directly on <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> objects.</p>
+<p>This introduces a double behavior on Metric functions (those that act upon tensors, and those that act upon arrays). To
+cope with this issue, we propose a class called “Metric”, that wraps tensorflow-based and numpy-based functions,
+handling when to call one or another.</p>
+<p>For evaluation purposes, we only need to specify metrics that process numpy arrays. To define PSNR, SSIM and MSE metrics
+we run the following snippet,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mse_metric</span> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">Metric</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;MSE&quot;</span><span class="p">,</span> <span class="n">np_metric</span><span class="o">=</span><span class="n">evaluation</span><span class="o">.</span><span class="n">skimage_mse</span><span class="p">)</span>
+<span class="n">ssim_metric</span> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">Metric</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SSIM&quot;</span><span class="p">,</span> <span class="n">np_metric</span><span class="o">=</span><span class="n">evaluation</span><span class="o">.</span><span class="n">skimage_ssim</span><span class="p">)</span>
+<span class="n">psnr_metric</span> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">Metric</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;PSNR&quot;</span><span class="p">,</span> <span class="n">np_metric</span><span class="o">=</span><span class="n">evaluation</span><span class="o">.</span><span class="n">skimage_psnr</span><span class="p">)</span>
+
+<span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">mse_metric</span><span class="p">,</span> <span class="n">psnr_metric</span><span class="p">,</span> <span class="n">ssim_metric</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="visualisations">
+<h2>Visualisations<a class="headerlink" href="#visualisations" title="Permalink to this headline">¶</a></h2>
+<p>Visualisations are functions to create plots based on the evaluation results. To define a visualisation you need to
+specify the function to generate the plot, and the use the class <code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.evaluation.Visualisation</span></code> to
+wrap it. The OpenDenoising benchmark provides box plots of default metrics as built-ins options for visualisations,
+as follows,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">boxplot_PSNR</span> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">Visualisation</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">evaluation</span><span class="o">.</span><span class="n">boxplot</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;PSNR&quot;</span><span class="p">),</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Boxplot_PSNR&quot;</span><span class="p">)</span>
+
+<span class="n">boxplot_SSIM</span> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">Visualisation</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">evaluation</span><span class="o">.</span><span class="n">boxplot</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;SSIM&quot;</span><span class="p">),</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Boxplot_SSIM&quot;</span><span class="p">)</span>
+
+<span class="n">boxplot_MSE</span> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">Visualisation</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">evaluation</span><span class="o">.</span><span class="n">boxplot</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;MSE&quot;</span><span class="p">),</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Boxplot_MSE&quot;</span><span class="p">)</span>
+<span class="n">visualisations</span> <span class="o">=</span> <span class="p">[</span><span class="n">boxplot_PSNR</span><span class="p">,</span> <span class="n">boxplot_SSIM</span><span class="p">,</span> <span class="n">boxplot_MSE</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evaluation">
+<h2>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h2>
+<p>To run an evaluation session you need to instantiate the <a class="reference internal" href="../benchmarking_doc.html#OpenDenoising.Benchmark" title="OpenDenoising.Benchmark"><code class="xref py py-class docutils literal notranslate"><span class="pre">OpenDenoising.Benchmark</span></code></a> class, and then register
+the list we have created so far (datasets, models, metrics and visualisations) through the method <em>register</em>, as follows,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">benchmark</span> <span class="o">=</span> <span class="n">Benchmark</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;BSD68_Test12&quot;</span><span class="p">)</span>
+
+<span class="c1"># Register metrics</span>
+<span class="n">benchmark</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+<span class="c1"># Register datasets</span>
+<span class="n">benchmark</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">datasets</span><span class="p">)</span>
+<span class="c1"># Register models</span>
+<span class="n">benchmark</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">models</span><span class="p">)</span>
+<span class="c1"># Register visualisations</span>
+<span class="n">benchmark</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">visualisations</span><span class="p">)</span>
+
+<span class="n">benchmark</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This snippet has as output:</p>
+<img alt="Box plot of PSNR metric." src="../_images/boxplot_PSNR.png" />
+<img alt="Box plot of MSE metric." src="../_images/boxplot_MSE.png" />
+<img alt="Box plot of SSIM metric." src="../_images/boxplot_SSIM.png" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DataTutorial.html" class="btn btn-neutral float-right" title="Example: creating datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

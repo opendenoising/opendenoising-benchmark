@@ -1,0 +1,412 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Benchmark Class &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="evaluation module" href="evaluation_doc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="benchmark_api_doc.html">Benchmark API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="model_doc.html">model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_doc.html">data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_doc.html">evaluation module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Benchmark Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="benchmark_api_doc.html">Benchmark API</a> &raquo;</li>
+        
+      <li>Benchmark Class</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/benchmarking_doc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="module-OpenDenoising">
+<span id="benchmark-class"></span><h1>Benchmark Class<a class="headerlink" href="#module-OpenDenoising" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="OpenDenoising.Benchmark">
+<em class="property">class </em><code class="sig-prename descclassname">OpenDenoising.</code><code class="sig-name descname">Benchmark</code><span class="sig-paren">(</span><em class="sig-param">name='evaluation'</em>, <em class="sig-param">output_dir='./results'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OpenDenoising/benchmark.html#Benchmark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#OpenDenoising.Benchmark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Benchmark class.</p>
+<p>The purpose of this class is to evaluate models on given datasets. The evaluations are registered through the
+function “register_function”. After registering the desired metrics, you can run numeric evaluations through
+“numeric_evaluation”. To further visualize the results, you may also register visualization functions (to generate
+figures) through “register_visualization”. Once you have computed the metrics, you can call “graphic_evaluation”
+to generate the registered plots.</p>
+<dl class="attribute">
+<dt id="OpenDenoising.Benchmark.models">
+<code class="sig-name descname">models</code><a class="headerlink" href="#OpenDenoising.Benchmark.models" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <a class="reference internal" href="model_doc.html#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a> objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpenDenoising.Benchmark.metrics">
+<code class="sig-name descname">metrics</code><a class="headerlink" href="#OpenDenoising.Benchmark.metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of dictionaries holding the following fields,</p>
+<ul class="simple">
+<li><p>Name (str): metric name.</p></li>
+<li><p>Func (<code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code>): function object.</p></li>
+<li><p>Value (list): List of values, one for each file in dataset.</p></li>
+<li><p>Mean (float): Mean of “Values” field.</p></li>
+<li><p>Variance (float): Variance of “Values” field.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpenDenoising.Benchmark.datasets">
+<code class="sig-name descname">datasets</code><a class="headerlink" href="#OpenDenoising.Benchmark.datasets" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <a class="reference internal" href="data_doc.html#data.AbstractDatasetGenerator" title="data.AbstractDatasetGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">data.AbstractDatasetGenerator</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpenDenoising.Benchmark.visualizations">
+<code class="sig-name descname">visualizations</code><a class="headerlink" href="#OpenDenoising.Benchmark.visualizations" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of visualization functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpenDenoising.Benchmark.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#OpenDenoising.Benchmark.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>String holding the identifier of evaluations being performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpenDenoising.Benchmark.output_dir">
+<code class="sig-name descname">output_dir</code><a class="headerlink" href="#OpenDenoising.Benchmark.output_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>String holding the path to the output directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpenDenoising.Benchmark.partial">
+<code class="sig-name descname">partial</code><a class="headerlink" href="#OpenDenoising.Benchmark.partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>DataFrame holding per-file denoising results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpenDenoising.Benchmark.general">
+<code class="sig-name descname">general</code><a class="headerlink" href="#OpenDenoising.Benchmark.general" title="Permalink to this definition">¶</a></dt>
+<dd><p>DataFrame holding aggregates of denoising results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="OpenDenoising.Benchmark.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">name='evaluation'</em>, <em class="sig-param">output_dir='./results'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OpenDenoising/benchmark.html#Benchmark.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#OpenDenoising.Benchmark.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="OpenDenoising.Benchmark.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/OpenDenoising/benchmark.html#Benchmark.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#OpenDenoising.Benchmark.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="OpenDenoising.Benchmark.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/OpenDenoising/benchmark.html#Benchmark.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#OpenDenoising.Benchmark.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the entire evaluation on datasets and models.</p>
+<p>For each pair (model, dataset), runs inference on each dataset image using model. The results are stored
+in a pandas DataFrame, and later written into two csv files:</p>
+<ol class="arabic simple">
+<li><p>(EVALUATION_NAME)/General_Results: contains aggregates (mean and variance of each metric) about the ran tests</p></li>
+<li><p>(EVALUATION_NAME)/Partial_Results: contains the performance of each model on each dataset image.</p></li>
+</ol>
+<dl class="simple">
+<dt>These tables are stored on ‘output_dir’. Moreover, the visual restoration results are stored into</dt><dd><p>‘output_dir/EVALUATION_NAME/RestoredImages’ folder. If you have visualisations registered into your evaluator,
+the plots are saved in ‘output_dir/EVALUATION_NAME/Figures’ folder.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="OpenDenoising.Benchmark.evaluate_model_on_dataset">
+<code class="sig-name descname">evaluate_model_on_dataset</code><span class="sig-paren">(</span><em class="sig-param">denoiser</em>, <em class="sig-param">test_generator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OpenDenoising/benchmark.html#Benchmark.evaluate_model_on_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#OpenDenoising.Benchmark.evaluate_model_on_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates denoiser on dataset represented by test_generator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>denoiser</strong> (<a class="reference internal" href="model_doc.html#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a>) – Denoiser object</p></li>
+<li><p><strong>test_generator</strong> (<a class="reference internal" href="data_doc.html#data.AbstractDatasetGenerator" title="data.AbstractDatasetGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">data.AbstractDatasetGenerator</span></code></a>) – Dataset generator object. It generates data to evaluate the denoiser.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of evaluated metrics.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="OpenDenoising.Benchmark.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param">obj_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OpenDenoising/benchmark.html#Benchmark.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#OpenDenoising.Benchmark.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register datasets, models, metrics or evaluations into Benchmark object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj_list</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) – List of instances of datasets, models, metrics or evaluations to be registered to internal lists.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="OpenDenoising.Benchmark.visualize">
+<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><em class="sig-param">csv_dir</em>, <em class="sig-param">output_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OpenDenoising/benchmark.html#Benchmark.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#OpenDenoising.Benchmark.visualize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot visualizations.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="evaluation_doc.html" class="btn btn-neutral float-left" title="evaluation module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

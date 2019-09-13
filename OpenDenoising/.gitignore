@@ -1,0 +1,7 @@
+# Ignoring python cache files
+data/__pycache__
+data/*/__pycache__
+model/__pycache__
+model/*/__pycache__
+model/*/*/__pycache__
+evaluation/__pycache__

@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>model.matlab_model &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../benchmark_api_doc.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>model.matlab_model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for model.matlab_model</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Copyright or © or Copr. IETR/INSA Rennes (2019)</span>
+<span class="c1">#</span>
+<span class="c1">#Contributors :</span>
+<span class="c1">#    Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)</span>
+<span class="c1">#    Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#OpenDenoising is a computer program whose purpose is to benchmark image</span>
+<span class="c1">#restoration algorithms.</span>
+<span class="c1">#</span>
+<span class="c1">#This software is governed by the CeCILL-C license under French law and</span>
+<span class="c1">#abiding by the rules of distribution of free software. You can  use,</span>
+<span class="c1">#modify and/ or redistribute the software under the terms of the CeCILL-C</span>
+<span class="c1">#license as circulated by CEA, CNRS and INRIA at the following URL</span>
+<span class="c1">#&quot;http://www.cecill.info&quot;.</span>
+<span class="c1">#</span>
+<span class="c1">#As a counterpart to the access to the source code and rights to copy,</span>
+<span class="c1">#modify and redistribute granted by the license, users are provided only</span>
+<span class="c1">#with a limited warranty  and the software&#39;s author, the holder of the</span>
+<span class="c1">#economic rights, and the successive licensors have only  limited</span>
+<span class="c1">#liability.</span>
+<span class="c1">#</span>
+<span class="c1">#In this respect, the user&#39;s attention is drawn to the risks associated</span>
+<span class="c1">#with loading, using, modifying and/or developing or reproducing the</span>
+<span class="c1">#software by the user in light of its specific status of free software,</span>
+<span class="c1">#that may mean  that it is complicated to manipulate,  and  that  also</span>
+<span class="c1">#therefore means  that it is reserved for developers  and  experienced</span>
+<span class="c1">#professionals having in-depth computer knowledge. Users are therefore</span>
+<span class="c1">#encouraged to load and test the software&#39;s suitability as regards their</span>
+<span class="c1">#requirements in conditions enabling the security of their systems and/or</span>
+<span class="c1">#data to be ensured and, more generally, to use and operate it in the</span>
+<span class="c1">#same conditions as regards security.</span>
+<span class="c1">#</span>
+<span class="c1">#The fact that you are presently reading this means that you have had</span>
+<span class="c1">#knowledge of the CeCILL-C license and that you accept its terms.</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">matlab.engine</span> <span class="k">import</span> <span class="n">EngineError</span>
+<span class="kn">from</span> <span class="nn">matlab.engine</span> <span class="k">import</span> <span class="n">MatlabExecutionError</span>
+<span class="kn">from</span> <span class="nn">OpenDenoising.model</span> <span class="k">import</span> <span class="n">module_logger</span>
+<span class="kn">from</span> <span class="nn">OpenDenoising.model</span> <span class="k">import</span> <span class="n">AbstractDeepLearningModel</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matlab.engine</span>
+    <span class="n">MATLAB_IMPORTED</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="n">module_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Matlab engine was not installed correctly. Take a look on the documentation&#39;s tutorial for </span><span class="se">\</span>
+<span class="s2">                          its installation.&quot;</span><span class="p">)</span>
+    <span class="n">MATLAB_IMPORTED</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">kwargs_to_string</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">argname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;, </span><span class="si">{}</span><span class="s2">,&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">argname</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">argname</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">argname</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">argname</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">string</span>
+
+
+<div class="viewcode-block" id="MatlabModel"><a class="viewcode-back" href="../../model_doc.html#model.MatlabModel">[docs]</a><span class="k">class</span> <span class="nc">MatlabModel</span><span class="p">(</span><span class="n">AbstractDeepLearningModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Matlab Deep Learning toolbox wrapper class.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To use this class you need a Matlab license with access to the Deep Learning toolbox.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logdir : str</span>
+<span class="sd">        Path to the directory where training logs will be saved.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`model.AbstractDenoiser` : for the basic functionalities of Image Denoisers.</span>
+<span class="sd">    :class:`model.AbstractDeepLearningModel` : for the basic functionalities of Deep Learning based Denoisers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="MatlabModel.__init__"><a class="viewcode-back" href="../../model_doc.html#model.MatlabModel.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;MatlabModel&quot;</span><span class="p">,</span> <span class="n">logdir</span><span class="o">=</span><span class="s2">&quot;./logs/Matlab&quot;</span><span class="p">,</span> <span class="n">return_diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">matlab</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">start_matlab</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">EngineError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">module_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Matlab license error. Make sure you have a valid Matlab license.&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">license</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;neural_network_toolbox&#39;</span><span class="p">),</span> <span class="s2">&quot;Expected Neural Network Toolbox to be installed.&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">framework</span><span class="o">=</span><span class="s2">&quot;Matlab&quot;</span><span class="p">,</span> <span class="n">return_diff</span><span class="o">=</span><span class="n">return_diff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logdir</span> <span class="o">=</span> <span class="n">logdir</span></div>
+
+<div class="viewcode-block" id="MatlabModel.charge_model"><a class="viewcode-back" href="../../model_doc.html#model.MatlabModel.charge_model">[docs]</a>    <span class="k">def</span> <span class="nf">charge_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;MatlabModel model charging functions</span>
+
+<span class="sd">        This function works by using Matlab&#39;s Python engine to make Matlab internal calls. You can either specify the</span>
+<span class="sd">        path to a Matlab function that will build the model, or to a .mat file holding the pretrained model.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        You may specify optional arguments to the model building function through keyword arguments.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model_function : str</span>
+<span class="sd">            String containing the path to the matlab .m function that will build the model. Note that this function</span>
+<span class="sd">            should return a list of layers.</span>
+<span class="sd">        model_path : str</span>
+<span class="sd">            String containing the path to the .mat file holding the trained network object.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        `Matlab Deep Learning Toolbox documentation</span>
+<span class="sd">        &lt;https://mathworks.com/products/deep-learning.html&gt;`_.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">model_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;You should provide at least a model_function</span><span class="se">\</span>
+<span class="s2">                                                                        or a model_path to build your neural network</span><span class="se">\</span>
+<span class="s2">                                                                        model&quot;</span>
+        <span class="k">if</span> <span class="n">model_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_function</span> <span class="o">=</span> <span class="n">model_function</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="n">model_function_path</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_function</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">function_filename</span> <span class="o">=</span> <span class="n">model_function</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">function_filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">addpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model_function_path</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">function_filename</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Function </span><span class="si">{}</span><span class="s2"> is not in PATH&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_function</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">evalc</span><span class="p">(</span><span class="s2">&quot;layers = </span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">);&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">kwargs_to_string</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="n">model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">evalc</span><span class="p">(</span><span class="s2">&quot;load(&#39;</span><span class="si">{}</span><span class="s2">&#39;);&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MatlabModel.train"><a class="viewcode-back" href="../../model_doc.html#model.MatlabModel.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_epochs</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">n_stages</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+              <span class="n">optimizer_name</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">valid_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trains a Matlab denoiser model.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Instead of using Clean/Full/Blind dataset Python classes, you should use the class MatlabDatasetWrapper,</span>
+<span class="sd">        which exports a dataset to matlab workspace.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_generator : str</span>
+<span class="sd">            Name of the matlab imageDatastore variable (for instance, if you have train_imds in your workspace you</span>
+<span class="sd">            should pass &#39;train_imds&#39; for train_generator).</span>
+<span class="sd">        valid_generator : str</span>
+<span class="sd">            Name of the matlab imageDatastore variable (for instance, if you have train_imds in your workspace you</span>
+<span class="sd">            should pass &#39;valid_imds&#39; for valid_generator).</span>
+<span class="sd">        n_epochs : int</span>
+<span class="sd">            Number of training epochs.</span>
+<span class="sd">        n_stages : int</span>
+<span class="sd">            Number of image batches are drawn during a training epoch.</span>
+<span class="sd">        learning_rate : float</span>
+<span class="sd">            Initial value for learning rate value for optimization.</span>
+<span class="sd">        optimizer_name : str</span>
+<span class="sd">            One among {&#39;sgdm&#39;, &#39;adam&#39;, &#39;rmsprop&#39;}</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :class:`data.MatlabDatasetWrapper` : for the class providing data to train such kinds of models.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">optimizer_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sgdm&#39;</span><span class="p">,</span> <span class="s1">&#39;adam&#39;</span><span class="p">,</span> <span class="s1">&#39;rmsprop&#39;</span><span class="p">],</span> <span class="s2">&quot;Expected optimizer_name to be in </span><span class="si">{}</span><span class="s2">, but got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;sgdm&#39;</span><span class="p">,</span> <span class="s1">&#39;adam&#39;</span><span class="p">,</span> <span class="s1">&#39;rmsprop&#39;</span><span class="p">],</span> <span class="n">optimizer_name</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">optimizer_name</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">optimizer_name</span> <span class="o">=</span> <span class="s2">&quot;adam&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">workspace</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_generator</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">MatlabExecutionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MatlabExecutionError</span><span class="p">(</span><span class="s2">&quot;Variable </span><span class="si">{}</span><span class="s2"> is not in Matlab&#39;s workspace.&quot;</span>\
+                                       <span class="s2">&quot;Workspace:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">workspace</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">valid_generator</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;opts = trainingOptions(&#39;</span><span class="si">{}</span><span class="s2">&#39;, </span><span class="si">{}</span><span class="s2">);&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">optimizer_name</span><span class="p">,</span> <span class="n">kwargs_to_string</span><span class="p">(</span>
+                <span class="n">Plots</span><span class="o">=</span><span class="s2">&quot;&#39;training-progress&#39;&quot;</span><span class="p">,</span> <span class="n">Verbose</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="n">VerboseFrequency</span><span class="o">=</span><span class="n">n_stages</span><span class="p">,</span>
+                <span class="n">MaxEpochs</span><span class="o">=</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">Shuffle</span><span class="o">=</span><span class="s2">&quot;&#39;every-epoch&#39;&quot;</span><span class="p">,</span> <span class="n">ValidationData</span><span class="o">=</span><span class="s2">&quot;valid_imds&quot;</span><span class="p">,</span>
+                <span class="n">CheckpointPath</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logdir</span><span class="p">)</span>
+            <span class="p">)))</span>
+            <span class="c1"># Adds datasets to workspace</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">evalc</span><span class="p">(</span><span class="s2">&quot;opts = trainingOptions(&#39;</span><span class="si">{}</span><span class="s2">&#39;, </span><span class="si">{}</span><span class="s2">);&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">optimizer_name</span><span class="p">,</span> <span class="n">kwargs_to_string</span><span class="p">(</span>
+                <span class="n">Plots</span><span class="o">=</span><span class="s2">&quot;&#39;training-progress&#39;&quot;</span><span class="p">,</span> <span class="n">Verbose</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="n">VerboseFrequency</span><span class="o">=</span><span class="n">n_stages</span><span class="p">,</span>
+                <span class="n">MaxEpochs</span><span class="o">=</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">Shuffle</span><span class="o">=</span><span class="s2">&quot;&#39;every-epoch&#39;&quot;</span><span class="p">,</span> <span class="n">ValidationData</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
+                <span class="n">CheckpointPath</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logdir</span><span class="p">)</span>
+            <span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">evalc</span><span class="p">(</span><span class="s2">&quot;opts = trainingOptions(&#39;</span><span class="si">{}</span><span class="s2">&#39;, </span><span class="si">{}</span><span class="s2">);&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">optimizer_name</span><span class="p">,</span> <span class="n">kwargs_to_string</span><span class="p">(</span>
+                <span class="n">Plots</span><span class="o">=</span><span class="s2">&quot;&#39;training-progress&#39;&quot;</span><span class="p">,</span> <span class="n">Verbose</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="n">VerboseFrequency</span><span class="o">=</span><span class="n">n_stages</span><span class="p">,</span>
+                <span class="n">MaxEpochs</span><span class="o">=</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">Shuffle</span><span class="o">=</span><span class="s2">&quot;&#39;every-epoch&#39;&quot;</span><span class="p">,</span> <span class="n">CheckpointPath</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logdir</span><span class="p">)</span>
+            <span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">evalc</span><span class="p">(</span><span class="s2">&quot;net = trainNetwork(</span><span class="si">{}</span><span class="s2">, layers, opts)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_generator</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">evalc</span><span class="p">(</span><span class="s2">&quot;save(&#39;</span><span class="si">{}</span><span class="s2">.mat&#39;, &#39;net&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MatlabModel.__call__"><a class="viewcode-back" href="../../model_doc.html#model.MatlabModel.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Denoises a batch of images.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        To perform inference on MatlabModels, you need to have a variable on Matlab&#39;s workspace called &#39;net&#39;. This</span>
+<span class="sd">        variable is the output of a training session, or the result of a load(&#39;obj&#39;).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        image: :class:`numpy.ndarray`</span>
+<span class="sd">            4D batch of noised images. It has shape: (batch_size, height, width, channels)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`numpy.ndarray`:</span>
+<span class="sd">            Restored batch of images, with same shape as the input.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+            <span class="c1"># Matlab&#39;s convention: height x width x channels x batch_size</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+            <span class="c1"># Matlab&#39;s convention: height x width x channels x batch_size</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># Copy data into Matlab&#39;s workspace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">workspace</span><span class="p">[</span><span class="s1">&#39;Xbatch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matlab</span><span class="o">.</span><span class="n">double</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="c1"># Denoises data using net object.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">evalc</span><span class="p">(</span><span class="s2">&quot;predicted_image = denoiseImage(Xbatch, net);&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_diff</span><span class="p">:</span>
+            <span class="c1"># Returns difference between predicted image and input image.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">evalc</span><span class="p">(</span><span class="s2">&quot;predicted_image = Xbatch - predicted_image;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">workspace</span><span class="p">[</span><span class="s1">&#39;predicted_image&#39;</span><span class="p">]),</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="MatlabModel.__len__"><a class="viewcode-back" href="../../model_doc.html#model.MatlabModel.__len__">[docs]</a>    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Counts the number of parameters in the networks.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nparams : int</span>
+<span class="sd">            Number of parameters in the network.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_params</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">eng</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;length(net)&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;Convolution2DLayer&#39;</span> <span class="ow">in</span> <span class="n">eng</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;class(net.Layers(</span><span class="si">{}</span><span class="s2">))&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)):</span>
+                <span class="n">n_params</span> <span class="o">+=</span> <span class="n">eng</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;prod(size(net.Layers(</span><span class="si">{}</span><span class="s2">).Weights)) + prod(size(net.Layers(</span><span class="si">{}</span><span class="s2">).Bias))&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span>
+                                                                                                                   <span class="n">i</span><span class="p">))</span>
+            <span class="k">if</span> <span class="s1">&#39;BatchNormalizationLayer&#39;</span> <span class="ow">in</span> <span class="n">eng</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;class(net.Layers(</span><span class="si">{}</span><span class="s2">))&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)):</span>
+                <span class="n">n_params</span> <span class="o">+=</span> <span class="n">eng</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;prod(size(net.Layers(</span><span class="si">{}</span><span class="s2">).Offset)) + prod(size(net.Layers(</span><span class="si">{}</span><span class="s2">).Scale))&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span>
+                                                                                                                   <span class="n">i</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

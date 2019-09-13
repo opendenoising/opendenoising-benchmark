@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>data.utils.corrupt &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation guide.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark_api_doc.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>data.utils.corrupt</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for data.utils.corrupt</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Copyright or © or Copr. IETR/INSA Rennes (2019)</span>
+<span class="c1">#</span>
+<span class="c1">#Contributors :</span>
+<span class="c1">#    Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)</span>
+<span class="c1">#    Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#OpenDenoising is a computer program whose purpose is to benchmark image</span>
+<span class="c1">#restoration algorithms.</span>
+<span class="c1">#</span>
+<span class="c1">#This software is governed by the CeCILL-C license under French law and</span>
+<span class="c1">#abiding by the rules of distribution of free software. You can  use,</span>
+<span class="c1">#modify and/ or redistribute the software under the terms of the CeCILL-C</span>
+<span class="c1">#license as circulated by CEA, CNRS and INRIA at the following URL</span>
+<span class="c1">#&quot;http://www.cecill.info&quot;.</span>
+<span class="c1">#</span>
+<span class="c1">#As a counterpart to the access to the source code and rights to copy,</span>
+<span class="c1">#modify and redistribute granted by the license, users are provided only</span>
+<span class="c1">#with a limited warranty  and the software&#39;s author, the holder of the</span>
+<span class="c1">#economic rights, and the successive licensors have only  limited</span>
+<span class="c1">#liability.</span>
+<span class="c1">#</span>
+<span class="c1">#In this respect, the user&#39;s attention is drawn to the risks associated</span>
+<span class="c1">#with loading, using, modifying and/or developing or reproducing the</span>
+<span class="c1">#software by the user in light of its specific status of free software,</span>
+<span class="c1">#that may mean  that it is complicated to manipulate,  and  that  also</span>
+<span class="c1">#therefore means  that it is reserved for developers  and  experienced</span>
+<span class="c1">#professionals having in-depth computer knowledge. Users are therefore</span>
+<span class="c1">#encouraged to load and test the software&#39;s suitability as regards their</span>
+<span class="c1">#requirements in conditions enabling the security of their systems and/or</span>
+<span class="c1">#data to be ensured and, more generally, to use and operate it in the</span>
+<span class="c1">#same conditions as regards security.</span>
+<span class="c1">#</span>
+<span class="c1">#The fact that you are presently reading this means that you have had</span>
+<span class="c1">#knowledge of the CeCILL-C license and that you accept its terms.</span>
+
+
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">skimage.util.noise</span> <span class="k">import</span> <span class="n">random_noise</span>
+
+<span class="n">RANDOM_SEED</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">RANDOM_SEED</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="gaussian_noise"><a class="viewcode-back" href="../../../data_doc.html#data.gaussian_noise">[docs]</a><span class="k">def</span> <span class="nf">gaussian_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gaussian noise</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Image to be noised.</span>
+<span class="sd">    noise_level : :class:`numpy.ndarray`</span>
+<span class="sd">        Level of corruption. Always give the noise_level in terms of 0-255 pixel intensity range.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">random_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="p">(</span><span class="n">noise_level</span> <span class="o">/</span> <span class="mi">255</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;Shape mismatch between input (</span><span class="si">{}</span><span class="s2">) and output (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inp</span></div>
+
+
+<div class="viewcode-block" id="poisson_noise"><a class="viewcode-back" href="../../../data_doc.html#data.poisson_noise">[docs]</a><span class="k">def</span> <span class="nf">poisson_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Poisson noise</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Image to be noised.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">random_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;poisson&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">RANDOM_SEED</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;Shape mismatch between input (</span><span class="si">{}</span><span class="s2">) and output (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inp</span></div>
+
+
+<div class="viewcode-block" id="salt_and_pepper_noise"><a class="viewcode-back" href="../../../data_doc.html#data.salt_and_pepper_noise">[docs]</a><span class="k">def</span> <span class="nf">salt_and_pepper_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Salt and pepper noise</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Image to be noised.</span>
+<span class="sd">    noise_level : :class:`numpy.ndarray`</span>
+<span class="sd">        Percentage of perturbed pixels.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">noise_level</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">noise_level</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">&quot;Expected noise_level to be a percentage,&quot;</span> \
+                                                    <span class="s2">&quot;but got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">noise_level</span><span class="p">)</span>
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">random_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;s&amp;p&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">RANDOM_SEED</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">noise_level</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;Shape mismatch between input (</span><span class="si">{}</span><span class="s2">) and output (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inp</span></div>
+
+
+<div class="viewcode-block" id="speckle_noise"><a class="viewcode-back" href="../../../data_doc.html#data.speckle_noise">[docs]</a><span class="k">def</span> <span class="nf">speckle_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Speckle noise</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Image to be noised.</span>
+<span class="sd">    noise_level : :class:`numpy.ndarray`</span>
+<span class="sd">        Percentage of perturbed pixels.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">random_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;speckle&#39;</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">noise_level</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;Shape mismatch between input (</span><span class="si">{}</span><span class="s2">) and output (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inp</span></div>
+
+
+<div class="viewcode-block" id="super_resolution_noise"><a class="viewcode-back" href="../../../data_doc.html#data.super_resolution_noise">[docs]</a><span class="k">def</span> <span class="nf">super_resolution_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Noise due to down-sampling followed by up-sampling an image</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Image to be noised.</span>
+<span class="sd">    noise_level : :class:`numpy.ndarray`</span>
+<span class="sd">        scaling factor. For instance, for an image (512, 512), a factor 2 down-samples the image to (256, 256), then</span>
+<span class="sd">        up-samples it again to (512, 512).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">downsampled_image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="p">(</span><span class="n">h</span> <span class="o">//</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">w</span> <span class="o">//</span> <span class="n">noise_level</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_CUBIC</span><span class="p">)</span>
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">downsampled_image</span><span class="p">,</span> <span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_CUBIC</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;Shape mismatch between input (</span><span class="si">{}</span><span class="s2">) and output (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inp</span></div>
+
+
+<span class="k">def</span> <span class="nf">gaussian_blind_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">noise_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise_max</span><span class="o">=</span><span class="mi">55</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Corruption for Blind Denoising adopted on DnCNN paper.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Image to be noised.</span>
+<span class="sd">    noise_min : float</span>
+<span class="sd">        Minimum value for :math:`\sigma` parameter of gaussian noise. It should be specified as if images had range</span>
+<span class="sd">        0-255.</span>
+<span class="sd">    noise_max : float</span>
+<span class="sd">        Maximum value for :math:`\sigma` parameter of gaussian noise. It should be specified as if images had range</span>
+<span class="sd">        0-255.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">noise_min</span><span class="p">,</span> <span class="n">noise_max</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gaussian_noise</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">jpeg_artifacts</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">compression_rate</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Introduce JPEG artifacts through JPEG compression.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Image to be noised. ref should be a 3D array (height, width, channel) of float dtype (range 0-1).</span>
+<span class="sd">    compression_rate : int</span>
+<span class="sd">        Compression percentage. Should be an integer between 0 and 100.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;float32&#39;</span><span class="p">,</span> <span class="s1">&#39;float64&#39;</span><span class="p">]),</span> <span class="s2">&quot;Expected reference array to be float32 or float64,&quot;</span> \
+                                                  <span class="s2">&quot;but got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">compression_rate</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">),</span> <span class="s2">&quot;Expected compression_rate to be between 0 and 100,&quot;</span> \
+                                         <span class="s2">&quot; but got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">compression_rate</span><span class="p">)</span>
+    <span class="c1"># Converts image to uint8</span>
+    <span class="n">_img</span> <span class="o">=</span> <span class="p">(</span><span class="n">ref</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span>
+    <span class="c1"># Performs compression</span>
+    <span class="n">result</span><span class="p">,</span> <span class="n">encimg</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imencode</span><span class="p">(</span><span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="n">_img</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">IMWRITE_JPEG_QUALITY</span><span class="p">),</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">compression_rate</span><span class="p">])</span>
+    <span class="c1"># Decodes image</span>
+    <span class="n">decimg</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imdecode</span><span class="p">(</span><span class="n">encimg</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Converts decimg to float</span>
+    <span class="n">decimg</span> <span class="o">=</span> <span class="n">decimg</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span>
+
+    <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">decimg</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">decimg</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">decimg</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>data.full_dataset &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../benchmark_api_doc.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>data.full_dataset</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for data.full_dataset</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Copyright or © or Copr. IETR/INSA Rennes (2019)</span>
+<span class="c1">#</span>
+<span class="c1">#Contributors :</span>
+<span class="c1">#    Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)</span>
+<span class="c1">#    Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#OpenDenoising is a computer program whose purpose is to benchmark image</span>
+<span class="c1">#restoration algorithms.</span>
+<span class="c1">#</span>
+<span class="c1">#This software is governed by the CeCILL-C license under French law and</span>
+<span class="c1">#abiding by the rules of distribution of free software. You can  use,</span>
+<span class="c1">#modify and/ or redistribute the software under the terms of the CeCILL-C</span>
+<span class="c1">#license as circulated by CEA, CNRS and INRIA at the following URL</span>
+<span class="c1">#&quot;http://www.cecill.info&quot;.</span>
+<span class="c1">#</span>
+<span class="c1">#As a counterpart to the access to the source code and rights to copy,</span>
+<span class="c1">#modify and redistribute granted by the license, users are provided only</span>
+<span class="c1">#with a limited warranty  and the software&#39;s author, the holder of the</span>
+<span class="c1">#economic rights, and the successive licensors have only  limited</span>
+<span class="c1">#liability.</span>
+<span class="c1">#</span>
+<span class="c1">#In this respect, the user&#39;s attention is drawn to the risks associated</span>
+<span class="c1">#with loading, using, modifying and/or developing or reproducing the</span>
+<span class="c1">#software by the user in light of its specific status of free software,</span>
+<span class="c1">#that may mean  that it is complicated to manipulate,  and  that  also</span>
+<span class="c1">#therefore means  that it is reserved for developers  and  experienced</span>
+<span class="c1">#professionals having in-depth computer knowledge. Users are therefore</span>
+<span class="c1">#encouraged to load and test the software&#39;s suitability as regards their</span>
+<span class="c1">#requirements in conditions enabling the security of their systems and/or</span>
+<span class="c1">#data to be ensured and, more generally, to use and operate it in the</span>
+<span class="c1">#same conditions as regards security.</span>
+<span class="c1">#</span>
+<span class="c1">#The fact that you are presently reading this means that you have had</span>
+<span class="c1">#knowledge of the CeCILL-C license and that you accept its terms.</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">skimage.io</span> <span class="k">import</span> <span class="n">imread</span>
+<span class="kn">from</span> <span class="nn">skimage.color</span> <span class="k">import</span> <span class="n">rgb2gray</span>
+<span class="kn">from</span> <span class="nn">skimage.util</span> <span class="k">import</span> <span class="n">img_as_float32</span>
+<span class="kn">from</span> <span class="nn">OpenDenoising.data</span> <span class="k">import</span> <span class="n">module_logger</span>
+<span class="kn">from</span> <span class="nn">OpenDenoising.data</span> <span class="k">import</span> <span class="n">AbstractDatasetGenerator</span>
+
+
+<div class="viewcode-block" id="FullDatasetGenerator"><a class="viewcode-back" href="../../data_doc.html#data.FullDatasetGenerator">[docs]</a><span class="k">class</span> <span class="nc">FullDatasetGenerator</span><span class="p">(</span><span class="n">AbstractDatasetGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dataset generator based on Keras library. This class is used for non-blind denoising problems. Unlike</span>
+<span class="sd">    ClenDatasetGenerator class, this class corresponds to the case where both clean and noisy samples are available and</span>
+<span class="sd">    paired (for each noisy image, there is one and only one clean image with same filename).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        String containing the path to image files directory.</span>
+<span class="sd">    batch_size : int</span>
+<span class="sd">        Size of image batch.</span>
+<span class="sd">    n_channels : int</span>
+<span class="sd">        1 for grayscale, 3 for RGB.</span>
+<span class="sd">    shuffle : bool</span>
+<span class="sd">        Whether to shuffle the dataset at each epoch or not.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        String containing the dataset&#39;s name.</span>
+<span class="sd">    preprocessing : list</span>
+<span class="sd">        List of preprocessing functions, which will be applied to each image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="FullDatasetGenerator.__init__"><a class="viewcode-back" href="../../data_doc.html#data.FullDatasetGenerator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FullDataset&quot;</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">preprocessing</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">=</span> <span class="n">n_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">preprocessing</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">preprocessing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_epoch_end</span><span class="p">()</span>
+        <span class="n">module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating data from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="FullDatasetGenerator.__getitem__"><a class="viewcode-back" href="../../data_doc.html#data.FullDatasetGenerator.__getitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate batches of data &quot;&quot;&quot;</span>
+        <span class="c1"># Get batch_filenames</span>
+        <span class="n">batch_filenames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">]</span>
+        <span class="n">module_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">{}</span><span class="s2">] Got following batch names: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_filenames</span><span class="p">))</span>
+        <span class="c1"># Get data batches</span>
+        <span class="n">inp</span><span class="p">,</span> <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data_generation</span><span class="p">(</span><span class="n">batch_filenames</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">inp</span><span class="p">,</span> <span class="n">ref</span></div>
+
+    <span class="k">def</span> <span class="nf">__data_generation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_filenames</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Data generation method</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        batch_filenames : list</span>
+<span class="sd">            List of strings containing filenames to read. Note that, for each noisy image filename there must be a clean</span>
+<span class="sd">            image with same filename.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        noisy_batch : :class:`numpy.ndarray`</span>
+<span class="sd">            Batch of noisy images.</span>
+<span class="sd">        clean_batch : :class:`numpy.ndarray`</span>
+<span class="sd">            Batch of reference images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Noised image and ground truth initialization</span>
+        <span class="n">ref_batch</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">inp_batch</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">batch_filenames</span><span class="p">:</span>
+            <span class="c1"># Compose path</span>
+            <span class="n">clean_filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">noisy_filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;ref&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="c1"># Read images</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">clean_filepath</span><span class="p">)</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">img_as_float32</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+            <span class="n">inp</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">noisy_filepath</span><span class="p">)</span>
+            <span class="n">inp</span> <span class="o">=</span> <span class="n">img_as_float32</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected </span><span class="si">{}</span><span class="s2"> to have same shape of </span><span class="si">{}</span><span class="s2">, but got </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">clean_filepath</span><span class="p">,</span>
+                                                                                                  <span class="n">noisy_filepath</span><span class="p">,</span>
+                                                                                                  <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="c1"># Corrects shape of reference</span>
+            <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Converts RGB to Gray</span>
+                <span class="n">ref</span> <span class="o">=</span> <span class="n">rgb2gray</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Expand last dim if image is grayscale</span>
+                <span class="n">ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ref</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected RGB image but got Grayscale (image shape: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+            <span class="c1"># Corrects shape of input image</span>
+            <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Converts RGB to Gray</span>
+                <span class="n">inp</span> <span class="o">=</span> <span class="n">rgb2gray</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Expand last dim if image is grayscale</span>
+                <span class="n">inp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">inp</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected RGB image but got Grayscale (image shape: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+            <span class="c1"># Apply preprocessing functions</span>
+            <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing</span><span class="p">:</span>
+                <span class="n">inp</span><span class="p">,</span> <span class="n">ref</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+
+            <span class="c1"># Append images to lists</span>
+            <span class="n">ref_batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+            <span class="n">inp_batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+        <span class="n">ref_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_batch</span><span class="p">)</span>
+        <span class="n">inp_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inp_batch</span><span class="p">)</span>
+        <span class="n">module_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Data shape: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">ref_batch</span><span class="p">,</span> <span class="n">inp_batch</span>
+
+<div class="viewcode-block" id="FullDatasetGenerator.__next__"><a class="viewcode-back" href="../../data_doc.html#data.FullDatasetGenerator.__next__">[docs]</a>    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns image batches sequentially.&quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">input_batch</span><span class="p">,</span> <span class="n">output_batch</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">input_batch</span><span class="p">,</span> <span class="n">output_batch</span></div>
+
+<div class="viewcode-block" id="FullDatasetGenerator.__repr__"><a class="viewcode-back" href="../../data_doc.html#data.FullDatasetGenerator.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Dataset name: </span><span class="si">{}</span><span class="s2">, Dataset type: </span><span class="si">{}</span><span class="s2">, Path: </span><span class="si">{}</span><span class="s2">, &quot;</span> \
+               <span class="s2">&quot;Batch Size: </span><span class="si">{}</span><span class="s2">, preprocessing: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Full&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

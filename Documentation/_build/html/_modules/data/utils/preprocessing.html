@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>data.utils.preprocessing &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation guide.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark_api_doc.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>data.utils.preprocessing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for data.utils.preprocessing</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Copyright or © or Copr. IETR/INSA Rennes (2019)</span>
+<span class="c1">#</span>
+<span class="c1">#Contributors :</span>
+<span class="c1">#    Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)</span>
+<span class="c1">#    Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#OpenDenoising is a computer program whose purpose is to benchmark image</span>
+<span class="c1">#restoration algorithms.</span>
+<span class="c1">#</span>
+<span class="c1">#This software is governed by the CeCILL-C license under French law and</span>
+<span class="c1">#abiding by the rules of distribution of free software. You can  use,</span>
+<span class="c1">#modify and/ or redistribute the software under the terms of the CeCILL-C</span>
+<span class="c1">#license as circulated by CEA, CNRS and INRIA at the following URL</span>
+<span class="c1">#&quot;http://www.cecill.info&quot;.</span>
+<span class="c1">#</span>
+<span class="c1">#As a counterpart to the access to the source code and rights to copy,</span>
+<span class="c1">#modify and redistribute granted by the license, users are provided only</span>
+<span class="c1">#with a limited warranty  and the software&#39;s author, the holder of the</span>
+<span class="c1">#economic rights, and the successive licensors have only  limited</span>
+<span class="c1">#liability.</span>
+<span class="c1">#</span>
+<span class="c1">#In this respect, the user&#39;s attention is drawn to the risks associated</span>
+<span class="c1">#with loading, using, modifying and/or developing or reproducing the</span>
+<span class="c1">#software by the user in light of its specific status of free software,</span>
+<span class="c1">#that may mean  that it is complicated to manipulate,  and  that  also</span>
+<span class="c1">#therefore means  that it is reserved for developers  and  experienced</span>
+<span class="c1">#professionals having in-depth computer knowledge. Users are therefore</span>
+<span class="c1">#encouraged to load and test the software&#39;s suitability as regards their</span>
+<span class="c1">#requirements in conditions enabling the security of their systems and/or</span>
+<span class="c1">#data to be ensured and, more generally, to use and operate it in the</span>
+<span class="c1">#same conditions as regards security.</span>
+<span class="c1">#</span>
+<span class="c1">#The fact that you are presently reading this means that you have had</span>
+<span class="c1">#knowledge of the CeCILL-C license and that you accept its terms.</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">OpenDenoising.data</span> <span class="k">import</span> <span class="n">module_logger</span>
+
+
+<span class="k">def</span> <span class="nf">clip_batch</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minrange</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxrange</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Clips a batch of images, so that all pixels with values less than minrange are set to minrange, and all above</span>
+<span class="sd">    maxrange at set to maxrange.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        4D Batch of images with shape (batch_size, height, width, channels)</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        4D Batch of images with shape (batch_size, height, width, channels)</span>
+<span class="sd">    minrange : float</span>
+<span class="sd">        Lower bound of pixel interval.</span>
+<span class="sd">    maxrange : float</span>
+<span class="sd">        Upper bound of pixel interval.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">minrange</span><span class="p">,</span> <span class="n">maxrange</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">minrange</span><span class="p">,</span> <span class="n">maxrange</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">minrange</span><span class="p">,</span> <span class="n">maxrange</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">normalize_batch</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minrange</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxrange</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Normalizes each pixel of a 4D batch of images in the range [minrange, maxrange].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        4D Batch of images with shape (batch_size, height, width, channels)</span>
+<span class="sd">    minrange : float</span>
+<span class="sd">        Lower bound of pixel interval.</span>
+<span class="sd">    maxrange : float</span>
+<span class="sd">        Upper bound of pixel interval.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+    <span class="n">_inp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">_inp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_ref</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">maxrange</span> <span class="o">-</span> <span class="n">minrange</span><span class="p">)</span> <span class="o">*</span> <span class="n">_inp</span> <span class="o">+</span> <span class="n">minrange</span><span class="p">,</span> <span class="p">(</span><span class="n">maxrange</span> <span class="o">-</span> <span class="n">minrange</span><span class="p">)</span> <span class="o">*</span> <span class="n">_ref</span> <span class="o">+</span> <span class="n">minrange</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">maxrange</span> <span class="o">-</span> <span class="n">minrange</span><span class="p">)</span> <span class="o">*</span> <span class="n">_inp</span> <span class="o">+</span> <span class="n">minrange</span>
+
+
+<div class="viewcode-block" id="dncnn_augmentation"><a class="viewcode-back" href="../../../data_doc.html#data.dncnn_augmentation">[docs]</a><span class="k">def</span> <span class="nf">dncnn_augmentation</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aug_times</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">channels_first</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Data augmentation policy employed on DnCNN</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image.</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Ground-truth images.</span>
+<span class="sd">    aug_times : int</span>
+<span class="sd">        Number of times augmentation if applied.</span>
+<span class="sd">    channels_first : boo</span>
+<span class="sd">        Whether data is formatted as NCHW (True) or NHWC (False).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Augmented noised images</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Augmented ground-truth images</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_inp</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">_ref</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">copy</span> <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;Expected 4D input, but got </span><span class="si">{}</span><span class="s2">D&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;Expected 4D reference, but got </span><span class="si">{}</span><span class="s2">D&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="n">inp_aug</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ref_aug</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">if</span> <span class="n">channels_first</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">aug_times</span><span class="p">):</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># No augmentation</span>
+            <span class="n">inp_aug</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ref_aug</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Flip image over the x axis (up-down)</span>
+            <span class="n">inp_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ref_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Rotate the image by 90 degrees</span>
+            <span class="n">inp_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ref_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># Flip the image over the x axis, then rotate it by 90 degrees</span>
+            <span class="n">inp_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ref_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="c1"># Rotate the image by 180 degrees</span>
+            <span class="n">inp_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ref_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="c1"># Flip the image over the x axis, then rotate it by 180 degrees</span>
+            <span class="n">inp_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ref_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="c1"># Rotate the image by 270 degrees</span>
+            <span class="n">inp_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ref_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="c1"># Flip the image over the x axis, then rotate it by 270 degrees</span>
+            <span class="n">inp_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ref_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">inp_aug</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Augmentation was performed</span>
+            <span class="n">inp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">inp</span><span class="p">,</span> <span class="n">inp_aug</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ref_aug</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Reference was passed</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">ref</span><span class="p">,</span> <span class="n">ref_aug</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Passed input and reference images</span>
+        <span class="k">assert</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="n">_inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s2">&quot;Data Augmentation changed input shape: &quot;</span> \
+                                                <span class="s2">&quot;before </span><span class="si">{}</span><span class="s2">, after </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">assert</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s2">&quot;Data Augmentation changed reference shape: &quot;</span> \
+                                                <span class="s2">&quot;before </span><span class="si">{}</span><span class="s2">, after </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">inp</span><span class="p">,</span> <span class="n">ref</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Passed only input image</span>
+        <span class="k">assert</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="n">_inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s2">&quot;Data Augmentation changed input shape: &quot;</span> \
+                                                <span class="s2">&quot;before </span><span class="si">{}</span><span class="s2">, after </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">inp</span></div>
+
+
+<div class="viewcode-block" id="gen_patches"><a class="viewcode-back" href="../../../data_doc.html#data.gen_patches">[docs]</a><span class="k">def</span> <span class="nf">gen_patches</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">channels_first</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sequential&quot;</span><span class="p">,</span> <span class="n">n_patches</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Patch generation function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inp : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image which patches will be extracted.</span>
+<span class="sd">    ref : :class:`numpy.ndarray`</span>
+<span class="sd">        Reference image which patches will be extracted.</span>
+<span class="sd">    patch_size : int</span>
+<span class="sd">        Size of patch window (number of pixels in each axis).</span>
+<span class="sd">    channels_first : bool</span>
+<span class="sd">        Whether data is formatted as NCHW (True) or NHWC (False).</span>
+<span class="sd">    mode : str</span>
+<span class="sd">        One between {&#39;sequential&#39;, &#39;random&#39;}. If mode = &#39;sequential&#39;, extracts patches sequentially on each axis.</span>
+<span class="sd">        If mode = &#39;random&#39;, extracts patches randomly.</span>
+<span class="sd">    n_patches : int</span>
+<span class="sd">        Number of patches to be extracted from the image. Should be specified only if mode = &#39;random&#39;. If not specified,</span>
+<span class="sd">        then,</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            n\_patches = \dfrac{h \\times w}{patch_{size}^{2}}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    input_patches : :class:`numpy.ndarray`</span>
+<span class="sd">        Extracted input patches.</span>
+<span class="sd">    reference_patches : :class:`numpy.ndarray`</span>
+<span class="sd">        Extracted reference patches.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;sequential&quot;</span><span class="p">],</span> <span class="s2">&quot;Expected mode to be &#39;random&#39; or &#39;sequential&#39; but got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+
+    <span class="n">_inp</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">_ref</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">channels_first</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">_inp</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">_inp</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span> <span class="ow">and</span> <span class="n">n_patches</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">n_patches</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="p">(</span><span class="n">patch_size</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">inp_patches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ref_patches</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;sequential&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span> <span class="o">-</span> <span class="n">patch_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span> <span class="o">-</span> <span class="n">patch_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">channels_first</span><span class="p">:</span>
+                    <span class="n">inp_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_inp</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">])</span>
+                    <span class="n">ref_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ref</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">inp_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_inp</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="p">:])</span>
+                    <span class="n">ref_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ref</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_patches</span><span class="p">):</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span> <span class="o">-</span> <span class="n">patch_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span> <span class="o">-</span> <span class="n">patch_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">channels_first</span><span class="p">:</span>
+                <span class="n">inp_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_inp</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">])</span>
+                <span class="n">ref_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ref</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">inp_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_inp</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="p">:])</span>
+                <span class="n">ref_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ref</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">patch_size</span><span class="p">,</span> <span class="p">:])</span>
+
+
+    <span class="n">input_patches</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inp_patches</span><span class="p">)</span>
+    <span class="n">reference_patches</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_patches</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">input_patches</span><span class="p">,</span> <span class="n">reference_patches</span></div>
+
+
+<span class="k">def</span> <span class="nf">smooth_patches</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">sg</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">sl</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.25</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract smooth patches for GCBD algorithm.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : :class:`numpy.ndarray`</span>
+<span class="sd">        Noised image.</span>
+<span class="sd">    d : int</span>
+<span class="sd">        Global patch size.</span>
+<span class="sd">    h : int</span>
+<span class="sd">        Local patch size.</span>
+<span class="sd">    sg : int</span>
+<span class="sd">        Global stride.</span>
+<span class="sd">    sl : int</span>
+<span class="sd">        Local stride.</span>
+<span class="sd">    mu : float</span>
+<span class="sd">        mean-smoothing hyper-parameter.</span>
+<span class="sd">    gamma : float</span>
+<span class="sd">        Variance-smoothing hyper-parameter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    patches : :class:`numpy.ndarray`</span>
+<span class="sd">        Extracted patches from img.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">d</span><span class="p">,</span> <span class="n">sg</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">-</span> <span class="n">d</span><span class="p">,</span> <span class="n">sg</span><span class="p">):</span>
+            <span class="c1"># Run for global h x h patches p</span>
+            <span class="n">wg</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span>
+            <span class="c1"># Patch mean and variance</span>
+            <span class="n">mean_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wg</span><span class="p">)</span>
+            <span class="n">var_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">wg</span><span class="p">)</span>
+            <span class="c1"># Initializes smooth verifier</span>
+            <span class="n">smooth</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">d</span> <span class="o">-</span> <span class="n">h</span><span class="p">,</span> <span class="n">sl</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="n">d</span> <span class="o">-</span> <span class="n">h</span><span class="p">,</span> <span class="n">sl</span><span class="p">):</span>
+                    <span class="c1"># Run for local h x h patches q</span>
+                    <span class="n">wl</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">k</span><span class="p">:</span> <span class="n">k</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="n">l</span> <span class="o">+</span> <span class="n">h</span><span class="p">]</span>
+                    <span class="n">module_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;image shape </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">, local patch shape: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span>
+                                                                                               <span class="n">l</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">wl</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+                    <span class="c1"># Local mean and variance</span>
+                    <span class="n">mean_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wl</span><span class="p">)</span>
+                    <span class="n">var_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">wl</span><span class="p">)</span>
+                    <span class="c1"># Difference between local and global means/variances</span>
+                    <span class="n">mean_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mean_g</span> <span class="o">-</span> <span class="n">mean_l</span><span class="p">)</span>
+                    <span class="n">var_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">var_g</span> <span class="o">-</span> <span class="n">var_l</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">mean_diff</span> <span class="o">&gt;</span> <span class="n">mu</span> <span class="o">*</span> <span class="n">mean_l</span> <span class="ow">or</span> <span class="n">var_diff</span> <span class="o">&gt;</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">var_l</span><span class="p">:</span>
+                        <span class="n">module_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\t</span><span class="s2">mean_g: </span><span class="si">{}</span><span class="s2">, mean_l: </span><span class="si">{}</span><span class="s2">, mean_diff: </span><span class="si">{}</span><span class="s2">, bound: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">],</span>
+                                                                                                    <span class="n">mean_g</span><span class="p">,</span>
+                                                                                                    <span class="n">mean_l</span><span class="p">,</span>
+                                                                                                    <span class="n">mean_diff</span><span class="p">,</span>
+                                                                                                    <span class="n">mu</span> <span class="o">*</span> <span class="n">mean_l</span><span class="p">))</span>
+                        <span class="n">module_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\t</span><span class="s2">var_g: </span><span class="si">{}</span><span class="s2">, var_l: </span><span class="si">{}</span><span class="s2">, var_diff: </span><span class="si">{}</span><span class="s2">, bound: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">],</span> <span class="n">var_g</span><span class="p">,</span>
+                                                                                                   <span class="n">var_l</span><span class="p">,</span> <span class="n">var_diff</span><span class="p">,</span>
+                                                                                                   <span class="n">gamma</span> <span class="o">*</span> <span class="n">var_l</span><span class="p">))</span>
+                        <span class="c1"># If constraints not met for a local patch, then global patch</span>
+                        <span class="c1"># is not smooth =&gt; smooth verifier becomes false</span>
+                        <span class="n">smooth</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">smooth</span><span class="p">:</span>
+                <span class="c1"># If smooth enough, then extracts the noise patch through</span>
+                <span class="c1"># noise = patch - mean(patch)</span>
+                <span class="n">patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wg</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wg</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">patches</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

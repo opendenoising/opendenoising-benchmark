@@ -1,0 +1,864 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>evaluation module &mdash; OpenDenoising 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Benchmark Class" href="benchmarking_doc.html" />
+    <link rel="prev" title="data module" href="data_doc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> OpenDenoising
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="benchmark_api_doc.html">Benchmark API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="model_doc.html">model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_doc.html">data module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">evaluation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-evaluation">Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-evaluation">Metrics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-evaluation">Tensorflow Metrics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-evaluation">Skimage Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-evaluation">Visualisations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-evaluation">Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchmarking_doc.html">Benchmark Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OpenDenoising</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="benchmark_api_doc.html">Benchmark API</a> &raquo;</li>
+        
+      <li>evaluation module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/evaluation_doc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="evaluation-module">
+<h1>evaluation module<a class="headerlink" href="#evaluation-module" title="Permalink to this headline">¶</a></h1>
+<p>The evaluation module was designed to provide functions that implement numerical metrics and visualisations during training
+and inference, as well as callbacks.</p>
+<div class="section" id="module-evaluation">
+<span id="callbacks"></span><h2>Callbacks<a class="headerlink" href="#module-evaluation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="evaluation.TensorboardImage">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">TensorboardImage</code><span class="sig-paren">(</span><em class="sig-param">valid_generator</em>, <em class="sig-param">denoiser</em>, <em class="sig-param">preprocess='clip'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#TensorboardImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.TensorboardImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">keras.callbacks.Callback</span></code></p>
+<p>Tensorboard Keras callback. At each epoch end, it plots on Tensorboard metrics/loss information on validation
+data, as well as a denoising summary.</p>
+<dl class="attribute">
+<dt id="evaluation.TensorboardImage.valid_generator">
+<code class="sig-name descname">valid_generator</code><a class="headerlink" href="#evaluation.TensorboardImage.valid_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image dataset generator. Provide validation data for model evaluation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="data_doc.html#data.AbstractDatasetGenerator" title="data.AbstractDatasetGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">data.AbstractDatasetGenerator</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.TensorboardImage.denoiser">
+<code class="sig-name descname">denoiser</code><a class="headerlink" href="#evaluation.TensorboardImage.denoiser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image denoising object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="model_doc.html#model.AbstractDeepLearningModel" title="model.AbstractDeepLearningModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDeepLearningModel</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.TensorboardImage.folder_string">
+<code class="sig-name descname">folder_string</code><a class="headerlink" href="#evaluation.TensorboardImage.folder_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to logging directory. Corresponds to denoiser’s name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.TensorboardImage.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">valid_generator</em>, <em class="sig-param">denoiser</em>, <em class="sig-param">preprocess='clip'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#TensorboardImage.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.TensorboardImage.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="evaluation.LrSchedulerCallback">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">LrSchedulerCallback</code><a class="reference internal" href="_modules/evaluation/callbacks.html#LrSchedulerCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.LrSchedulerCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">keras.callbacks.Callback</span></code></p>
+<p>Custom Learning Rate scheduler based on Keras. This class is mainly used for compatibility between TfModel,
+PytorchModel and KerasModel. Please note that this class should not be used as a LearningRateScheduler. To specify
+one, you need to use a class that inherits from LrSchedulerCallback.</p>
+<dl class="method">
+<dt id="evaluation.LrSchedulerCallback.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#LrSchedulerCallback.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.LrSchedulerCallback.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="evaluation.DnCNNSchedule">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">DnCNNSchedule</code><span class="sig-paren">(</span><em class="sig-param">initial_lr=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#DnCNNSchedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.DnCNNSchedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">evaluation.callbacks.LrSchedulerCallback</span></code></p>
+<p>DnCNN learning rate decay scheduler as specified in the original paper.</p>
+<p>After epoch 30, drops the initial learning rate by a factor of 10.
+After epoch 60, drops the initial learning rate by a factor of 20.</p>
+<dl class="attribute">
+<dt id="evaluation.DnCNNSchedule.initial_lr">
+<code class="sig-name descname">initial_lr</code><a class="headerlink" href="#evaluation.DnCNNSchedule.initial_lr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial learning rate value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.DnCNNSchedule.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">initial_lr=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#DnCNNSchedule.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.DnCNNSchedule.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="evaluation.StepSchedule">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">StepSchedule</code><span class="sig-paren">(</span><em class="sig-param">initial_lr=0.001</em>, <em class="sig-param">factor=0.5</em>, <em class="sig-param">dropEvery=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#StepSchedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.StepSchedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">evaluation.callbacks.LrSchedulerCallback</span></code></p>
+<p>Drops the learning rate at each ‘dropEvery’ iterations by a factor of ‘factor’.</p>
+<dl class="attribute">
+<dt id="evaluation.StepSchedule.initial_lr">
+<code class="sig-name descname">initial_lr</code><a class="headerlink" href="#evaluation.StepSchedule.initial_lr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial Learning Rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.StepSchedule.factor">
+<code class="sig-name descname">factor</code><a class="headerlink" href="#evaluation.StepSchedule.factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decay factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.StepSchedule.dropEvery">
+<code class="sig-name descname">dropEvery</code><a class="headerlink" href="#evaluation.StepSchedule.dropEvery" title="Permalink to this definition">¶</a></dt>
+<dd><p>The learning rate will be decayed periodically, where the period is defined by dropEvery.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.StepSchedule.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">initial_lr=0.001</em>, <em class="sig-param">factor=0.5</em>, <em class="sig-param">dropEvery=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#StepSchedule.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.StepSchedule.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="evaluation.PolynomialSchedule">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">PolynomialSchedule</code><span class="sig-paren">(</span><em class="sig-param">initial_lr=0.001</em>, <em class="sig-param">maxEpochs=100</em>, <em class="sig-param">power=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#PolynomialSchedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.PolynomialSchedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">evaluation.callbacks.LrSchedulerCallback</span></code></p>
+<p>Drops the learning rate following a polynomial schedule:</p>
+<div class="math notranslate nohighlight">
+\[\alpha = \alpha_{0}\biggr(1 - \dfrac{epoch}{maxEpochs}\biggr)^{power}\]</div>
+<dl class="attribute">
+<dt id="evaluation.PolynomialSchedule.initial_lr">
+<code class="sig-name descname">initial_lr</code><a class="headerlink" href="#evaluation.PolynomialSchedule.initial_lr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial Learning Rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.PolynomialSchedule.maxEpochs">
+<code class="sig-name descname">maxEpochs</code><a class="headerlink" href="#evaluation.PolynomialSchedule.maxEpochs" title="Permalink to this definition">¶</a></dt>
+<dd><p>At the end of maxEpochs, the learning_rate will be zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.PolynomialSchedule.power">
+<code class="sig-name descname">power</code><a class="headerlink" href="#evaluation.PolynomialSchedule.power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Polynomial power.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.PolynomialSchedule.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">initial_lr=0.001</em>, <em class="sig-param">maxEpochs=100</em>, <em class="sig-param">power=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#PolynomialSchedule.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.PolynomialSchedule.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="evaluation.ExponentialSchedule">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">ExponentialSchedule</code><span class="sig-paren">(</span><em class="sig-param">initial_lr=0.001</em>, <em class="sig-param">factor=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#ExponentialSchedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.ExponentialSchedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">evaluation.callbacks.LrSchedulerCallback</span></code></p>
+<p>Drops the learning rate following a exponential schedule:</p>
+<div class="math notranslate nohighlight">
+\[\alpha = \dfrac{\alpha_{0}}{1 + factor \times epoch}\]</div>
+<dl class="attribute">
+<dt id="evaluation.ExponentialSchedule.initial_lr">
+<code class="sig-name descname">initial_lr</code><a class="headerlink" href="#evaluation.ExponentialSchedule.initial_lr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial Learning Rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.ExponentialSchedule.factor">
+<code class="sig-name descname">factor</code><a class="headerlink" href="#evaluation.ExponentialSchedule.factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rate at which the learning rate is decayed at each epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.ExponentialSchedule.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">initial_lr=0.001</em>, <em class="sig-param">factor=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#ExponentialSchedule.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.ExponentialSchedule.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="evaluation.CheckpointCallback">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">CheckpointCallback</code><span class="sig-paren">(</span><em class="sig-param">denoiser</em>, <em class="sig-param">monitor='loss'</em>, <em class="sig-param">mode='max'</em>, <em class="sig-param">period=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#CheckpointCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.CheckpointCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">keras.callbacks.Callback</span></code></p>
+<p>Creates training checkpoints for Deep Learning models.</p>
+<dl class="attribute">
+<dt id="evaluation.CheckpointCallback.denoiser">
+<code class="sig-name descname">denoiser</code><a class="headerlink" href="#evaluation.CheckpointCallback.denoiser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Denoiser object to be saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="model_doc.html#model.AbstractDenoiser" title="model.AbstractDenoiser"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.AbstractDenoiser</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.CheckpointCallback.monitor">
+<code class="sig-name descname">monitor</code><a class="headerlink" href="#evaluation.CheckpointCallback.monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the metric being tracked. If the name is not present on logs, tracks the loss value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.CheckpointCallback.mode">
+<code class="sig-name descname">mode</code><a class="headerlink" href="#evaluation.CheckpointCallback.mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>String having one of these two values: {‘max’, ‘min’}. If it is ‘max’, saves the model with the greater metric
+value. If it is ‘min’, saves the model with the smaller metric value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.CheckpointCallback.period">
+<code class="sig-name descname">period</code><a class="headerlink" href="#evaluation.CheckpointCallback.period" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves models at uniform intervals specified by period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.CheckpointCallback.logdir">
+<code class="sig-name descname">logdir</code><a class="headerlink" href="#evaluation.CheckpointCallback.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>String containing the path to the logs directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.CheckpointCallback.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">denoiser</em>, <em class="sig-param">monitor='loss'</em>, <em class="sig-param">mode='max'</em>, <em class="sig-param">period=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/callbacks.html#CheckpointCallback.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.CheckpointCallback.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-evaluation">
+<span id="metrics"></span><h2>Metrics<a class="headerlink" href="#module-evaluation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="evaluation.Metric">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">Metric</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">tf_metric=None</em>, <em class="sig-param">np_metric=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#Metric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.Metric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>The metric class is used for interfacing between tensorflow and numpy metrics.</p>
+<p class="rubric">Notes</p>
+<p>This class is recommended instead of directly using functions, because functions that work with tensors are not
+recommended to act on numpy arrays (for each time they are called on numpy arrays, a new tensor is created, thus
+causing memory overflow). See Examples for more informations. We remark that, for inference on the benchmark, you
+should always specify np metrics.</p>
+<dl class="attribute">
+<dt id="evaluation.Metric.tf_metric">
+<code class="sig-name descname">tf_metric</code><a class="headerlink" href="#evaluation.Metric.tf_metric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tensorflow function implementing the metric on tensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.Metric.np_metric">
+<code class="sig-name descname">np_metric</code><a class="headerlink" href="#evaluation.Metric.np_metric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numpy function implementing metric on ndarrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Examples</p>
+<p>The most basic usage of Metric class is when you have functions for processing tensors and numpy arrays. We provide
+as built-in metrics SSIM, PSNR and MSE. For instance,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">OpenDenoising.evaluation</span> <span class="k">import</span> <span class="n">Metric</span><span class="p">,</span> <span class="n">tf_ssim</span><span class="p">,</span> <span class="n">skimage_ssim</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssim</span> <span class="o">=</span> <span class="n">Metric</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SSIM&quot;</span><span class="p">,</span> <span class="n">tf_metric</span><span class="o">=</span><span class="n">tf_ssim</span><span class="p">,</span> <span class="n">np_metric</span><span class="o">=</span><span class="n">skimage_ssim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssim</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="go">&lt;tf.Tensor &#39;Mean_3:0&#39; shape=() dtype=float32&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssim</span><span class="p">(</span><span class="n">x_np</span><span class="p">,</span> <span class="n">y_np</span><span class="p">)</span>
+<span class="go">0.007000506155677978</span>
+</pre></div>
+</div>
+<p>That is, if you have specified the two metrics, the class handles if the result is a tensor, or a numeric value.</p>
+<dl class="method">
+<dt id="evaluation.Metric.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">y_true</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#Metric.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.Metric.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call self as a function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.Metric.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">tf_metric=None</em>, <em class="sig-param">np_metric=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#Metric.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.Metric.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.Metric.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#Metric.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.Metric.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.Metric.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#evaluation.Metric.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-evaluation">
+<span id="tensorflow-metrics"></span><h3>Tensorflow Metrics<a class="headerlink" href="#module-evaluation" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="evaluation.tf_ssim">
+<code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">tf_ssim</code><span class="sig-paren">(</span><em class="sig-param">y_true</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#tf_ssim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.tf_ssim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structural Similarity Index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to ground-truth images (clean).</p></li>
+<li><p><strong>y_pred</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to the Network’s prediction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor corresponding to the evaluated metric.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="evaluation.tf_mse">
+<code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">tf_mse</code><span class="sig-paren">(</span><em class="sig-param">y_true</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#tf_mse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.tf_mse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean Squared Error.</p>
+<div class="math notranslate nohighlight">
+\[MSE = \dfrac{1}{N \times H \times W \times C}\sum_{n=0}^{N}\sum_{i=0}^{H}\sum_{j=0}^{W}\sum_{k=0}^{C}(y_{true}
+(n, i, j, k)-y_{pred}(n, i, j, k))^{2}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to ground-truth images (clean).</p></li>
+<li><p><strong>y_pred</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to the Network’s prediction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor corresponding to the evaluated metric.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="evaluation.tf_psnr">
+<code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">tf_psnr</code><span class="sig-paren">(</span><em class="sig-param">y_true</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#tf_psnr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.tf_psnr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peak Signal to Noise Ratio loss.</p>
+<div class="math notranslate nohighlight">
+\[PSNR = \dfrac{10}{N}\sum_{n=0}^{N}log_{10}\biggr(\dfrac{max(y_{true}(n)^{2})}{MSE(y_{true}(n), y_{pred}(n))}\biggr)\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to ground-truth images (clean).</p></li>
+<li><p><strong>y_pred</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to the Network’s prediction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor corresponding to the evaluated metric.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="evaluation.tf_se">
+<code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">tf_se</code><span class="sig-paren">(</span><em class="sig-param">y_true</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#tf_se"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.tf_se" title="Permalink to this definition">¶</a></dt>
+<dd><p>Squared Error loss.</p>
+<div class="math notranslate nohighlight">
+\[SE = \sum_{n=0}^{N}\sum_{i=0}^{H}\sum_{j=0}^{W}\sum_{k=0}^{C}(y_{true}(n, i, j, k)-y_{pred}(n, i, j, k))^{2}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to ground-truth images (clean).</p></li>
+<li><p><strong>y_pred</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code>) – Tensor corresponding to the Network’s prediction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor corresponding to the evaluated metric.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tf.Tensor</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-evaluation">
+<span id="skimage-metrics"></span><h3>Skimage Metrics<a class="headerlink" href="#module-evaluation" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="evaluation.skimage_ssim">
+<code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">skimage_ssim</code><span class="sig-paren">(</span><em class="sig-param">y_true</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#skimage_ssim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.skimage_ssim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skimage SSIM wrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D numpy array containing ground-truth images.</p></li>
+<li><p><strong>y_pred</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D numpy array containing the Network’s prediction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Scalar value of SSIM between y_true and y_pred</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="evaluation.skimage_mse">
+<code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">skimage_mse</code><span class="sig-paren">(</span><em class="sig-param">y_true</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#skimage_mse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.skimage_mse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skimage MSE wrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D numpy array containing ground-truth images.</p></li>
+<li><p><strong>y_pred</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D numpy array containing the Network’s prediction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Scalar value of MSE between y_true and y_pred</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="evaluation.skimage_psnr">
+<code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">skimage_psnr</code><span class="sig-paren">(</span><em class="sig-param">y_true</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/metrics.html#skimage_psnr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.skimage_psnr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skimage PSNR wrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D numpy array containing ground-truth images.</p></li>
+<li><p><strong>y_pred</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – 4D numpy array containing the Network’s prediction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Scalar value of PSNR between y_true and y_pred</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-evaluation">
+<span id="visualisations"></span><h2>Visualisations<a class="headerlink" href="#module-evaluation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="evaluation.Visualisation">
+<em class="property">class </em><code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">Visualisation</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/visualisations.html#Visualisation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.Visualisation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Wraps visualisation functions.</p>
+<dl class="attribute">
+<dt id="evaluation.Visualisation.func">
+<code class="sig-name descname">func</code><a class="headerlink" href="#evaluation.Visualisation.func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference to a function that will create the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.Visualisation.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#evaluation.Visualisation.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualisation’s name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.Visualisation.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">file_dir</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/visualisations.html#Visualisation.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.Visualisation.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_dir</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – Path to the directory containing the files that will be used for constructing the visualisation.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)"><em>dict</em></a>) – Keyword arguments. Used for passing optional arguments for the visualisation.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Assuming you are output your benchmark results to “./results”, and that you have a Benchmark with name
+“MyBenchTests”, you can use the boxplot function to generate visualisations from the output .csv files.</p>
+<p>&gt;&gt;&gt;from OpenDenoising.evaluation import Visualisation, boxplot
+&gt;&gt;&gt;vis = Visualisation(func=boxplot, name=”boxplot_PSNR”)
+&gt;&gt;&gt;vis(file_dir=”./results/”)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.Visualisation.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/visualisations.html#Visualisation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.Visualisation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="evaluation.Visualisation.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/visualisations.html#Visualisation.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.Visualisation.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="evaluation.Visualisation.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#evaluation.Visualisation.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-evaluation">
+<span id="functions"></span><h3>Functions<a class="headerlink" href="#module-evaluation" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="evaluation.boxplot">
+<code class="sig-prename descclassname">evaluation.</code><code class="sig-name descname">boxplot</code><span class="sig-paren">(</span><em class="sig-param">csv_dir</em>, <em class="sig-param">output_dir</em>, <em class="sig-param">metric='PSNR'</em>, <em class="sig-param">show=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/evaluation/visualisations.html#boxplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#evaluation.boxplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps Seaborn boxplot function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csv_dir</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to CSV file directory holding the data.</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the path to save the image.</p></li>
+<li><p><strong>metric</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – String containing the name of the metric being shown by the plot.</p></li>
+<li><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) – If bool is True, shows the plot rather than only saving it to output_path.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="benchmarking_doc.html" class="btn btn-neutral float-right" title="Benchmark Class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="data_doc.html" class="btn btn-neutral float-left" title="data module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Montesuma, Florian Lemarchand
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
