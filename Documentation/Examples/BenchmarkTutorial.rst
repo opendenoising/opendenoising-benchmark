@@ -6,7 +6,7 @@ algorithms. You can run through this examples running the code snippets sequenti
 
 First, being on the project's root, you need to import the modules provided by the OpenDenoising benchmark:
 
-.. code-block:: python
+.. code:: python
 
     from OpenDenoising import data
     from OpenDenoising import model
@@ -16,7 +16,7 @@ First, being on the project's root, you need to import the modules provided by t
 To execute multiple models that access the GPU, you need to allow Tensorflow/Keras to allocate memory only when
 needed. This is done through,
 
-.. code-block:: python
+.. code:: python
 
     import keras
     import tensorflow as tf
@@ -27,7 +27,7 @@ needed. This is done through,
     session = tf.Session(config=config)
     keras.backend.set_session(session)
 
-The rest of the tutorial is divided as follows,
+For now on, we suppose you are running your codes on the project root folder.
 
 
 Defining Datasets
@@ -38,7 +38,7 @@ structure:
 
 **Clean Dataset (only references)**
 
-.. code-block::
+.. parsed-literal::
 
     DatasetName/
     |-- Train
@@ -48,7 +48,7 @@ structure:
 
 **Full Dataset (references and noisy images)**
 
-.. code-block::
+.. parsed-literal::
 
     DatasetName/
     |-- Train
@@ -60,24 +60,24 @@ structure:
 
 To run this example, you can use the :py:mod:`data` module to download test datasets,
 
-.. code-block:: python
+.. code:: python
 
     data.download_dncnn_testsets(output_dir="./tmp/TestSets", testset="BSD68")
     data.download_dncnn_testsets(output_dir="./tmp/TestSets", testset="Set12")
 
-This snippet will create the entire folder structure for these two test datasets. To actually create the object for
-generating image samples, you can use the following,
+The previous snippet will create the entire folder structure on a temporary folder called "tmp". Moreover
+to create the object for generating image samples, you can use the following commands,
 
-.. code-block:: python
+.. code:: python
 
     # BSD Dataset
-    BSD68 = data.DatasetFactory.create(path="../../tmp/TestSets/BSD68/",
+    BSD68 = data.DatasetFactory.create(path="./tmp/TestSets/BSD68/",
                                        batch_size=1,
                                        n_channels=1,
                                        noise_config={data.utils.gaussian_noise: [25]},
                                        name="BSD68")
     # Set12 Dataset
-    Set12 = data.DatasetFactory.create(path="../../tmp/TestSets/Set12/",
+    Set12 = data.DatasetFactory.create(path="./tmp/TestSets/Set12/",
                                        batch_size=1,
                                        n_channels=1,
                                        noise_config={data.utils.gaussian_noise: [25]},
@@ -95,18 +95,18 @@ look the Model module tutorial.
 
 Bellow, we charge each model using the respective wrapper class for its framework.
 
-.. code-block:: python
+.. code:: python
 
     # Keras rednet30
-    keras_rednet30 = model.KerasModel(model_name="Keras_Rednet30", logdir="../../training_logs/Keras")
+    keras_rednet30 = model.KerasModel(model_name="Keras_Rednet30")
     keras_rednet30.charge_model(model_path="./Additional Files/Keras Models/rednet30.hdf5")
 
     # Keras rednet20
-    keras_rednet20 = model.KerasModel(model_name="Keras_Rednet20", logdir="../../training_logs/Keras")
+    keras_rednet20 = model.KerasModel(model_name="Keras_Rednet20")
     keras_rednet20.charge_model(model_path="./Additional Files/Keras Models/rednet20.hdf5")
 
     # Keras rednet10
-    keras_rednet10 = model.KerasModel(model_name="Keras_Rednet10", logdir="../../training_logs/Keras")
+    keras_rednet10 = model.KerasModel(model_name="Keras_Rednet10")
     keras_rednet10.charge_model(model_path="./Additional Files/Keras Models/rednet10.hdf5")
 
     # Onnx dncnn from Matlab
@@ -122,7 +122,7 @@ Matlab's engine.
 **Note** If you have not installed Matlab support, or have not installed BM3D library from `the author's website
 <http://www.cs.tut.fi/~foi/GCF-BM3D/>`_, do not execute the next snippet.
 
-.. code-block:: python
+.. code:: python
 
     # BM3D from Matlab
     bm3d_filter = model.FilteringModel(model_name="BM3D_filter")
@@ -132,13 +132,13 @@ Matlab's engine.
 
 If you have instantiated BM3D model,
 
-.. code-block:: python
+.. code:: python
 
     models = [bm3d_filter, onnx_dncnn, keras_rednet10, keras_rednet20, keras_rednet30]
 
 Otherwise,
 
-.. code-block:: python
+.. code:: python
 
     models = [onnx_dncnn, keras_rednet10, keras_rednet20, keras_rednet30]
 
@@ -203,7 +203,7 @@ handling when to call one or another.
 For evaluation purposes, we only need to specify metrics that process numpy arrays. To define PSNR, SSIM and MSE metrics
 we run the following snippet,
 
-.. code-block:: python
+.. code:: python
 
     mse_metric = evaluation.Metric(name="MSE", np_metric=evaluation.skimage_mse)
     ssim_metric = evaluation.Metric(name="SSIM", np_metric=evaluation.skimage_ssim)
@@ -219,7 +219,7 @@ specify the function to generate the plot, and the use the class :py:class:`Open
 wrap it. The OpenDenoising benchmark provides box plots of default metrics as built-ins options for visualisations,
 as follows,
 
-.. code-block:: python
+.. code:: python
 
     boxplot_PSNR = evaluation.Visualisation(func=partial(evaluation.boxplot, metric="PSNR"),
                                             name="Boxplot_PSNR")
@@ -237,9 +237,9 @@ Evaluation
 To run an evaluation session you need to instantiate the :py:class:`OpenDenoising.Benchmark` class, and then register
 the list we have created so far (datasets, models, metrics and visualisations) through the method *register*, as follows,
 
-.. code-block:: python
+.. code:: python
 
-    benchmark = Benchmark(name="BSD68_Test12")
+    benchmark = Benchmark(name="BSD68_Test12", output_dir='./tmp/results')
 
     # Register metrics
     benchmark.register(metrics)
@@ -262,3 +262,8 @@ This snippet has as output:
 
 .. image:: Figures/boxplot_SSIM.png
     :alt: Box plot of SSIM metric.
+
+All evaluation results are saved on './tmp/results/BSD68_Test12' folder, which was specified by output_dir and name. There
+you may find two .csv files (partial_results.csv and general_results.csv). partial_results.csv holds the denoising results
+for each image present on each dataset, for each model, and general_results holds statistics for model and dataset (mean 
+and variance).

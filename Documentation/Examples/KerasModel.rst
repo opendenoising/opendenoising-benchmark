@@ -7,7 +7,7 @@ filtering functions in the benchmark.
 
 First, being on the project's root, you need to import the necessary modules,
 
-.. code-block:: python
+.. code:: python
 
     import gc
     import keras
@@ -23,9 +23,11 @@ First, being on the project's root, you need to import the necessary modules,
 
     eng = matlab.engine.start_matlab()
 
+For now on, we suppose you are running your codes on the project root folder.
+
 The following function will be used throughout this tutorial to display denoising results,
 
-.. code-block:: python
+.. code:: python
 
     def display_results(clean_imgs, noisy_imgs, rest_images, name):
         """Display denoising results."""
@@ -48,13 +50,13 @@ The following function will be used throughout this tutorial to display denoisin
 
 Moreover, you may download the data we will use by using the following function,
 
-.. code-block:: python
+.. code:: python
 
     data.download_BSDS_grayscale(output_dir="./tmp/BSDS500/")
 
 The models will be evaluated using the BSDS dataset,
 
-.. code-block::
+.. code:: python
 
     # Training images generator
     train_generator = data.DatasetFactory.create(path="./tmp/BSDS500/Train",
@@ -66,7 +68,7 @@ The models will be evaluated using the BSDS dataset,
                                                  name="BSDS_Train")
 
 
-.. code-block:: python
+.. code:: python
 
     # Validation images generator
     valid_generator = data.DatasetFactory.create(path="./tmp/BSDS500/Valid",
@@ -78,7 +80,7 @@ The models will be evaluated using the BSDS dataset,
 To execute multiple models that access the GPU, you need to allow Tensorflow/Keras to allocate memory only when
 needed. This is done through,
 
-.. code:: ipython3
+.. code:: python
 
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
@@ -157,19 +159,14 @@ convention to architecture functions:
 In the following blocks of code, we show how we can charge the model
 into a “KerasModel” wrapper class by using the “dncnn” function.
 
-.. code:: ipython3
+.. code:: python
 
     # Creating the KerasModel instance
-    kerasmodel_ex1 = model.KerasModel(model_name="Example1", logdir="../../logs/Keras")
+    kerasmodel_ex1 = model.KerasModel(model_name="Example1")
     print("KerasModel {} created succesfully.".format(kerasmodel_ex1))
 
 
-.. parsed-literal::
-
-    KerasModel Example1 created succesfully.
-
-
-.. code:: ipython3
+.. code:: python
 
     # Defining the function to be charged
     def dncnn():
@@ -189,21 +186,15 @@ into a “KerasModel” wrapper class by using the “dncnn” function.
         # Keras model
         return models.Model(x, y)
 
-.. code:: ipython3
+.. code:: python
 
     # Charging model into Example1
     kerasmodel_ex1.charge_model(model_function=dncnn)
 
 
+This last snippet outputs the following warning:
+
 .. parsed-literal::
-
-    WARNING: Logging before flag parsing goes to stderr.
-    W0902 10:47:13.272264 140353946789696 keras_model.py:119] You have loaded your model from a python function, which does not hold any information about weight values. Be sure to train the network before running your tests.
-
-
-Notice the previous warning:
-
-::
 
    W0821 09:12:14.533067 140116547233600 keras_model.py:118] You have loaded your model from a python function, which does not hold any information about weight values. Be sure to train the network before running your tests.
 
@@ -238,7 +229,7 @@ that it has additional parameters, such as “depth”, “n_filters”,
 “kernel_size” and “n_channels”. You can still pass these to the
 charge_model function,
 
-.. code:: ipython3
+.. code:: python
 
     def dncnn_opt_params(depth=17, n_filters=64, kernel_size=(3, 3), n_channels=1):
         x = layers.Input(shape=[None, None, n_channels])
@@ -257,21 +248,11 @@ charge_model function,
         # Keras model
         return models.Model(x, y)
 
-.. code:: ipython3
+.. code:: python
 
-    kerasmodel_ex2 = model.KerasModel(model_name="Example2", logdir="../../logs/Keras")
+    kerasmodel_ex2 = model.KerasModel(model_name="Example2")
     print("KerasModel {} created succesfully.".format(kerasmodel_ex2))
     kerasmodel_ex2.charge_model(model_function=dncnn_opt_params, depth=20, kernel_size=(7, 7), n_channels=3)
-
-
-.. parsed-literal::
-
-    KerasModel Example2 created succesfully.
-
-
-.. parsed-literal::
-
-    W0902 10:47:45.332327 140353946789696 keras_model.py:119] You have loaded your model from a python function, which does not hold any information about weight values. Be sure to train the network before running your tests.
 
 
 From a file
@@ -308,38 +289,32 @@ using your model for inference.
 
 To charge a model using a file, you simply need to pass it to
 “**charge_model**” through the “model_path” parameters. An example is
-shown bellow, on `Running Inference <#keras-running-inference>`__.
+shown bellow, on Running Inference section. To free the memory allocated 
+to the previous two models, run,
 
-.. code:: ipython3
+.. code:: python
 
     # Frees memory
     kerasmodel_ex1 = None
     kerasmodel_ex2 = None
+    tf.reset_default_graph()
     gc.collect()
 
+Running Inference
+-----------------
 
+All denoisers can perform denoisnig by using the "**__call__**" magic function. In the following
+example we load the pre-trained DnCNN model saved using Keras to perform inference,
 
-
-.. parsed-literal::
-
-    290
-
-
-
-.. code:: ipython3
+.. code:: python
 
     # Loads model from .hdf5 file.
-    kerasmodel_ex3 = model.KerasModel(model_name="Inference_ex1", logdir="../../logs/Keras")
-    kerasmodel_ex3.charge_model(model_path="../../pretrained_models/Keras/dncnn/model.hdf5")
+    kerasmodel_ex3 = model.KerasModel(model_name="Inference_ex1")
+    kerasmodel_ex3.charge_model(model_path="./Examples/JupyterNotebooks/Additional Files/dncnn.hdf5")
 
+Then, inference is done as if the KerasModel instance were a function,
 
-.. parsed-literal::
-
-    /home/efernand/repos/Summer_Internship_2019/venv/lib/python3.6/site-packages/keras/engine/saving.py:292: UserWarning: No training configuration found in save file: the model was *not* compiled. Compile it manually.
-      warnings.warn('No training configuration found in save file: '
-
-
-.. code:: ipython3
+.. code:: python
 
     # Get batch from valid_generator
     noisy_imgs, clean_imgs = next(valid_generator)
@@ -347,22 +322,15 @@ shown bellow, on `Running Inference <#keras-running-inference>`__.
     rest_imgs = kerasmodel_ex3(noisy_imgs)
     display_results(clean_imgs, noisy_imgs, rest_imgs, str(kerasmodel_ex3))
 
-
+This code snippet generates the following output,
 
 .. image:: Figures/output_24_0.png
 
 
-.. code:: ipython3
+.. code:: python
 
     kerasmodel_ex3 = None
     gc.collect()
-
-
-
-
-.. parsed-literal::
-
-    25129
 
 
 
@@ -370,36 +338,37 @@ Training a KerasModel
 ---------------------
 
 To run a training session, you only need to have a dataset, such as
-defined in the DatasetUsage.ipynb. Once you created a DatasetGenerator
-for your training images (and possibly, for you validation images) you
-can call the “**train**” method from KerasModel class, which takes the
-following parameters,
+defined in the `Data Tutorial 
+<https://opendenoising-docs.readthedocs.io/en/latest/Examples/DataTutorial.html>`_.
+Once you created a DatasetGenerator for your training images 
+(and possibly, for you validation images) you can call the “**train**”
+method from KerasModel class, which takes the following parameters,
 
--  train_generator: any instance of a dataset generator class. This
-   class will yield the data pairs.
--  valid_generator: optional. Specify it if you have validation data at
+-  **train_generator**: any instance of a class inheriting from :py:mod:`data.AbstractDatasetGenerator`.
+   This class will yield the data pairs.
+-  **valid_generator**: optional. Specify it if you have validation data at
    hand.
--  n_epochs: number of training epochs. Default is 100.
--  n_stages: number of training batches drawn at random from the dataset
+-  **n_epochs**: number of training epochs. Default is 100.
+-  **n_stages**: number of training batches drawn at random from the dataset
    at each training epoch. Default value is 500.
--  learning_rate: constant regulating the weight updates in your model.
+-  **learning_rate**: constant regulating the weight updates in your model.
    Default is 1e-3.
--  optimizer_name: you can specify the optimizer’s name for you model.
+-  **optimizer_name**: you can specify the optimizer’s name for you model.
    You can do this by lookin at the names in `Keras
    documentation <https://keras.io/optimizers/>`__. Default is “Adam”
    optimizer.
--  metrics: list of metrics that will be tracked during training. There
+-  **metrics**: list of metrics that will be tracked during training. There
    are a couple of useful metrics implemented on **evaluation** module
    (such as PSNR, SSIM, MSE) but you can also implement your own
    following `Keras conventions <https://keras.io/metrics/>`__.
--  kcallbacks: list of Keras callbacks. You can either use `Keras
+-  **kcallbacks**: list of Keras callbacks. You can either use `Keras
    default callbacks <https://keras.io/callbacks/>`__ or the callbacks
    defined on :py:mod:`evaluation` module.
--  loss: A metric that will be used in optimization as the objective
+-  **loss**: A metric that will be used in optimization as the objective
    function to be minimized. You can either use `Keras
    default losses <https://keras.io/losses/>`__ or the metrics
    defined on :py:mod:`evaluation` module.
--  valid_steps: number of validation batches drawn at each validation
+-  **valid_steps**: number of validation batches drawn at each validation
    epoch.
 
 To show how a keras model can be trained, consider the training of a
@@ -415,25 +384,14 @@ paper <https://arxiv.org/pdf/1608.03981.pdf>`__:
 For evaluation, we will use a disjoint subset of BSDS, consisting on 68
 images which are not present in the training dataset.
 
-.. code:: ipython3
+.. code:: python
 
     # KerasModel
-    kerasmodel_ex4 = model.KerasModel(model_name="Example4", logdir="../../logs/Keras")
-    print("KerasModel {} created succesfully.".format(kerasmodel_ex4))
+    kerasmodel_ex4 = model.KerasModel(model_name="Example4", logdir='./logs/Keras/DnCNN')
     kerasmodel_ex4.charge_model(model_function=dncnn_opt_params, depth=17, kernel_size=(3, 3), n_channels=1)
 
 
-.. parsed-literal::
-
-    KerasModel Example4 created succesfully.
-
-
-.. parsed-literal::
-
-    W0902 10:51:00.440434 140353946789696 keras_model.py:119] You have loaded your model from a python function, which does not hold any information about weight values. Be sure to train the network before running your tests.
-
-
-.. code:: ipython3
+.. code:: python
 
     kerasmodel_ex4.train(train_generator=train_generator,
                          valid_generator=valid_generator,
@@ -447,7 +405,9 @@ images which are not present in the training dataset.
                          loss=evaluation.mse,
                          valid_steps=10)
 
-.. code:: ipython3
+Finally, you may free the memory allocated to the model by using,
+
+.. code:: python
 
     kerasmodel_ex4 = None
     tf.reset_default_graph()

@@ -5,7 +5,7 @@ This tutorial is a part of Model module guide. Here, we explore how you
 can use the MatlabModel wrapper to use your Matlab deep learning models
 in the benchmark.
 
-.. code:: ipython3
+.. code:: python
 
     # Python packages
     import gc
@@ -19,6 +19,8 @@ in the benchmark.
     from OpenDenoising import evaluation
 
     eng = matlab.engine.start_matlab()
+
+For now on, we suppose you are running your codes on the project root folder.
 
 The following function will be used throughout this tutorial to display denoising results,
 
@@ -76,18 +78,18 @@ file containing the model’s architecture. Notice that for models that
 predict the residual, rather than the restored image, “**return_diff**”
 should be specified as True,
 
-.. code:: ipython3
+.. code:: python
 
     matlabModel = model.MatlabModel(return_diff=True)
 
-.. code:: ipython3
+.. code:: python
 
     matlabModel.charge_model(model_path="./Additional Files/Matlab Models/dncnn_matlab.mat")
 
 After charging the model into the wrapper object, the network object will be available on Matlab’s workspace. The
 following command prints the workspace:
 
-.. code:: ipython3
+.. code:: python
 
     print(matlabModel.engine.workspace)
 
@@ -116,10 +118,10 @@ function using Matlab’s engine.
 **Note:** you may still pass extra arguments through kwargs, as if they
 were going to feed a normal Python function.
 
-.. code:: ipython3
+.. code:: python
 
-    matlabModel2 = model.MatlabModel(return_diff=True, logdir="../../logs/Matlab")
-    matlabModel2.charge_model(model_function="../../OpenDenoising/model/architectures/matlab/dncnn.m")
+    matlabModel2 = model.MatlabModel(return_diff=True)
+    matlabModel2.charge_model(model_function="./OpenDenoising/model/architectures/matlab/dncnn.m")
 
 Inference with MatlabModel
 ---------------------------
@@ -129,14 +131,14 @@ class. This method uses the Matlab’s engine to internally call
 “denoiseImage” matlab function, that uses the network object to denoise
 an input batch.
 
-.. code:: ipython3
+.. code:: python
 
     # Get batch from valid_generator
     noisy_imgs, clean_imgs = next(valid_generator)
     # Performs inference on noisy images
     rest_imgs = matlabModel(noisy_imgs)
 
-.. code:: ipython3
+.. code:: python
 
     display_results(clean_imgs, noisy_imgs, noisy_imgs - rest_imgs, str(matlabModel))
 
@@ -175,19 +177,19 @@ function, and specify its arguments via the same strategy.
 **Note:** You should make sure that “./OpenDenoising/data/” folder is on
 Matlab’s path (add it to pathdef.m).
 
-.. code:: ipython3
+.. code:: python
 
-    dataset_train_wrapper = data.MatlabCleanDatasetGenerator(matlabModel2.engine, images_path="../../tmp/BSDS500/Train/ref",
+    dataset_train_wrapper = data.MatlabCleanDatasetGenerator(matlabModel2.engine, images_path="./tmp/BSDS500/Train/ref",
                                                              partition="Train")
     dataset_train_wrapper()
 
-.. code:: ipython3
+.. code:: python
 
-    dataset_valid_wrapper = data.MatlabCleanDatasetGenerator(matlabModel2.engine, images_path="../../tmp/BSDS500/Valid/ref",
+    dataset_valid_wrapper = data.MatlabCleanDatasetGenerator(matlabModel2.engine, images_path="./tmp/BSDS500/Valid/ref",
                                                              partition="Valid")
     dataset_valid_wrapper()
 
-.. code:: ipython3
+.. code:: python
 
     print(matlabModel2.engine.workspace)
 
@@ -209,11 +211,6 @@ Matlab’s path (add it to pathdef.m).
 
 
 
-.. code:: ipython3
+.. code:: python
 
     matlabModel2.train(train_generator="imds_Train_noise", valid_generator="imds_Valid_noise")
-
-
-.. parsed-literal::
-
-    opts = trainingOptions('adam', 'Plots', 'training-progress','Verbose', true,'VerboseFrequency', 500,'MaxEpochs', 250,'Shuffle', 'every-epoch','ValidationData', valid_imds,'CheckpointPath', '../../OpenDenoising/training_logs/Matlab');

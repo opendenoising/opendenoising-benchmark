@@ -25,6 +25,8 @@ the benchmark.
 
     eng = matlab.engine.start_matlab()
 
+For now on, we suppose you are running your codes on the project root folder.
+
 The following function will be used throughout this tutorial to display denoising results,
 
 .. code-block:: python

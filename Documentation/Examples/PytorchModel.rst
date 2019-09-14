@@ -6,7 +6,7 @@ can use the Pytorch wrapper to use your Pytorch deep learning models in
 the benchmark.
 
 
-.. code:: ipython3
+.. code:: python
 
     # Python packages
     import gc
@@ -19,9 +19,11 @@ the benchmark.
     from OpenDenoising import model
     from OpenDenoising import evaluation
 
+For now on, we suppose you are running your codes on the project root folder.
+
 The following function will be used throughout this tutorial to display denoising results,
 
-.. code-block:: python
+.. code:: python
 
     def display_results(clean_imgs, noisy_imgs, rest_images, name):
         """Display denoising results."""
@@ -44,13 +46,13 @@ The following function will be used throughout this tutorial to display denoisin
 
 Moreover, you may download the data we will use by using the following function,
 
-.. code-block:: python
+.. code:: python
 
     data.download_BSDS_grayscale(output_dir="./tmp/BSDS500/")
 
 The models will be evaluated using the BSDS dataset,
 
-.. code-block::
+.. code:: python
 
     # Training images generator
     train_generator = data.DatasetFactory.create(path="./tmp/BSDS500/Train",
@@ -62,7 +64,7 @@ The models will be evaluated using the BSDS dataset,
                                                  name="BSDS_Train")
 
 
-.. code-block:: python
+.. code:: python
 
     # Validation images generator
     valid_generator = data.DatasetFactory.create(path="./tmp/BSDS500/Valid",
@@ -123,9 +125,9 @@ You can charge your model by passing it to the “**model_function**”
 argument. If you need to pass any optional arguments to the class init
 function, you can do so by using kwargs,
 
-.. code:: ipython3
+.. code:: python
 
-    torch_ex1 = model.PytorchModel(model_name="dncnn_pytorch", logdir="../../training_logs/Pytorch")
+    torch_ex1 = model.PytorchModel(model_name="dncnn_pytorch")
     torch_ex1.charge_model(model_function=model.architectures.pytorch.DnCNN, depth=17)
 
 Charging from a file
@@ -135,9 +137,9 @@ To charge a model from a file, you need to save it with extension “.pt”
 or “.pth”. Important to mention, you need to save your whole model, and
 not only its state dict.
 
-.. code:: ipython3
+.. code:: python
 
-    torch_ex2 = model.PytorchModel(model_name="dncnn_pytorch", logdir="../../training_logs/Pytorch")
+    torch_ex2 = model.PytorchModel(model_name="dncnn_pytorch")
     torch_ex2.charge_model(model_path="./Additional Files/Pytorch Models/dncnn.pth", depth=17)
 
 Running inference
@@ -151,7 +153,7 @@ function automatically handles conversion between **NCHW** and **NHWC**.
 In all cases, you should expect the shape of inputs to be equal to the
 output shape.
 
-.. code:: ipython3
+.. code:: python
 
     # Get batch from valid_generator
     noisy_imgs, clean_imgs = next(valid_generator)
@@ -211,9 +213,9 @@ function <https://pytorch.org/docs/stable/nn.html#loss-functions>`__.
 
 Number of validation batches drawn at the end of each epoch.
 
-.. code:: ipython3
+.. code:: python
 
-    torch_ex3 = model.PytorchModel(model_name="dncnn_pytorch", logdir="../../training_logs/Pytorch")
+    torch_ex3 = model.PytorchModel(model_name="dncnn_pytorch", logdir="./training_logs/Pytorch")
     torch_ex3.charge_model(model_function=model.architectures.pytorch.DnCNN, depth=17)
     torch_ex3.train(train_generator=train_generator,
                     valid_generator=valid_generator,

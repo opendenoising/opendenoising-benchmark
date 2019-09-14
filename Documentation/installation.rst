@@ -8,7 +8,7 @@ Creating a virtual environment
 
 On a directory of your choice, clone the OpenDenoising benchmark repository by using,
 
-.. code-block:: bash
+.. code:: bash
     
     $ git clone https://github.com/opendenoising/benchmark
 
@@ -19,28 +19,30 @@ installed, a GPU CUDA-compatible, CUDA installed:
 
 * Install virtualenv:
 
-.. code-block:: bash
+.. code:: bash
 
     $ sudo apt install virtualenv
 
 
 * Create a virtual environment anywhere with VENV-NAME the name given to the environment:
 
-.. code-block::
+.. code:: bash
 
     $ virtualenv --system-site-packages -p python3 ~/virtualenvironments/VENV_NAME
 
 
 * Activate the venv:
  
-.. code-block:: bash
+.. code:: bash
+
     $ source ~/virtualenvironments/VENV_NAME/bin/activate
 
 
 If the last command succeeded, the command line should now be preceded by (VENV_NAME).
 The virtual environment can be exited using:
 
-.. code-block:: bash
+.. code:: bash
+
     $ deactivate
 
 
@@ -52,7 +54,7 @@ GPU Users
 
 Here is a list of required packages to run OpenDenoising benchmark:
 
-.. code-block::
+.. parsed-literal::
 
     Keras==2.2.4
     Keras-Applications==1.0.8
@@ -80,7 +82,7 @@ Here is a list of required packages to run OpenDenoising benchmark:
 
 To install them, you can simply go to the project's root, and run the following command,
 
-.. code-block:: bash
+.. code:: bash
 
     $ pip install -r requirements_gpu.txt
 
@@ -89,7 +91,7 @@ CPU Users
 
 Here is a list of required packages to run OpenDenoising benchmark:
 
-.. code-block::
+.. parsed-literal::
 
     Keras==2.2.4
     Keras-Applications==1.0.8
@@ -117,7 +119,7 @@ Here is a list of required packages to run OpenDenoising benchmark:
 
 To install them, you can simply go to the project's root, and run the following command,
 
-.. code-block:: bash
+.. code:: bash
 
     $ pip install -r requirements_cpu.txt
 
@@ -137,7 +139,7 @@ we detail the steps for installing Matlab's dependencies.
 If you will use Matlab Deep Learning toolbox with recent GPU cards (such as RTX 2080 ti), you should add the Following
 lines to your startup script:
 
-.. code-block:: Matlab
+.. code:: Matlab
 
     warning off parallel:gpu:device:DeviceLibsNeedsRecompiling
     try
@@ -161,7 +163,7 @@ you need to modify the file "pathdef.m". If you are on Windows, all you have to 
 main window. However if you are using Linux and you do not have the rights to modify it, you can run the following commands
 on the terminal,
 
-.. code-block:: bash
+.. code:: bash
 
     $ sudo nano /usr/local/MATLAB/R2018b/toolbox/local/pathdef.m
 
@@ -169,7 +171,7 @@ on the terminal,
 This will open nano on the needed file with the right permissions. You need to write the following line before the default
 entries,
 
-.. code-block::
+.. parsed-literal::
 
     'PATH_TO_BENCHMARK/data:', ...
 
@@ -182,7 +184,7 @@ Installing Matlab's Python engine
 
 Open an terminal, then, go to matlab engine setup folder,
 
-.. code-block:: bash
+.. code:: bash
 
     $ cd /usr/local/MATLAB/R2018b/extern/engines/python
 
@@ -190,7 +192,8 @@ Open an terminal, then, go to matlab engine setup folder,
 Following `matlab's instructions <https://fr.mathworks.com/help/matlab/matlab_external/install-matlab-engine-api-for-python-in-nondefault-locations.html>`_,
 install the engine on your venv folder,
 
-.. code-block:: bash
+.. code:: bash
+
     $ sudo $VENVROOT/bin/python setup.py install --prefix="$VENVROOT/"
 
 
@@ -199,7 +202,7 @@ all your aliases, so you need to specify the path to your venv python. Equally, 
 will output its files, so that you can run its engine. To test if your installation was succesfull, you can try to execute the following
 python script:
 
-.. code-block:: python
+.. code:: python
 
     import matlab.engine
     eng = matlab.engine.start_matlab()
@@ -219,7 +222,7 @@ Setting up multiple CUDA versions
 
 If you will use [Matconvnet toolbox](http://www.vlfeat.org/matconvnet/), you need to install gcc-6 by running
 
-.. code-block:: bash
+.. code:: bash
 
     $ sudo apt install gcc-6 g++-6
 
@@ -229,9 +232,9 @@ Tensorflow's requirement), you need to install multiple CUDA's on your system (w
 Assuming you already have on your system a CUDA version different from 9.1, you need to follow these steps,
 
 * Download CUDA Toolkit 9.1 from NVIDIA's `website <https://developer.nvidia.com/cuda-91-download-archive>`_, then execute
-it using the '--override' option, as follows:
+  it using the '--override' option, as follows:
 
-.. code-block:: bash
+.. code:: bash
 
     $ ./cuda_9.1.85_387.26_linux.run --override
 
@@ -240,7 +243,7 @@ The override option is needed, so that the installer won't fail because of drive
 (if you have a newer version of CUDA, it is likely that you have a more recent driver). Once you run the previous line,
 the installer will ask you the following questions,
 
-.. code-block::
+.. parsed-literal::
 
     You are attempting to install on an unsupported configuration. Do you wish to continue?
     > y
@@ -263,13 +266,13 @@ Moreover, such choice does not stop you from using CUDA-9.1 in Matconvnet.
 
 * Add the different CUDA paths to LD_LIBRARY_PATH:
 
-.. code-block:: bash
+.. code:: bash
 
     $ export LD_LIBRARY_PATH=/usr/local/cuda-10.1/lib64:/usr/local/cuda-9.1/lib64:\$LD_LIBRARY_PATH
 
 At the end of this process, your LD_LIBRARY_PATH should contain the following line as substring:
 
-.. code-block::
+.. parsed-literal::
     /usr/local/cuda/lib64:/usr/local/cuda-10.1/lib64:/usr/local/cuda-9.1/lib64
 
 
@@ -278,7 +281,7 @@ Compiling Matconvnet library
 
 Go to the directory where you extracted matconvnet files, then, after lauching matlab, use the following commands,
 
-.. code-block:: matlab
+.. code:: matlab
 
     cd matlab
     CudaPath = "/usr/local/cuda-9.1";
@@ -286,7 +289,7 @@ Go to the directory where you extracted matconvnet files, then, after lauching m
 
 vl_compilenn is a matlab function that will compilate matconvnet library. Here's what each option means,
 
-.. code-block::
+.. parsed-literal::
 
     EnableGpu: enables GPU usage by matconvnet.
     CudaRoot: indicates the path to Cuda's root folder.
@@ -294,7 +297,7 @@ vl_compilenn is a matlab function that will compilate matconvnet library. Here's
 
 **obs (27.06.19):** For matlab 2018b users, matconvnet compiling script happens to have a bug, which can be easily corrected by replacing **line 620** by,
 
-.. code-block:: matlab
+.. code:: matlab
 
     args = horzcat({'-outdir', mex_dir}, ...
     flags.base, flags.mexlink, ...
@@ -306,7 +309,7 @@ vl_compilenn is a matlab function that will compilate matconvnet library. Here's
 
 and **line 359** to:
 
-.. code-block:: matlab
+.. code:: matlab
 
     flags.mexlink = {'-lmwblas'};
 

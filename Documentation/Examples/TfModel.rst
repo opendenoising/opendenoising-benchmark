@@ -5,7 +5,7 @@ This tutorial is a part of Model module guide. Here, we explore how you
 can use the TensorflowModel wrapper to use your Tensorflow deep learning
 models in the benchmark.
 
-.. code:: ipython3
+.. code:: python
 
     # Python packages
     import gc
@@ -18,10 +18,11 @@ models in the benchmark.
     from OpenDenoising import model
     from OpenDenoising import evaluation
 
+For now on, we suppose you are running your codes on the project root folder.
 
 The following function will be used throughout this tutorial to display denoising results,
 
-.. code-block:: python
+.. code:: python
 
     def display_results(clean_imgs, noisy_imgs, rest_images, name):
         """Display denoising results."""
@@ -44,13 +45,13 @@ The following function will be used throughout this tutorial to display denoisin
 
 Moreover, you may download the data we will use by using the following function,
 
-.. code-block:: python
+.. code:: python
 
     data.download_BSDS_grayscale(output_dir="./tmp/BSDS500/")
 
 The models will be evaluated using the BSDS dataset,
 
-.. code-block::
+.. code:: python
 
     # Training images generator
     train_generator = data.DatasetFactory.create(path="./tmp/BSDS500/Train",
@@ -62,7 +63,7 @@ The models will be evaluated using the BSDS dataset,
                                                  name="BSDS_Train")
 
 
-.. code-block:: python
+.. code:: python
 
     # Validation images generator
     valid_generator = data.DatasetFactory.create(path="./tmp/BSDS500/Valid",
@@ -74,7 +75,7 @@ The models will be evaluated using the BSDS dataset,
 To execute multiple models that access the GPU, you need to allow Tensorflow/Keras to allocate memory only when
 needed. This is done through,
 
-.. code:: ipython3
+.. code:: python
 
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
@@ -137,7 +138,7 @@ Once the computational graph is constructed, we may use Tensorflow’s
 graph utils to retrieve tensor names. For instance, consider the
 following function:
 
-.. code:: ipython3
+.. code:: python
 
     def tf_dncnn(depth=17, n_filters=64, kernel_size=3, n_channels=1, channels_first=False):
         """Tensorflow implementation of dncnn. Implementation was based on https://github.com/wbhu/DnCNN-tensorflow.
@@ -192,11 +193,11 @@ following function:
                                      use_bias=False)
         output = tf.subtract(input_tensor, noise, name="output")
 
-.. code:: ipython3
+.. code:: python
 
-    tfmodel_ex1 = model.TfModel(model_name="TensorflowDnCNN", logdir="../../training_logs/Tensorflow")
+    tfmodel_ex1 = model.TfModel(model_name="TensorflowDnCNN")
 
-.. code:: ipython3
+.. code:: python
 
     tfmodel_ex1.charge_model(model_function=tf_dncnn)
 
@@ -206,20 +207,14 @@ following function:
     Loading model from model function. Be sure to train your network before using it.
 
 
-.. code:: ipython3
+To deallocate Tensorflow's graph from memory, you may use the following snippet,
+
+.. code:: python
 
     # Resets variables and tf graph
     tfmodel_ex1 = None
     tf.reset_default_graph()
     gc.collect()
-
-
-
-
-.. parsed-literal::
-
-    4
-
 
 
 From a file
@@ -257,18 +252,13 @@ that the TfModel class can find the files and load them. As an example,
 consider the files in “./Additional Files/Tensorflow Models”. There, we
 have the four necessary files to rebuild our Tensorflow model.
 
-.. code:: ipython3
+.. code:: python
 
-    tfmodel_ex2 = model.TfModel(model_name="TensorflowDnCNN", logdir="../../training_logs/Tensorflow")
+    tfmodel_ex2 = model.TfModel(model_name="TensorflowDnCNN")
     tfmodel_ex2.charge_model(model_path="./Additional Files/Tensorflow Models/from_checkpoint/model.ckpt.meta")
 
 
-.. parsed-literal::
-
-    Loading model using Checkpoint API.
-
-
-.. code:: ipython3
+.. code:: python
 
     # Get batch from valid_generator
     noisy_imgs, clean_imgs = next(valid_generator)
@@ -281,18 +271,13 @@ have the four necessary files to rebuild our Tensorflow model.
 .. image:: Figures/tf_output_20_0.png
 
 
-.. code:: ipython3
+Then deallocates Tensorflow's graph from memory to execute the other sections,
+
+.. code:: python
 
     tfmodel_ex2 = None
     tf.reset_default_graph()
     gc.collect()
-
-
-
-
-.. parsed-literal::
-
-    254071
 
 
 
@@ -304,9 +289,9 @@ done by passing to model_path the path to the .pb file. We remark that,
 following the requirements of the API, you need to have a folder in the
 directory called “variables”, that will hold variable values.
 
-.. code:: ipython3
+.. code:: python
 
-    tfmodel_ex3 = model.TfModel(model_name="TensorflowDnCNN", logdir="../../training_logs/Tensorflow")
+    tfmodel_ex3 = model.TfModel(model_name="TensorflowDnCNN", logdir="./training_logs/Tensorflow")
     tfmodel_ex3.charge_model(model_path="./Additional Files/Tensorflow Models/from_saved_model/saved_model.pb")
 
 
@@ -322,7 +307,7 @@ Inference on TfModels can be done as if the instance was a function (the
 class implements “**call**”) function, as can be saw bellow, where we
 reuse the TfModel loaded before.
 
-.. code:: ipython3
+.. code:: python
 
     # Get batch from valid_generator
     noisy_imgs, clean_imgs = next(valid_generator)
@@ -334,19 +319,13 @@ reuse the TfModel loaded before.
 
 .. image:: Figures/tf_output_25_0.png
 
+Then deallocates Tensorflow's graph from memory to execute the other sections,
 
-.. code:: ipython3
+.. code:: python
 
     tfmodel_ex3 = None
     tf.reset_default_graph()
     gc.collect()
-
-
-
-
-.. parsed-literal::
-
-    249984
 
 
 
@@ -359,32 +338,32 @@ DatasetGenerator for your training images (and possibly, for you
 validation images) you can call the “**train**” method from KerasModel
 class, which takes the following parameters,
 
--  train_generator: any instance of a dataset generator class. This
+-  **train_generator**: any instance of a dataset generator class. This
    class will yield the data pairs (noisy image, clean image).
--  valid_generator: optional. Specify it if you have validation data
+-  **valid_generator**: optional. Specify it if you have validation data
    available.
--  n_epochs: number of training epochs. Default is 100.
--  n_stages: number of training batches drawn at random from the dataset
+-  **n_epochs**: number of training epochs. Default is 100.
+-  **n_stages**: number of training batches drawn at random from the dataset
    at each training epoch. Default value is 500.
--  learning_rate: constant regulating the weight updates in your model.
+-  **learning_rate**: constant regulating the weight updates in your model.
    Default is 1e-3.
--  optimizer_name: you can specify the optimizer’s name for you model.
+-  **optimizer_name**: you can specify the optimizer’s name for you model.
    You can do this by lookin at the names in `Tensorflow
    documentation <https://www.tensorflow.org/api_docs/python/tf/train>`__.
    Default is “AdamOptimizer” optimizer.
--  metrics: list of metrics that will be tracked during training. There
+-  **metrics**: list of metrics that will be tracked during training. There
    are a couple of useful metrics implemented on **evaluation** module
    (such as PSNR, SSIM, MSE) but you can also implement your own
    following `Keras conventions <https://keras.io/metrics/>`__.
--  kcallbacks: list of Keras callbacks. You can either use `Keras
+-  **kcallbacks**: list of Keras callbacks. You can either use `Keras
    default callbacks <https://keras.io/callbacks/>`__ or the callbacks
    defined on :py:mod:`evaluation` module.
--  loss: a function following the same specification as metrics. It will
+-  **loss**: a function following the same specification as metrics. It will
    be using during optimization as an objective function to be
    minimized. You can either use `Keras
    default losses <https://keras.io/losses/>`__ or the metrics
    defined on :py:mod:`evaluation` module.
--  valid_steps: number of validation batches drawn at each validation
+-  **valid_steps**: number of validation batches drawn at each validation
    epoch.
 
 To show how a Tensorflow model can be trained, consider the training of
@@ -400,19 +379,14 @@ paper <https://arxiv.org/pdf/1608.03981.pdf>`__:
 For evaluation, we will use a disjoint subset of BSDS, consisting on 68
 images which are not present in the training dataset.
 
-.. code:: ipython3
+.. code:: python
 
     # Creating and charging the model
-    tfmodel_ex4 = model.TfModel(model_name="TensorflowDnCNN", logdir="../../training_logs/Tensorflow")
+    tfmodel_ex4 = model.TfModel(model_name="TensorflowDnCNN", logdir="./training_logs/Tensorflow")
     tfmodel_ex4.charge_model(model_function=tf_dncnn)
 
 
-.. parsed-literal::
-
-    Loading model from model function. Be sure to train your network before using it.
-
-
-.. code:: ipython3
+.. code:: python
 
     tfmodel_ex4.train(train_generator=train_generator,
                       valid_generator=valid_generator,

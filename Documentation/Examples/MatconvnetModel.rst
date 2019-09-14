@@ -7,7 +7,7 @@ models in the benchmark.
 
 First, being on the project's root, you need to import the necessary modules,
 
-.. code:: ipython3
+.. code:: python
 
     # Python packages
     import gc
@@ -22,9 +22,11 @@ First, being on the project's root, you need to import the necessary modules,
 
     eng = matlab.engine.start_matlab()
 
+For now on, we suppose you are running your codes on the project root folder.
+
 The following function will be used throughout this tutorial to display denoising results,
 
-.. code:: ipython3
+.. code:: python
 
     def display_results(clean_imgs, noisy_imgs, rest_images, name):
         """Display denoising results."""
@@ -47,13 +49,13 @@ The following function will be used throughout this tutorial to display denoisin
 
 Moreover, you may download the data we will use by using the following function,
 
-.. code-block:: python
+.. code:: python
 
     data.download_BSDS_grayscale(output_dir="./tmp/BSDS500/")
 
 The models will be evaluated using the BSDS dataset,
 
-.. code-block:: python
+.. code:: python
 
     # Validation images generator
     valid_generator = data.DatasetFactory.create(path="./tmp/BSDS500/Valid",
@@ -175,17 +177,17 @@ as the model weight + architecture “.mat” file, you only need to pass
 the path to the “.mat” file. Being so, consider the files on
 “./Additional Files/Matconvnet Models/”,
 
-.. code:: ipython3
+.. code:: python
 
     model_path = "/home/efernand/repos/Summer_Internship_2019/Code/examples" \
                  "/Jupyter Notebooks/Additional Files/Matconvnet Models/simplenn/dncnn.mat"
 
-.. code:: ipython3
+.. code:: python
 
     matconvnet_ex1 = model.MatconvnetModel(model_name="DnCNN")
     matconvnet_ex1.charge_model(model_path=model_path)
 
-.. code:: ipython3
+.. code:: python
 
     # Get batch from valid_generator
     noisy_imgs, clean_imgs = next(valid_generator)
@@ -254,17 +256,17 @@ few syntax changes while loading the model, as follows,
 
    end
 
-.. code:: ipython3
+.. code:: python
 
     model_path = "/home/efernand/repos/Summer_Internship_2019/Code/examples" \
                  "/Jupyter Notebooks/Additional Files/Matconvnet Models/dagnn/mwcnn.mat"
 
-.. code:: ipython3
+.. code:: python
 
     matconvnet_ex2 = model.MatconvnetModel(model_name="mwcnn")
     matconvnet_ex2.charge_model(model_path=model_path)
 
-.. code:: ipython3
+.. code:: python
 
     # Get batch from valid_generator
     noisy_imgs, clean_imgs = next(valid_generator)
