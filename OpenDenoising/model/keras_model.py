@@ -200,13 +200,14 @@ class KerasModel(AbstractDeepLearningModel):
         learning_rate : float
             Initial value for learning rate value for optimization
         optimizer_name : str
-            Name of optimizer employed. Check Keras documentation for more information.
+            Name of optimizer employed. Check `Keras documentation <https://keras.io/optimizers/>`_
+            for more information.
         metrics : list
             List of tensorflow functions implementing scalar metrics (see metrics in evaluation).
         kcallbacks : list
             List of keras callback instances. Consult Keras documentation and evaluation module for more
             information.
-        loss : :class:`function`
+        loss : function
             Tensorflow-based loss function. It should take as input two Tensors and output a scalar Tensor holding
             the loss computation.
         valid_steps : int
