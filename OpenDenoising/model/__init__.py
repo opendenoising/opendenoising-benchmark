@@ -63,7 +63,5 @@ from .utils import *
 from .filtering import *
 from .architectures import *
 
-dists = [str(dist).split(" ")[0] for dist in pkg_resources.working_set]
-if 'matlabengineforpython' in dists:
-    from .matlab_model import MatlabModel
-    from .matconvnet_model import MatconvnetModel
+from .matlab_model import MatlabModel
+from .matconvnet_model import MatconvnetModel

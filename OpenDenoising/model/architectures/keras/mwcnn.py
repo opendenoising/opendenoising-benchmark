@@ -155,7 +155,7 @@ class IDWT(layers.Layer):
 
 
 def mwcnn_1(n_levels=3, kernel_size=3, n_conv_blocks=4, n_channels=1, channels_first=False):
-    """Keras implementation of Multilevel Wavelet-CNN from [1].
+    """Keras implementation of Multilevel Wavelet-CNN from [1]_.
 
     Notes
     -----

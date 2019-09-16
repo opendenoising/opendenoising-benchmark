@@ -41,7 +41,7 @@ from keras import layers, models, initializers
 
 
 def rednet(depth=20, n_filters=64, kernel_size=(5, 5), skip_step=2, n_channels=1, channels_first=False):
-    """Keras implementation of RedNet. Implementation following the paper [1].
+    """Keras implementation of RedNet. Implementation following the paper [1]_.
 
     Parameters
     ----------

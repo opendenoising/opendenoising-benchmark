@@ -72,8 +72,9 @@ class CleanDatasetGenerator(AbstractDatasetGenerator):
         Dictionary whose keys are functions implementing the noise process, and the value is a list containing the noise
         function parameters. If you do not want to specify any parameters, your list should be empty.
 
-    Example
-    -------
+    Examples
+    --------
+    
     The following example corresponds to a Dataset Generator which reads images from "./images", yields batches of
     length 32, applies Gaussian noise with intensity drawn uniformely from the range [0, 55] followed by
     "Super Resolution noise" of intensity 4. Moreover, the dataset shuffles the data, yields them in NHWC format,

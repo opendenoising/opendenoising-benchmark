@@ -18,7 +18,7 @@ should provide:
 
 To give a better idea of the class structure and its relations to the other modules, we show the following UML class diagram,
 
-.. image:: /Figures/ClassDiagram.png
+.. image:: ./Figures/ClassDiagram.png
     :alt:
 
 The documentation of this module is divided as follows,

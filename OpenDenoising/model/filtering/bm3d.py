@@ -36,13 +36,26 @@
 
 
 import numpy as np
-import matlab.engine
 
-eng = matlab.engine.start_matlab()
+try:
+    import matlab.engine
+    MATLAB_IMPORTED = True
+except ImportError as err:
+    module_logger.warning("Matlab engine was not installed correctly. Take a look on the documentation's tutorial for \
+                           its installation.")
+    err_import = err
+    MATLAB_IMPORTED = False
+
+try:
+    eng = matlab.engine.start_matlab()
+    MATLAB_LAUNCHED = True
+except matlab.engine.EngineError as err:
+    err_launch = err
+    MATLAB_LAUNCHED = False
 
 
 def BM3D(z, sigma=25.0, profile="np"):
-    """This function wraps MATLAB's BM3D [1] implementation available on `author's website
+    """This function wraps MATLAB's BM3D [1]_ implementation available on `author's website
     <http://www.cs.tut.fi/~foi/GCF-BM3D/>`_.
 
     Notes
@@ -84,6 +97,10 @@ def BM3D(z, sigma=25.0, profile="np"):
     .. [1] Dabov K, Foi A, Katkovnik V, Egiazarian K. Image denoising by sparse 3-D transform-domain collaborative
            filtering. IEEE Transactions on image processing. 2007
     """
+    global MATLAB_IMPORTED, MATLAB_LAUNCHED
+    assert MATLAB_IMPORTED, "Got expcetion '{}' while importing matlab.engine. Check Matlab's Engine installation.".format(err_import)
+    global MATLAB_LAUNCHED
+    assert MATLAB_LAUNCHED, "Got expcetion '{}' while launching matlab.engine. Check Matlab's Engine installation.".format(err_launch)
     _z = z.copy()
     rgb = True if _z.shape[-1] == 3 else False
     if rgb:

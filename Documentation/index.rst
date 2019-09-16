@@ -25,9 +25,9 @@ table bellow shows the compatibility between our benchmark and various framework
    :maxdepth: 2
    :caption: Contents:
 
-   installation.rst
-   benchmark_api_doc.rst
-   examples.rst
+   source/installation.rst
+   source/api_doc.rst
+   source/examples.rst
 
 Indices and tables
 ==================

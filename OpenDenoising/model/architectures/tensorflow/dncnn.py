@@ -39,7 +39,7 @@ import tensorflow as tf
 
 
 def dncnn(depth=17, n_filters=64, kernel_size=3, n_channels=1, channels_first=False):
-    """Tensorflow implementation of DnCNN. Implementation followed the original paper [1]. Authors original code can be
+    """Tensorflow implementation of DnCNN. Implementation followed the original paper [1]_. Authors original code can be
     found on `their Github Page
     <https://github.com/cszn/DnCNN/>`_.
 
@@ -76,8 +76,8 @@ def dncnn(depth=17, n_filters=64, kernel_size=3, n_channels=1, channels_first=Fa
     .. [1] Zhang K, Zuo W, Chen Y, Meng D, Zhang L. Beyond a gaussian denoiser: Residual learning of deep cnn
            for image denoising. IEEE Transactions on Image Processing. 2017
 
-    Example
-    -------
+    Examples
+    --------
     >>> from OpenDenoising.model.architectures.tensorflow import dncnn
     >>> (dncnn_s_input, dncnn_s_is_training, dncnn_s_output) = dncnn(depth=17)
     >>> (dncnn_b_input, dncnn_b_is_training, dncnn_b_output) = dncnn(depth=20)

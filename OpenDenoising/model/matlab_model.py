@@ -38,13 +38,13 @@
 import os
 import numpy as np
 
-from matlab.engine import EngineError
-from matlab.engine import MatlabExecutionError
 from OpenDenoising.model import module_logger
 from OpenDenoising.model import AbstractDeepLearningModel
 
 try:
     import matlab.engine
+    from matlab.engine import EngineError
+    from matlab.engine import MatlabExecutionError
     MATLAB_IMPORTED = True
 except ImportError as err:
     module_logger.warning("Matlab engine was not installed correctly. Take a look on the documentation's tutorial for \
@@ -80,6 +80,8 @@ class MatlabModel(AbstractDeepLearningModel):
     :class:`model.AbstractDeepLearningModel` : for the basic functionalities of Deep Learning based Denoisers.
     """
     def __init__(self, model_name="MatlabModel", logdir="./logs/Matlab", return_diff=False):
+        global MATLAB_IMPORTED
+        assert MATLAB_IMPORTED, "Got expcetion {} while importing matlab.engine. Check Matlab's Engine installation.".format(err)
         try:
             self.engine = matlab.engine.start_matlab()
         except EngineError as err:
@@ -106,10 +108,6 @@ class MatlabModel(AbstractDeepLearningModel):
         model_path : str
             String containing the path to the .mat file holding the trained network object.
 
-        See Also
-        --------
-        `Matlab Deep Learning Toolbox documentation
-        <https://mathworks.com/products/deep-learning.html>`_.
         """
         assert (model_function is not None or model_path is not None), "You should provide at least a model_function\
                                                                         or a model_path to build your neural network\

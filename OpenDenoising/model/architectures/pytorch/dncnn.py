@@ -41,7 +41,7 @@ import torch.nn as nn
 
 class DnCNN(nn.Module):
     def __init__(self, depth=17, n_filters=64, kernel_size=3, n_channels=1):
-        """Pytorch implementation of DnCNN. Implementation followed the original paper [1]. Authors original code can be
+        """Pytorch implementation of DnCNN. Implementation followed the original paper [1]_. Authors original code can be
         found on `their Github Page
         <https://github.com/cszn/DnCNN/>`_.
 

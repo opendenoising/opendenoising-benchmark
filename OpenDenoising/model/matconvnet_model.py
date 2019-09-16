@@ -72,7 +72,7 @@ class MatconvnetModel(AbstractDeepLearningModel):
     """
     def __init__(self, model_name="MatconvnetModel", return_diff=False):
         global MATLAB_IMPORTED
-        assert MATLAB_IMPORTED, "Expected Matlab engine to be installed"
+        assert MATLAB_IMPORTED, "Got expcetion {} while importing matlab.engine. Check Matlab's Engine installation.".format(err)
         self.engine = matlab.engine.start_matlab()
         super().__init__(model_name, framework="Matconvnet", return_diff=return_diff)
         self.model_path = None

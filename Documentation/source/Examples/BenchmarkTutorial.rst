@@ -39,24 +39,24 @@ structure:
 **Clean Dataset (only references)**
 
 .. parsed-literal::
-
+    
     DatasetName/
-    |-- Train
-    |   |-- ref
-    |-- Valid
-    |   |-- ref
+    \|\-\- Train
+    \|   \|\-\- ref
+    \|\-\- Valid
+    \|   \|\-\- ref
 
 **Full Dataset (references and noisy images)**
 
 .. parsed-literal::
 
     DatasetName/
-    |-- Train
-    |   |-- in
-    |   |-- ref
-    |-- Valid
-    |   |-- in
-    |   |-- ref
+    \|\-\- Train
+    \|   \|\-\- in
+    \|   \|\-\- ref
+    \|\-\- Valid
+    \|   \|\-\- in
+    \|   \|\-\- ref
 
 To run this example, you can use the :py:mod:`data` module to download test datasets,
 

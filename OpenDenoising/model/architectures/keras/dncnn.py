@@ -40,7 +40,7 @@ from keras import layers, models
 
 
 def dncnn(depth=17, n_filters=64, kernel_size=(3, 3), n_channels=1, channels_first=False):
-    """Keras implementation of DnCNN. Implementation followed the original paper [1]. Authors original code can be
+    """Keras implementation of DnCNN. Implementation followed the original paper [1]_. Authors original code can be
     found on `their Github Page
     <https://github.com/cszn/DnCNN/>`_.
 
@@ -68,8 +68,9 @@ def dncnn(depth=17, n_filters=64, kernel_size=(3, 3), n_channels=1, channels_fir
     .. [1] Zhang K, Zuo W, Chen Y, Meng D, Zhang L. Beyond a gaussian denoiser: Residual learning of deep cnn
            for image denoising. IEEE Transactions on Image Processing. 2017
 
-    Example
-    -------
+    Examples
+    --------
+    
     >>> from OpenDenoising.model.architectures.keras import dncnn
     >>> dncnn_s = dncnn(depth=17)
     >>> dncnn_b = dncnn(depth=20)

@@ -39,7 +39,7 @@ from keras import layers, models, backend
 
 
 def xnet(depth=8, n_filters=64, kernel_size=(3, 3), skernel_size=(9, 9), n_channels=1, channels_first=False):
-    """xNet implementation on Keras. Implementation followed the paper [1].
+    """xNet implementation on Keras. Implementation followed the paper [1]_.
 
     Notes
     -----
