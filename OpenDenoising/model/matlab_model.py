@@ -86,6 +86,7 @@ class MatlabModel(AbstractDeepLearningModel):
             self.engine = matlab.engine.start_matlab()
         except EngineError as err:
             module_logger.exception("Matlab license error. Make sure you have a valid Matlab license.")
+            raise err
         assert self.engine.license('test', 'neural_network_toolbox'), "Expected Neural Network Toolbox to be installed."
         super().__init__(model_name, framework="Matlab", return_diff=return_diff)
         self.logdir = logdir

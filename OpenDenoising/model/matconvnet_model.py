@@ -73,7 +73,13 @@ class MatconvnetModel(AbstractDeepLearningModel):
     def __init__(self, model_name="MatconvnetModel", return_diff=False):
         global MATLAB_IMPORTED
         assert MATLAB_IMPORTED, "Got expcetion {} while importing matlab.engine. Check Matlab's Engine installation.".format(err)
-        self.engine = matlab.engine.start_matlab()
+
+        try:
+            self.engine = matlab.engine.start_matlab()
+        except matlab.engine.EngineError as err:
+            module_logger.exception("Matlab license error. Make sure you have a valid Matlab license.")
+            raise err
+
         super().__init__(model_name, framework="Matconvnet", return_diff=return_diff)
         self.model_path = None
         self.denoise_func = None
