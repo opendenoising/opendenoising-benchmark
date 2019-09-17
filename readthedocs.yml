@@ -1,6 +1,5 @@
 sphinx:
   builder: html
-  configuration: Documentation/conf.py
 
 conda:
   file: environment.yml
