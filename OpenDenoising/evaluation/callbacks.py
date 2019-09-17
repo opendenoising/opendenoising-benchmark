@@ -244,7 +244,7 @@ class ExponentialSchedule(LrSchedulerCallback):
         lr : float
             Learning rate value.
         """
-        lr = self.initial_lr * (gamma ** epoch)
+        lr = self.initial_lr * (self.gamma ** epoch)
         lr = np.asarray(lr, dtype="float64")
 
         return lr

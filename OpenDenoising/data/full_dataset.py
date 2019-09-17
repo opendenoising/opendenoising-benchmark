@@ -145,7 +145,7 @@ class FullDatasetGenerator(AbstractDatasetGenerator):
             inp_batch.append(inp)
         ref_batch = np.array(ref_batch) if ref_batch[0].ndim == 3 else np.concatenate(ref_batch, axis=0)
         inp_batch = np.array(inp_batch) if inp_batch[0].ndim == 3 else np.concatenate(inp_batch, axis=0)
-        print("Data shape: {}".format(ref_batch.shape))
+        module_logger.debug("Data shape: {}".format(ref_batch.shape))
 
         return ref_batch, inp_batch
 

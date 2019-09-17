@@ -154,8 +154,8 @@ class IDWT(layers.Layer):
             return input_shape[0], None, None, input_shape[-1] // 4
 
 
-def mwcnn_1(n_levels=3, kernel_size=3, n_conv_blocks=4, n_channels=1, channels_first=False):
-    """Keras implementation of Multilevel Wavelet-CNN from [1]_.
+def mwcnn(kernel_size=3, n_conv_blocks=4, n_channels=1):
+    """Keras implementation of Multilevel Wavelet-CNN from [1].
 
     Notes
     -----
@@ -164,16 +164,12 @@ def mwcnn_1(n_levels=3, kernel_size=3, n_conv_blocks=4, n_channels=1, channels_f
 
     Parameters
     ----------
-    n_levels : int
-        Number of Discrete Wavelet Transforms in the network.
     kernel_size : list
         2D Tuple specifying the size of the kernel window used to compute activations.
     n_conv_blocks : int
         Number of convolutional blocks (Conv + BN + ReLU) following each DWT.
     n_channels : int
         Number of image channels that the network processes (1 for grayscale, 3 for RGB)
-    channels_first : bool
-        Whether channels comes first (NCHW) or last (NHWC)
 
     Returns
     -------
@@ -182,60 +178,56 @@ def mwcnn_1(n_levels=3, kernel_size=3, n_conv_blocks=4, n_channels=1, channels_f
 
     References
     ----------
-    .. [1] Liu P, Zhang H, Zhang K, Lin L, Zuo W. Multi-level wavelet-CNN for image restoration. InProceedings of the 
+    .. [1] Liu P, Zhang H, Zhang K, Lin L, Zuo W. Multi-level wavelet-CNN for image restoration. InProceedings of the
            IEEE Conference on Computer Vision and Pattern Recognition Workshops 2018
     """
     assert (n_channels == 1 or n_channels == 3), "Expected 'n_channels' to be 1 or 3, but got {}".format(n_channels)
-    x = layers.Input([n_channels, None, None]) if channels_first else layers.Input([None, None, n_channels])
-    data_format = "channels_first" if channels_first else "channels_last"
-    y = x
-    filters = [160, 256, 256]
-    downsampled_x = []
+    x = layers.Input([None, None, n_channels])
 
-    """ Downsampling """
-    for i in range(n_levels - 1):
-        with tf.name_scope("Level_{}_Left".format(i)):
-            y = DWT()(y)
-            for j in range(n_conv_blocks):
-                with tf.name_scope("FullConvNet_{}".format(j)):
-                    y = layers.Conv2D(filters=filters[i], kernel_size=kernel_size, strides=(1, 1), padding='same',
-                                      kernel_initializer='Orthogonal', use_bias=False, data_format=data_format)(y)
-                    y = layers.BatchNormalization(axis=-1, momentum=0.0, epsilon=1e-3)(y)
-                    y = layers.Activation("relu")(y)
-            downsampled_x.append(y)
+    # MWCNN network
+    # First DWT
+    y1 = DWT()(x)  # has shape [None, None, None, 4]
+    for _ in range(4):
+        y1 = layers.Conv2D(filters=160, kernel_size=kernel_size, padding='same', use_bias=False)(y1)
+        y1 = layers.BatchNormalization()(y1)
+        y1 = layers.Activation('relu')(y1)
+    # Second DWT
+    y2 = DWT()(y1)  # y1 => [None, None, None, 160], y2 => [None, None, None, 640]
+    for _ in range(4):
+        y2 = layers.Conv2D(filters=256, kernel_size=kernel_size, padding='same', use_bias=False)(y2)
+        y2 = layers.BatchNormalization()(y2)
+        y2 = layers.Activation('relu')(y2)
+    # Third DWT
+    y3 = DWT()(y2)  # y2 => [None, None, None, 256], y3 => [None, None, None, 1024]
+    for _ in range(7):
+        y3 = layers.Conv2D(filters=256, kernel_size=kernel_size, padding='same', use_bias=False)(y3)
+        y3 = layers.BatchNormalization()(y3)
+        y3 = layers.Activation('relu')(y3)
+    y3 = layers.Conv2D(filters=1024, kernel_size=kernel_size, padding='same', use_bias=False)(y3)
+    y3 = layers.BatchNormalization()(y3)
+    y3 = layers.Activation('relu')(y3)
 
-    """ Bottom """
-    with tf.name_scope("Level_{}".format(n_levels)):
-        y = DWT()(y)
-        for i in range(2 * n_conv_blocks - 1):
-            with tf.name_scope("FullConvNet_{}".format(i)):
-                y = layers.Conv2D(filters=256, kernel_size=kernel_size, strides=(1, 1), padding='same',
-                                  kernel_initializer='Orthogonal', use_bias=False, data_format=data_format)(y)
-                y = layers.BatchNormalization(axis=-1, momentum=0.0, epsilon=1e-3)(y)
-                y = layers.Activation("relu")(y)
-        with tf.name_scope("FullConvNet_{}".format(2 * n_conv_blocks - 1)):
-            y = layers.Conv2D(filters=1024, kernel_size=kernel_size, strides=(1, 1), padding='same',
-                              kernel_initializer='Orthogonal', use_bias=False, data_format=data_format)(y)
-            y = layers.BatchNormalization(axis=-1, momentum=0.0, epsilon=1e-3)(y)
-            y = layers.Activation("relu")(y)
+    # First IDWT
+    iy3 = layers.Add()([IDWT()(y3), y2])  # y2 => [None, None, None, 256], iy3 => [None, None, None, 256]
+    for _ in range(3):
+        iy3 = layers.Conv2D(filters=256, kernel_size=kernel_size, padding='same', use_bias=False)(iy3)
+        iy3 = layers.BatchNormalization()(iy3)
+        iy3 = layers.Activation('relu')(iy3)
+    iy3 = layers.Conv2D(filters=640, kernel_size=kernel_size, padding='same', use_bias=False)(iy3)
+    iy3 = layers.BatchNormalization()(iy3)
+    iy3 = layers.Activation('relu')(iy3)
 
-    downsampled_x = downsampled_x[::-1]
-    """ Upsampling """
-    for i in range(n_levels - 1):
-        y = layers.Add()([IDWT()(y), downsampled_x[i]])
-        for i in range(n_conv_blocks - 1):
-            with tf.name_scope("FullConvNet_{}".format(i)):
-                y = layers.Conv2D(filters=256, kernel_size=kernel_size, strides=(1, 1), padding='same',
-                                  kernel_initializer='Orthogonal', use_bias=False, data_format=data_format)(y)
-                y = layers.BatchNormalization(axis=-1, momentum=0.0, epsilon=1e-3)(y)
-                y = layers.Activation("relu")(y)
-        with tf.name_scope("FullConvNet_{}".format(n_conv_blocks - 1)):
-            y = layers.Conv2D(filters=640, kernel_size=kernel_size, strides=(1, 1), padding='same',
-                              kernel_initializer='Orthogonal', use_bias=False, data_format=data_format)(y)
-            y = layers.BatchNormalization(axis=-1, momentum=0.0, epsilon=1e-3)(y)
-            y = layers.Activation("relu")(y)
+    # Second IDWT
+    iy2 = layers.Add()([IDWT()(iy3), y1])  # y2 => [None, None, None, 640], y3 => [None, None, None, 640]
+    for _ in range(3):
+        iy2 = layers.Conv2D(filters=160, kernel_size=kernel_size, padding='same', use_bias=False)(iy2)
+        iy2 = layers.BatchNormalization()(iy2)
+        iy2 = layers.Activation('relu')(iy2)
+    iy2 = layers.Conv2D(filters=4, kernel_size=kernel_size, padding='same', use_bias=False)(iy2)
+    iy2 = layers.BatchNormalization()(iy2)
+    iy2 = layers.Activation('relu')(iy2)
 
-    with tf.name_scope("Output"):
-        y = layers.Add()([IDWT()(y), x])
+    # Final IDWT
+    y = layers.Add()([IDWT()(iy2), x])
 
     return models.Model(x, y)
