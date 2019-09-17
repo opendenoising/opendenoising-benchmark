@@ -174,7 +174,7 @@ class KerasModel(AbstractDeepLearningModel):
         }
 
     def train(self, train_generator, valid_generator=None, n_epochs=1e+2, n_stages=5e+2, learning_rate=1e-3,
-              optimizer_name=None, metrics=None, kcallbacks=None, loss=None, valid_steps=10):
+              optimizer_name=None, metrics=None, kcallbacks=None, loss=None, valid_steps=10, **kwargs):
         """Function to run the training of a Keras Model.
 
         Notes
@@ -221,7 +221,7 @@ class KerasModel(AbstractDeepLearningModel):
 
         # Retrieve functions from strings
         optimizer_class = getattr(optimizers, optimizer_name)
-        optimizer = optimizer_class(lr=learning_rate)
+        optimizer = optimizer_class(lr=learning_rate, **kwargs)
         self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         # Train the model
         start = time.time()

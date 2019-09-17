@@ -1,12 +1,14 @@
-version: 2
-
 sphinx:
   builder: html
   configuration: Documentation/conf.py
+
+conda:
+  file: environment.yml
 
 python:
    version: 3.7
    install:
       - requirements: Documentation/docs_requirements.txt
    system_packages: true
+   pip_install: true
       
