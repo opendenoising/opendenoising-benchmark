@@ -217,7 +217,7 @@ class ExponentialSchedule(LrSchedulerCallback):
     """Drops the learning rate following a exponential schedule:
 
     .. math::
-        \\alpha = \dfrac{\\alpha_{0}}{1 + factor \\times epoch}
+        \\alpha = \\alpha_{0}\\times\\gamma^{epoch}
 
     Attributes
     ----------
@@ -226,9 +226,9 @@ class ExponentialSchedule(LrSchedulerCallback):
     factor : float
         Rate at which the learning rate is decayed at each epoch.
     """
-    def __init__(self, initial_lr=1e-3, factor=0.5):
+    def __init__(self, initial_lr=1e-3, gamma=0.5):
         self.initial_lr = initial_lr
-        self.factor = factor
+        self.gamma = gamma
 
     @timeit
     def __call__(self, epoch):
@@ -244,7 +244,7 @@ class ExponentialSchedule(LrSchedulerCallback):
         lr : float
             Learning rate value.
         """
-        lr = self.initial_lr / (1 + self.factor * epoch)
+        lr = self.initial_lr * (gamma ** epoch)
         lr = np.asarray(lr, dtype="float64")
 
         return lr
