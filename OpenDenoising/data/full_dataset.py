@@ -112,10 +112,6 @@ class FullDatasetGenerator(AbstractDatasetGenerator):
             inp = imread(noisy_filepath)
             inp = img_as_float32(inp)
 
-            if not inp.shape == ref.shape:
-                raise ValueError("Expected {} to have same shape of {}, but got {} and {}".format(clean_filepath,
-                                                                                                  noisy_filepath,
-                                                                                                  ref.shape, inp.shape))
             # Corrects shape of reference
             if ref.ndim == 3 and ref.shape[-1] == 3 and self.n_channels == 1:
                 # Converts RGB to Gray
@@ -146,6 +142,11 @@ class FullDatasetGenerator(AbstractDatasetGenerator):
         ref_batch = np.array(ref_batch) if ref_batch[0].ndim == 3 else np.concatenate(ref_batch, axis=0)
         inp_batch = np.array(inp_batch) if inp_batch[0].ndim == 3 else np.concatenate(inp_batch, axis=0)
         module_logger.debug("Data shape: {}".format(ref_batch.shape))
+
+        if not inp.shape == ref.shape:
+            raise ValueError("Expected {} to have same shape of {}, but got {} and {}".format(clean_filepath,
+                                                                                              noisy_filepath,
+                                                                                              ref.shape, inp.shape))
 
         return ref_batch, inp_batch
 
