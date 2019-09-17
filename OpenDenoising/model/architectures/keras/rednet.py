@@ -40,8 +40,20 @@ import tensorflow as tf
 from keras import layers, models, initializers
 
 
-def rednet(depth=20, n_filters=64, kernel_size=(5, 5), skip_step=2, n_channels=1, channels_first=False):
+def rednet(depth=20, n_filters=128, kernel_size=(3, 3), skip_step=2, n_channels=1):
     """Keras implementation of RedNet. Implementation following the paper [1]_.
+
+    Notes
+    -----
+
+    In [1]_, authors have suggested three architectures:
+
+    1. RED10, which has 10 layers and does not use any skip connection (hence skip_step = 0)
+    2. RED20, which has 20 layers and uses skip_step = 2
+    3. RED30, which has 30 layers and uses skip_step = 2
+
+    Moreover, the default number of filters is 128, while the kernel size is (3, 3).
+
 
     Parameters
     ----------
@@ -57,8 +69,6 @@ def rednet(depth=20, n_filters=64, kernel_size=(5, 5), skip_step=2, n_channels=1
         2 layers, the j-th encoder layer E_j is connected with the  i = (depth - j) th decoder layer D_i.
     n_channels : int
         Number of image channels that the network processes (1 for grayscale, 3 for RGB)
-    channels_first : bool
-        Whether channels comes first (NCHW) or last (NHWC)
 
     Returns
     -------
@@ -67,10 +77,10 @@ def rednet(depth=20, n_filters=64, kernel_size=(5, 5), skip_step=2, n_channels=1
 
     References
     ----------
-    .. [1] Mao XJ, Shen C, Yang YB. Image restoration using convolutional auto-encoders with symmetric skip connections.
-           arXiv preprint, 2016.
+    .. [1] Mao, X., Shen, C., & Yang, Y. B. (2016). Image restoration using very deep convolutional encoder-decoder 
+           networks with symmetric skip connections. In Advances in neural information processing systems 
     """
-    num_connections = np.ceil(depth / (2 * skip_step))
+    num_connections = np.ceil(depth / (2 * skip_step)) if skip_step > 0 else 0
     x = layers.Input(shape=[None, None, n_channels], name="InputImage")
     y = x
     encoder_layers = []
