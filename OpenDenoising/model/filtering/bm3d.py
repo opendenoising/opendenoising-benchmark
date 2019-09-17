@@ -36,6 +36,7 @@
 
 
 import numpy as np
+from OpenDenoising.model import module_logger
 
 try:
     import matlab.engine
@@ -46,12 +47,13 @@ except ImportError as err:
     err_import = err
     MATLAB_IMPORTED = False
 
-try:
-    eng = matlab.engine.start_matlab()
-    MATLAB_LAUNCHED = True
-except matlab.engine.EngineError as err:
-    err_launch = err
-    MATLAB_LAUNCHED = False
+if MATLAB_IMPORTED:
+    try:
+        eng = matlab.engine.start_matlab()
+        MATLAB_LAUNCHED = True
+    except matlab.engine.EngineError as err:
+        err_launch = err
+        MATLAB_LAUNCHED = False
 
 
 def BM3D(z, sigma=25.0, profile="np"):
