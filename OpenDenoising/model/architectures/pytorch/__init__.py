@@ -36,8 +36,6 @@
 
 
 from .dncnn import DnCNN
-from .xdncnn import xDnCNN
-
 
 available_architectures = {
     "DnCNN-S": DnCNN(depth=17),
