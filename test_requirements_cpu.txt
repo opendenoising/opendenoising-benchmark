@@ -38,7 +38,6 @@ keras2onnx
 kiwisolver
 Markdown
 MarkupSafe
-matplotlib
 mistune
 mock
 nbconvert
@@ -54,7 +53,6 @@ onnxruntime
 onnxruntime-gpu
 opencv-python
 packaging
-pandas
 pandocfilters
 parso
 pexpect
@@ -66,7 +64,6 @@ recommonmark
 requests
 scikit-image
 scikit-learn
-scipy
 seaborn
 six
 skl2onnx
