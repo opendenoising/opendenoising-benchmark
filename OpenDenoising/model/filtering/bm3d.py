@@ -1,48 +1,63 @@
-#Copyright or © or Copr. IETR/INSA Rennes (2019)
-#
-#Contributors :
-#    Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
-#    Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)
-#
-#
-#OpenDenoising is a computer program whose purpose is to benchmark image
-#restoration algorithms.
-#
-#This software is governed by the CeCILL-C license under French law and
-#abiding by the rules of distribution of free software. You can  use,
-#modify and/ or redistribute the software under the terms of the CeCILL-C
-#license as circulated by CEA, CNRS and INRIA at the following URL
-#"http://www.cecill.info".
-#
-#As a counterpart to the access to the source code and rights to copy,
-#modify and redistribute granted by the license, users are provided only
-#with a limited warranty  and the software's author, the holder of the
-#economic rights, and the successive licensors have only  limited
-#liability.
-#
-#In this respect, the user's attention is drawn to the risks associated
-#with loading, using, modifying and/or developing or reproducing the
-#software by the user in light of its specific status of free software,
-#that may mean  that it is complicated to manipulate,  and  that  also
-#therefore means  that it is reserved for developers  and  experienced
-#professionals having in-depth computer knowledge. Users are therefore
-#encouraged to load and test the software's suitability as regards their
-#requirements in conditions enabling the security of their systems and/or
-#data to be ensured and, more generally, to use and operate it in the
-#same conditions as regards security.
-#
-#The fact that you are presently reading this means that you have had
-#knowledge of the CeCILL-C license and that you accept its terms.
+# Copyright or © or Copr. IETR/INSA Rennes (2019)
+# 
+# Contributors :
+#     Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
+#     Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)
+# 
+# 
+# OpenDenoising is a computer program whose purpose is to benchmark image
+# restoration algorithms.
+# 
+# This software is governed by the CeCILL-C license under French law and
+# abiding by the rules of distribution of free software. You can  use,
+# modify and/ or redistribute the software under the terms of the CeCILL-C
+# license as circulated by CEA, CNRS and INRIA at the following URL
+# "http://www.cecill.info".
+# 
+# As a counterpart to the access to the source code and rights to copy,
+# modify and redistribute granted by the license, users are provided only
+# with a limited warranty  and the software's author, the holder of the
+# economic rights, and the successive licensors have only  limited
+# liability.
+# 
+# In this respect, the user's attention is drawn to the risks associated
+# with loading, using, modifying and/or developing or reproducing the
+# software by the user in light of its specific status of free software,
+# that may mean  that it is complicated to manipulate,  and  that  also
+# therefore means  that it is reserved for developers  and  experienced
+# professionals having in-depth computer knowledge. Users are therefore
+# encouraged to load and test the software's suitability as regards their
+# requirements in conditions enabling the security of their systems and/or
+# data to be ensured and, more generally, to use and operate it in the
+# same conditions as regards security.
+# 
+# The fact that you are presently reading this means that you have had
+# knowledge of the CeCILL-C license and that you accept its terms.
 
 
 import numpy as np
-import matlab.engine
+from OpenDenoising.model import module_logger
 
-eng = matlab.engine.start_matlab()
+try:
+    import matlab.engine
+    MATLAB_IMPORTED = True
+except ImportError as err:
+    module_logger.warning("Matlab engine was not installed correctly. Take a look on the documentation's tutorial for \
+                           its installation.")
+    err_import = err
+    MATLAB_IMPORTED = False
+
+if MATLAB_IMPORTED:
+    try:
+        eng = matlab.engine.start_matlab()
+        MATLAB_LAUNCHED = True
+    except matlab.engine.EngineError as err:
+        err_launch = err
+        MATLAB_LAUNCHED = False
 
 
 def BM3D(z, sigma=25.0, profile="np"):
-    """This function wraps MATLAB's BM3D [1] implementation available on `author's website
+    """This function wraps MATLAB's BM3D [1]_ implementation available on `author's website
     <http://www.cs.tut.fi/~foi/GCF-BM3D/>`_.
 
     Notes
@@ -84,6 +99,10 @@ def BM3D(z, sigma=25.0, profile="np"):
     .. [1] Dabov K, Foi A, Katkovnik V, Egiazarian K. Image denoising by sparse 3-D transform-domain collaborative
            filtering. IEEE Transactions on image processing. 2007
     """
+    global MATLAB_IMPORTED, MATLAB_LAUNCHED
+    assert MATLAB_IMPORTED, "Got expcetion '{}' while importing matlab.engine. Check Matlab's Engine installation.".format(err_import)
+    global MATLAB_LAUNCHED
+    assert MATLAB_LAUNCHED, "Got expcetion '{}' while launching matlab.engine. Check Matlab's Engine installation.".format(err_launch)
     _z = z.copy()
     rgb = True if _z.shape[-1] == 3 else False
     if rgb:

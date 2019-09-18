@@ -5,3 +5,4 @@ model/__pycache__
 model/*/__pycache__
 model/*/*/__pycache__
 evaluation/__pycache__
+__pycache__

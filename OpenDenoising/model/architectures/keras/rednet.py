@@ -1,38 +1,38 @@
-#Copyright or © or Copr. IETR/INSA Rennes (2019)
-#
-#Contributors :
-#    Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
-#    Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)
-#
-#
-#OpenDenoising is a computer program whose purpose is to benchmark image
-#restoration algorithms.
-#
-#This software is governed by the CeCILL-C license under French law and
-#abiding by the rules of distribution of free software. You can  use,
-#modify and/ or redistribute the software under the terms of the CeCILL-C
-#license as circulated by CEA, CNRS and INRIA at the following URL
-#"http://www.cecill.info".
-#
-#As a counterpart to the access to the source code and rights to copy,
-#modify and redistribute granted by the license, users are provided only
-#with a limited warranty  and the software's author, the holder of the
-#economic rights, and the successive licensors have only  limited
-#liability.
-#
-#In this respect, the user's attention is drawn to the risks associated
-#with loading, using, modifying and/or developing or reproducing the
-#software by the user in light of its specific status of free software,
-#that may mean  that it is complicated to manipulate,  and  that  also
-#therefore means  that it is reserved for developers  and  experienced
-#professionals having in-depth computer knowledge. Users are therefore
-#encouraged to load and test the software's suitability as regards their
-#requirements in conditions enabling the security of their systems and/or
-#data to be ensured and, more generally, to use and operate it in the
-#same conditions as regards security.
-#
-#The fact that you are presently reading this means that you have had
-#knowledge of the CeCILL-C license and that you accept its terms.
+# Copyright or © or Copr. IETR/INSA Rennes (2019)
+# 
+# Contributors :
+#     Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
+#     Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)
+# 
+# 
+# OpenDenoising is a computer program whose purpose is to benchmark image
+# restoration algorithms.
+# 
+# This software is governed by the CeCILL-C license under French law and
+# abiding by the rules of distribution of free software. You can  use,
+# modify and/ or redistribute the software under the terms of the CeCILL-C
+# license as circulated by CEA, CNRS and INRIA at the following URL
+# "http://www.cecill.info".
+# 
+# As a counterpart to the access to the source code and rights to copy,
+# modify and redistribute granted by the license, users are provided only
+# with a limited warranty  and the software's author, the holder of the
+# economic rights, and the successive licensors have only  limited
+# liability.
+# 
+# In this respect, the user's attention is drawn to the risks associated
+# with loading, using, modifying and/or developing or reproducing the
+# software by the user in light of its specific status of free software,
+# that may mean  that it is complicated to manipulate,  and  that  also
+# therefore means  that it is reserved for developers  and  experienced
+# professionals having in-depth computer knowledge. Users are therefore
+# encouraged to load and test the software's suitability as regards their
+# requirements in conditions enabling the security of their systems and/or
+# data to be ensured and, more generally, to use and operate it in the
+# same conditions as regards security.
+# 
+# The fact that you are presently reading this means that you have had
+# knowledge of the CeCILL-C license and that you accept its terms.
 
 
 import numpy as np
@@ -40,8 +40,20 @@ import tensorflow as tf
 from keras import layers, models, initializers
 
 
-def rednet(depth=20, n_filters=64, kernel_size=(5, 5), skip_step=2, n_channels=1, channels_first=False):
-    """Keras implementation of RedNet. Implementation following the paper [1].
+def rednet(depth=20, n_filters=128, kernel_size=(3, 3), skip_step=2, n_channels=1):
+    """Keras implementation of RedNet. Implementation following the paper [1]_.
+
+    Notes
+    -----
+
+    In [1]_, authors have suggested three architectures:
+
+    1. RED10, which has 10 layers and does not use any skip connection (hence skip_step = 0)
+    2. RED20, which has 20 layers and uses skip_step = 2
+    3. RED30, which has 30 layers and uses skip_step = 2
+
+    Moreover, the default number of filters is 128, while the kernel size is (3, 3).
+
 
     Parameters
     ----------
@@ -57,8 +69,6 @@ def rednet(depth=20, n_filters=64, kernel_size=(5, 5), skip_step=2, n_channels=1
         2 layers, the j-th encoder layer E_j is connected with the  i = (depth - j) th decoder layer D_i.
     n_channels : int
         Number of image channels that the network processes (1 for grayscale, 3 for RGB)
-    channels_first : bool
-        Whether channels comes first (NCHW) or last (NHWC)
 
     Returns
     -------
@@ -67,10 +77,10 @@ def rednet(depth=20, n_filters=64, kernel_size=(5, 5), skip_step=2, n_channels=1
 
     References
     ----------
-    .. [1] Mao XJ, Shen C, Yang YB. Image restoration using convolutional auto-encoders with symmetric skip connections.
-           arXiv preprint, 2016.
+    .. [1] Mao, X., Shen, C., & Yang, Y. B. (2016). Image restoration using very deep convolutional encoder-decoder 
+           networks with symmetric skip connections. In Advances in neural information processing systems 
     """
-    num_connections = np.ceil(depth / (2 * skip_step))
+    num_connections = np.ceil(depth / (2 * skip_step)) if skip_step > 0 else 0
     x = layers.Input(shape=[None, None, n_channels], name="InputImage")
     y = x
     encoder_layers = []

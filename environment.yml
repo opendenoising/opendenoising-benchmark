@@ -1,0 +1,30 @@
+name: OpenDenoisingEnv
+
+channels:
+    - anaconda
+
+dependencies:
+    - python==3.7
+    - Keras
+    - Keras-Applications
+    - Keras-Preprocessing
+    - keras2onnx
+    - matplotlib
+    - numpy
+    - onnx
+    - onnx-tf
+    - onnxruntime
+    - opencv-python
+    - pandas
+    - Pillow
+    - PyGithub
+    - scikit-image
+    - scipy
+    - seaborn
+    - six
+    - tensorboard
+    - tensorflow=
+    - tf2onnx
+    - torch
+    - torchvision
+    - tqdm

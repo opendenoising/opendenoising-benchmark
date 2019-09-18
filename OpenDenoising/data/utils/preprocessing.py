@@ -1,38 +1,38 @@
-#Copyright or © or Copr. IETR/INSA Rennes (2019)
-#
-#Contributors :
-#    Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
-#    Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)
-#
-#
-#OpenDenoising is a computer program whose purpose is to benchmark image
-#restoration algorithms.
-#
-#This software is governed by the CeCILL-C license under French law and
-#abiding by the rules of distribution of free software. You can  use,
-#modify and/ or redistribute the software under the terms of the CeCILL-C
-#license as circulated by CEA, CNRS and INRIA at the following URL
-#"http://www.cecill.info".
-#
-#As a counterpart to the access to the source code and rights to copy,
-#modify and redistribute granted by the license, users are provided only
-#with a limited warranty  and the software's author, the holder of the
-#economic rights, and the successive licensors have only  limited
-#liability.
-#
-#In this respect, the user's attention is drawn to the risks associated
-#with loading, using, modifying and/or developing or reproducing the
-#software by the user in light of its specific status of free software,
-#that may mean  that it is complicated to manipulate,  and  that  also
-#therefore means  that it is reserved for developers  and  experienced
-#professionals having in-depth computer knowledge. Users are therefore
-#encouraged to load and test the software's suitability as regards their
-#requirements in conditions enabling the security of their systems and/or
-#data to be ensured and, more generally, to use and operate it in the
-#same conditions as regards security.
-#
-#The fact that you are presently reading this means that you have had
-#knowledge of the CeCILL-C license and that you accept its terms.
+# Copyright or © or Copr. IETR/INSA Rennes (2019)
+# 
+# Contributors :
+#     Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
+#     Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)
+# 
+# 
+# OpenDenoising is a computer program whose purpose is to benchmark image
+# restoration algorithms.
+# 
+# This software is governed by the CeCILL-C license under French law and
+# abiding by the rules of distribution of free software. You can  use,
+# modify and/ or redistribute the software under the terms of the CeCILL-C
+# license as circulated by CEA, CNRS and INRIA at the following URL
+# "http://www.cecill.info".
+# 
+# As a counterpart to the access to the source code and rights to copy,
+# modify and redistribute granted by the license, users are provided only
+# with a limited warranty  and the software's author, the holder of the
+# economic rights, and the successive licensors have only  limited
+# liability.
+# 
+# In this respect, the user's attention is drawn to the risks associated
+# with loading, using, modifying and/or developing or reproducing the
+# software by the user in light of its specific status of free software,
+# that may mean  that it is complicated to manipulate,  and  that  also
+# therefore means  that it is reserved for developers  and  experienced
+# professionals having in-depth computer knowledge. Users are therefore
+# encouraged to load and test the software's suitability as regards their
+# requirements in conditions enabling the security of their systems and/or
+# data to be ensured and, more generally, to use and operate it in the
+# same conditions as regards security.
+# 
+# The fact that you are presently reading this means that you have had
+# knowledge of the CeCILL-C license and that you accept its terms.
 
 
 import numpy as np
@@ -98,8 +98,6 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         Ground-truth images.
     aug_times : int
         Number of times augmentation if applied.
-    channels_first : boo
-        Whether data is formatted as NCHW (True) or NHWC (False).
 
     Returns
     -------
@@ -109,13 +107,17 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         Augmented ground-truth images
     """
     _inp = inp.copy()
-    _ref = ref.copy if ref is not None else None
-    assert (inp.ndim == 4), "Expected 4D input, but got {}D".format(inp.ndim)
-    if ref is not None:
-        assert (ref.ndim == 4), "Expected 4D reference, but got {}D".format(ref.ndim)
+    _ref = ref.copy() if ref is not None else None
     inp_aug = None
     ref_aug = None
-    axes = (2, 3) if channels_first else (1, 2)
+
+    if inp.ndim == 4:
+        axes = (1, 2)
+    elif inp.ndim == 3:
+        axes = (0, 1)
+    else:
+        raise ValueError("Expected 3D or 4D array, but got {}".format(inp.ndim))
+
     for _ in range(aug_times):
         mode = np.random.randint(0, 7)
         if mode == 0:
@@ -168,7 +170,7 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         # Passed input and reference images
         assert inp.shape[1:] == _inp.shape[1:], "Data Augmentation changed input shape: " \
                                                 "before {}, after {}".format(_inp.shape[1:], inp.shape[1:])
-        assert ref.shape[1:] == ref.shape[1:], "Data Augmentation changed reference shape: " \
+        assert ref.shape[1:] == _ref.shape[1:], "Data Augmentation changed reference shape: " \
                                                 "before {}, after {}".format(_inp.shape[1:], inp.shape[1:])
         return inp, ref
     else:
@@ -176,6 +178,9 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         assert inp.shape[1:] == _inp.shape[1:], "Data Augmentation changed input shape: " \
                                                 "before {}, after {}".format(_inp.shape[1:], inp.shape[1:])
         return inp
+
+
+
 
 
 def gen_patches(inp, ref, patch_size, channels_first=False, mode="sequential", n_patches=-1):

@@ -1,50 +1,50 @@
-#Copyright or © or Copr. IETR/INSA Rennes (2019)
-#
-#Contributors :
-#    Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
-#    Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)
-#
-#
-#OpenDenoising is a computer program whose purpose is to benchmark image
-#restoration algorithms.
-#
-#This software is governed by the CeCILL-C license under French law and
-#abiding by the rules of distribution of free software. You can  use,
-#modify and/ or redistribute the software under the terms of the CeCILL-C
-#license as circulated by CEA, CNRS and INRIA at the following URL
-#"http://www.cecill.info".
-#
-#As a counterpart to the access to the source code and rights to copy,
-#modify and redistribute granted by the license, users are provided only
-#with a limited warranty  and the software's author, the holder of the
-#economic rights, and the successive licensors have only  limited
-#liability.
-#
-#In this respect, the user's attention is drawn to the risks associated
-#with loading, using, modifying and/or developing or reproducing the
-#software by the user in light of its specific status of free software,
-#that may mean  that it is complicated to manipulate,  and  that  also
-#therefore means  that it is reserved for developers  and  experienced
-#professionals having in-depth computer knowledge. Users are therefore
-#encouraged to load and test the software's suitability as regards their
-#requirements in conditions enabling the security of their systems and/or
-#data to be ensured and, more generally, to use and operate it in the
-#same conditions as regards security.
-#
-#The fact that you are presently reading this means that you have had
-#knowledge of the CeCILL-C license and that you accept its terms.
+# Copyright or © or Copr. IETR/INSA Rennes (2019)
+# 
+# Contributors :
+#     Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
+#     Florian Lemarchand florian.lemarchand@insa-rennes.fr (2019)
+# 
+# 
+# OpenDenoising is a computer program whose purpose is to benchmark image
+# restoration algorithms.
+# 
+# This software is governed by the CeCILL-C license under French law and
+# abiding by the rules of distribution of free software. You can  use,
+# modify and/ or redistribute the software under the terms of the CeCILL-C
+# license as circulated by CEA, CNRS and INRIA at the following URL
+# "http://www.cecill.info".
+# 
+# As a counterpart to the access to the source code and rights to copy,
+# modify and redistribute granted by the license, users are provided only
+# with a limited warranty  and the software's author, the holder of the
+# economic rights, and the successive licensors have only  limited
+# liability.
+# 
+# In this respect, the user's attention is drawn to the risks associated
+# with loading, using, modifying and/or developing or reproducing the
+# software by the user in light of its specific status of free software,
+# that may mean  that it is complicated to manipulate,  and  that  also
+# therefore means  that it is reserved for developers  and  experienced
+# professionals having in-depth computer knowledge. Users are therefore
+# encouraged to load and test the software's suitability as regards their
+# requirements in conditions enabling the security of their systems and/or
+# data to be ensured and, more generally, to use and operate it in the
+# same conditions as regards security.
+# 
+# The fact that you are presently reading this means that you have had
+# knowledge of the CeCILL-C license and that you accept its terms.
 
 
 import os
 import numpy as np
 
-from matlab.engine import EngineError
-from matlab.engine import MatlabExecutionError
 from OpenDenoising.model import module_logger
 from OpenDenoising.model import AbstractDeepLearningModel
 
 try:
     import matlab.engine
+    from matlab.engine import EngineError
+    from matlab.engine import MatlabExecutionError
     MATLAB_IMPORTED = True
 except ImportError as err:
     module_logger.warning("Matlab engine was not installed correctly. Take a look on the documentation's tutorial for \
@@ -80,10 +80,13 @@ class MatlabModel(AbstractDeepLearningModel):
     :class:`model.AbstractDeepLearningModel` : for the basic functionalities of Deep Learning based Denoisers.
     """
     def __init__(self, model_name="MatlabModel", logdir="./logs/Matlab", return_diff=False):
+        global MATLAB_IMPORTED
+        assert MATLAB_IMPORTED, "Got expcetion {} while importing matlab.engine. Check Matlab's Engine installation.".format(err)
         try:
             self.engine = matlab.engine.start_matlab()
         except EngineError as err:
             module_logger.exception("Matlab license error. Make sure you have a valid Matlab license.")
+            raise err
         assert self.engine.license('test', 'neural_network_toolbox'), "Expected Neural Network Toolbox to be installed."
         super().__init__(model_name, framework="Matlab", return_diff=return_diff)
         self.logdir = logdir
@@ -106,10 +109,6 @@ class MatlabModel(AbstractDeepLearningModel):
         model_path : str
             String containing the path to the .mat file holding the trained network object.
 
-        See Also
-        --------
-        `Matlab Deep Learning Toolbox documentation
-        <https://mathworks.com/products/deep-learning.html>`_.
         """
         assert (model_function is not None or model_path is not None), "You should provide at least a model_function\
                                                                         or a model_path to build your neural network\
