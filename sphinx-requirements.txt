@@ -20,3 +20,8 @@ scikit-image
 PyGithub
 seaborn
 tqdm
+tf2onnx
+onnx
+keras2onnx
+onnxruntime
+onnx-tf
