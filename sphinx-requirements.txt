@@ -19,3 +19,4 @@ opencv-python
 scikit-image
 PyGithub
 seaborn
+tqdm
