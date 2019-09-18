@@ -98,8 +98,6 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         Ground-truth images.
     aug_times : int
         Number of times augmentation if applied.
-    channels_first : boo
-        Whether data is formatted as NCHW (True) or NHWC (False).
 
     Returns
     -------
@@ -109,13 +107,17 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         Augmented ground-truth images
     """
     _inp = inp.copy()
-    _ref = ref.copy if ref is not None else None
-    assert (inp.ndim == 4), "Expected 4D input, but got {}D".format(inp.ndim)
-    if ref is not None:
-        assert (ref.ndim == 4), "Expected 4D reference, but got {}D".format(ref.ndim)
+    _ref = ref.copy() if ref is not None else None
     inp_aug = None
     ref_aug = None
-    axes = (2, 3) if channels_first else (1, 2)
+
+    if inp.ndim == 4:
+        axes = (1, 2)
+    elif inp.ndim == 3:
+        axes = (0, 1)
+    else:
+        raise ValueError("Expected 3D or 4D array, but got {}".format(inp.ndim))
+
     for _ in range(aug_times):
         mode = np.random.randint(0, 7)
         if mode == 0:
@@ -168,7 +170,7 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         # Passed input and reference images
         assert inp.shape[1:] == _inp.shape[1:], "Data Augmentation changed input shape: " \
                                                 "before {}, after {}".format(_inp.shape[1:], inp.shape[1:])
-        assert ref.shape[1:] == ref.shape[1:], "Data Augmentation changed reference shape: " \
+        assert ref.shape[1:] == _ref.shape[1:], "Data Augmentation changed reference shape: " \
                                                 "before {}, after {}".format(_inp.shape[1:], inp.shape[1:])
         return inp, ref
     else:
@@ -176,6 +178,9 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         assert inp.shape[1:] == _inp.shape[1:], "Data Augmentation changed input shape: " \
                                                 "before {}, after {}".format(_inp.shape[1:], inp.shape[1:])
         return inp
+
+
+
 
 
 def gen_patches(inp, ref, patch_size, channels_first=False, mode="sequential", n_patches=-1):
