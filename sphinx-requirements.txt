@@ -16,6 +16,6 @@ sphinxcontrib-qthelp
 sphinxcontrib-serializinghtml
 numpydoc
 opencv-python
-skimage
+scikit-image
 PyGithub
 seaborn
