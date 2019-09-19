@@ -36,6 +36,7 @@
 
 
 import numpy as np
+from functools import partial
 from OpenDenoising.data import module_logger
 
 
@@ -321,3 +322,43 @@ def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
                 # noise = patch - mean(patch)
                 patches.append(wg - np.mean(wg))
     return patches
+
+
+def rand_tuple_2D(box_size):
+    while True:
+        yield (np.random.rand() * box_size, np.random.rand() * box_size)
+
+
+def get_stratified_coords(coord_gen, box_size, shape):
+    coords = []
+    box_count_y = int(np.ceil(shape[0] / box_size))
+    box_count_x = int(np.ceil(shape[1] / box_size))
+
+    for i in range(box_count_y):
+        for j in range(box_count_x):
+            y, x = next(coord_gen)
+            y = int(i * box_size + y)
+            x = int(j * box_size + x)
+            if (y < shape[0] and x < shape[1]):
+                coords.append(y, x)
+
+    return coords
+
+
+def n2v_generate_targets(inp, num_pix=1):
+    _inp = inp.copy()
+    b, h, w, c = inp.shape
+    boxsize = np.round(np.sqrt(h * w / num_pix)).astype('int')
+    coordinate_generator = rand_tuple_2D(boxsize)
+
+    ref = np.zeros([b, h, w, 2 * c])  # [ref | mask]
+    inp = np.zeros([b, h, w, c]) 
+
+
+    for channel in range(c):
+        coords = get_stratified_coords(coordinate_generator, box_size=boxsize, shape=(h, w))
+
+
+
+
+
