@@ -63,23 +63,39 @@ class BlindDatasetGenerator(AbstractDatasetGenerator):
         String containing the dataset's name.
     preprocessing : list
         List of preprocessing functions, which will be applied to each image.
+    target_fcn : function
+        Function implementing how to generate target images from noisy ones.
     """
-    def __init__(self, path, batch_size=32, shuffle=True, name="CleanDataset", n_channels=1, preprocessing=None):
+    def __init__(self, path, batch_size=32, shuffle=True, name="CleanDataset", n_channels=1, preprocessing=None,
+                 target_fcn=None):
         super().__init__(path, batch_size, shuffle, name, n_channels)
         self.filenames = np.array(os.listdir(os.path.join(self.path, "in")))
         self.preprocessing = [] if preprocessing is None else preprocessing
         self.on_epoch_end()
+        self.target_fcn = target_fcn
         module_logger.info("Generating data from {}".format(os.path.join(self.path)))
 
     def __getitem__(self, i):
-        """Generate batches of images."""
-        # Generate data indexes
-        indexes = self.idx[i * self.batch_size: (i + 1) * self.batch_size]
+        """Generates image batches from filenames.
+
+        Parameters
+        ----------
+        i : int
+            Batch index to get.
+
+        Returns
+        -------
+        inp : :class:`numpy.ndararray`
+            Batch of noisy images.
+        ref : :class:`numpy.ndarray`
+            Batch of target images.
+        """
         # Get batch_filenames
-        batch_filenames = self.filenames[indexes]
+        batch_filenames = self.filenames[i * self.batch_size: (i + 1) * self.batch_size]
+        module_logger.debug("[{}] Got following batch names: {}".format(self, batch_filenames))
         # Get data batches
-        inp = self.__data_generation(batch_filenames)
-        return inp
+        inp, ref = self.__data_generation(batch_filenames)
+        return inp, ref
 
     def __data_generation(self, batch_filenames):
         """Data generation method
@@ -95,7 +111,8 @@ class BlindDatasetGenerator(AbstractDatasetGenerator):
             Batch of noisy images.
         """
         # Noised image and ground truth initialization
-        noisy_batch = []
+        inp_batch = []
+        ref_batch = []
 
         for filename in batch_filenames:
             filepath = os.path.join(self.path, filename)
@@ -116,10 +133,12 @@ class BlindDatasetGenerator(AbstractDatasetGenerator):
                 # Preprocessing pipeline
                 inp = func(inp)
 
-            noisy_batch.append(inp)
-        noisy_batch = np.array(noisy_batch)
-        module_logger.debug("Data shape: {}".format(noisy_batch.shape))
-        return noisy_batch
+            # Generates target from input
+            ref_batch.append(self.target_fcn(inp))
+            inp_batch.append(inp)
+        inp_batch = np.array(inp_batch)
+        module_logger.debug("Data shape: {}".format(inp_batch.shape))
+        return inp_batch, ref_batch
 
     def __next__(self):
         """Returns image batches sequentially."""
