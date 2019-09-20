@@ -324,41 +324,60 @@ def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
     return patches
 
 
-def rand_tuple_2D(box_size):
+def __rand_float_coords2D__(boxsize):
     while True:
-        yield (np.random.rand() * box_size, np.random.rand() * box_size)
+        yield (np.random.rand() * boxsize, np.random.rand() * boxsize)
 
 
-def get_stratified_coords(coord_gen, box_size, shape):
+def __get_stratified_coords2D__(coord_gen, box_size, shape):
     coords = []
     box_count_y = int(np.ceil(shape[0] / box_size))
     box_count_x = int(np.ceil(shape[1] / box_size))
-
     for i in range(box_count_y):
         for j in range(box_count_x):
             y, x = next(coord_gen)
             y = int(i * box_size + y)
             x = int(j * box_size + x)
             if (y < shape[0] and x < shape[1]):
-                coords.append(y, x)
-
+                coords.append((y, x))
     return coords
 
 
-def n2v_generate_targets(inp, num_pix=1):
-    _inp = inp.copy()
-    b, h, w, c = inp.shape
-    boxsize = np.round(np.sqrt(h * w / num_pix)).astype('int')
-    coordinate_generator = rand_tuple_2D(boxsize)
+def pm_uniform_withCP(local_sub_patch_radius=5):
+    def random_neighbor_withCP_uniform(patch, coord, dims):
+        sub_patch = get_subpatch(patch, coord,local_sub_patch_radius)
+        rand_coords = [np.random.randint(0, s) for s in sub_patch.shape[0:dims]]
+        return sub_patch[tuple(rand_coords)]
+    return random_neighbor_withCP_uniform
 
-    ref = np.zeros([b, h, w, 2 * c])  # [ref | mask]
-    inp = np.zeros([b, h, w, c]) 
 
+def n2v_data_generation(noisy_patches, num_pix=64, value_manipulation=pm_uniform_withCP, n_channels=1):
+    h, w, c = noisy_patches.shape
+    boxsize = np.round(np.sqrt(h * w / num_pix)).astype(np.int)
+    X = noisy_patches.copy()
+    Y = np.concatenate((X, np.zeros(X.shape, dtype=X.dtype)), axis=-1)
+    coord_gen = __rand_float_coords2D__(boxsize)
 
     for channel in range(c):
-        coords = get_stratified_coords(coordinate_generator, box_size=boxsize, shape=(h, w))
+        coords = __get_stratified_coords2D__(coord_gen, box_size=boxsize, shape=(h, w))
 
+        y_val = []
+        x_val = []
+        for k in range(len(coords)):
+            y_val.append(
+                np.copy(
+                    Y[(*coords[k], channel)]
+                )
+            )
+            x_val.append(value_manipulation(X[..., channel][...,np.newaxis], coords[k], 2))
 
+        #Y[..., channel] *= 0
+        Y[..., n_channels + channel] *= 0
 
+        for k in range(len(coords)):
+            Y[(*coords[k], channel)] = y_val[k]
+            Y[(*coords[k], n_channels + channel)] = 1
+            X[(*coords[k], channel)] = x_val[k]
 
+    return X, Y
 
