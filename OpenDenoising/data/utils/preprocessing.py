@@ -184,7 +184,7 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
 
 
 
-def gen_patches(inp, ref, patch_size, channels_first=False, mode="sequential", n_patches=-1):
+def gen_patches(inp, ref=None, patch_size=40, mode="sequential", n_patches=-1):
     """Patch generation function.
 
     Parameters
@@ -195,8 +195,6 @@ def gen_patches(inp, ref, patch_size, channels_first=False, mode="sequential", n
         Reference image which patches will be extracted.
     patch_size : int
         Size of patch window (number of pixels in each axis).
-    channels_first : bool
-        Whether data is formatted as NCHW (True) or NHWC (False).
     mode : str
         One between {'sequential', 'random'}. If mode = 'sequential', extracts patches sequentially on each axis.
         If mode = 'random', extracts patches randomly.
@@ -218,43 +216,36 @@ def gen_patches(inp, ref, patch_size, channels_first=False, mode="sequential", n
     assert mode in ["random", "sequential"], "Expected mode to be 'random' or 'sequential' but got {}".format(mode)
 
     _inp = inp.copy()
-    _ref = ref.copy()
-    if channels_first:
-        _, h, w = _inp.shape
-    else:
-        h, w = _inp.shape[:2]
+    if ref is not None: _ref = ref.copy()
+    
+    h, w = _inp.shape[:2]
 
     if mode == "random" and n_patches == -1:
         n_patches = h * w / (patch_size ** 2)
 
     inp_patches = []
-    ref_patches = []
+    if ref is not None: ref_patches = []
 
     if mode == "sequential":
         for i in range(0, h - patch_size + 1, patch_size):
             for j in range(0, w - patch_size + 1, patch_size):
-                if channels_first:
-                    inp_patches.append(_inp[:, i: i + patch_size, j: j + patch_size])
-                    ref_patches.append(_ref[:, i: i + patch_size, j: j + patch_size])
-                else:
-                    inp_patches.append(_inp[i: i + patch_size, j: j + patch_size, :])
-                    ref_patches.append(_ref[i: i + patch_size, j: j + patch_size, :])
+                inp_patches.append(_inp[i: i + patch_size, j: j + patch_size, :])
+                if ref is not None: ref_patches.append(_ref[i: i + patch_size, j: j + patch_size, :])
     if mode == "random":
         for _ in range(n_patches):
             i = np.random.randint(0, h - patch_size + 1)
             j = np.random.randint(0, h - patch_size + 1)
-            if channels_first:
-                inp_patches.append(_inp[:, i: i + patch_size, j: j + patch_size])
-                ref_patches.append(_ref[:, i: i + patch_size, j: j + patch_size])
-            else:
-                inp_patches.append(_inp[i: i + patch_size, j: j + patch_size, :])
-                ref_patches.append(_ref[i: i + patch_size, j: j + patch_size, :])
+            inp_patches.append(_inp[i: i + patch_size, j: j + patch_size, :])
+            if ref is not None: ref_patches.append(_ref[i: i + patch_size, j: j + patch_size, :])
 
 
     input_patches = np.array(inp_patches)
-    reference_patches = np.array(ref_patches)
+    if ref is not None: reference_patches = np.array(ref_patches)
 
-    return input_patches, reference_patches
+    if ref is not None:
+        return input_patches, reference_patches
+    else:
+        return input_patches
 
 
 def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
@@ -343,6 +334,23 @@ def __get_stratified_coords2D__(coord_gen, box_size, shape):
     return coords
 
 
+def get_subpatch(patch, coord, local_sub_patch_radius):
+    start = np.maximum(0, np.array(coord) - local_sub_patch_radius)
+    end = start + local_sub_patch_radius*2 + 1
+
+    start = np.append(start, 0)
+    end = np.append(end, patch.shape[-1])
+
+    shift = np.minimum(0, patch.shape - end)
+
+    start += shift
+    end += shift
+
+    slices = [ slice(s, e) for s, e in zip(start, end)]
+
+    return patch[tuple(slices)]
+
+
 def pm_uniform_withCP(local_sub_patch_radius=5):
     def random_neighbor_withCP_uniform(patch, coord, dims):
         sub_patch = get_subpatch(patch, coord,local_sub_patch_radius)
@@ -351,7 +359,10 @@ def pm_uniform_withCP(local_sub_patch_radius=5):
     return random_neighbor_withCP_uniform
 
 
-def n2v_data_generation(noisy_patches, num_pix=64, value_manipulation=pm_uniform_withCP, n_channels=1):
+def n2v_data_generation(noisy_patches, num_pix=64, value_manipulation=None, n_channels=1):
+    if value_manipulation is None:
+        value_manipulation = pm_uniform_withCP(5)
+
     h, w, c = noisy_patches.shape
     boxsize = np.round(np.sqrt(h * w / num_pix)).astype(np.int)
     X = noisy_patches.copy()
