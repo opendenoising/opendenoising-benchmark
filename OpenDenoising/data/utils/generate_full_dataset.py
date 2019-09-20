@@ -237,26 +237,34 @@ def joint_apply_preprocessing_pipeline(in_images_folder, ref_images_folder, in_o
         except FileNotFoundError:
             raise FileNotFoundError("Expected file {} to be present on folder {}.".format(filename, ref_images_folder))
 
-        if inp.ndim == 2: inp = np.expand_dims(inp, axis=-1)
-        if inp.shape[-1] == 3 and n_channels == 1: inp = rgb2gray(inp)
+
+        if inp.ndim == 2:
+            inp = np.expand_dims(inp, axis=-1)
+        if inp.shape[-1] == 3 and n_channels == 1: 
+            inp = rgb2gray(inp)
+            inp = np.expand_dims(inp, axis=-1)
         if inp.shape[-1] == 1 and n_channels == 3:
             raise ValueError("Expected {} to have 3 channels, but got 1.".format(filename))
         if inp.dtype == 'uint8': inp = img_as_ubyte(inp)
 
-        if ref.ndim == 2: ref = np.expand_dims(ref, axis=-1)
-        if ref.shape[-1] == 3 and n_channels == 1: ref = rgb2gray(ref)
+        if ref.ndim == 2:
+            ref = np.expand_dims(ref, axis=-1)
+        if ref.shape[-1] == 3 and n_channels == 1:
+            ref = rgb2gray(ref)
+            ref = np.expand_dims(ref, axis=-1)
         if ref.shape[-1] == 1 and n_channels == 3:
             raise ValueError("Expected {} to have 3 channels, but got 1.".format(filename))
         if ref.dtype == 'uint8': ref = img_as_ubyte(ref)
-
 
         for func in preprocessing:
             inp, ref = func(inp, ref)
 
         if inp.ndim > 3:
             for i, (in_patch, ref_patch) in enumerate(zip(inp, ref)):
-                imsave(os.path.join(in_output_folder, str(i) + "_" + filename), np.squeeze(in_patch))
-                imsave(os.path.join(ref_output_folder, str(i) + "_" + filename), np.squeeze(ref_patch))
+                imsave(os.path.join(in_output_folder, str(i) + "_" + filename), np.squeeze(in_patch),
+                       check_contrast=False)
+                imsave(os.path.join(ref_output_folder, str(i) + "_" + filename), np.squeeze(ref_patch),
+                       check_contrast=False)
         else:
             imsave(os.path.join(in_output_folder, filename), np.squeeze(inp), check_contrast=False)
             imsave(os.path.join(ref_output_folder, filename), np.squeeze(ref), check_contrast=False)
