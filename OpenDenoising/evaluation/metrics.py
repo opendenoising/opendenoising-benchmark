@@ -278,3 +278,25 @@ def skimage_psnr(y_true, y_pred):
 ssim = Metric(name="SSIM", tf_metric=tf_ssim, np_metric=skimage_ssim)
 psnr = Metric(name="PSNR", tf_metric=tf_psnr, np_metric=skimage_psnr)
 mse = Metric(name="MSE", tf_metric=tf_mse, np_metric=skimage_mse)
+
+
+def n2v_mse(y_true, y_pred):
+    """Noise2Void adapted mse noise.
+
+    Notes
+    ----- 
+    The original source code is available on `Author's Github page <https://github.com/juglab/n2v>`. This function
+    should only be used as a cost function, and strictly for Noise2Void model.
+    
+    Parameters
+    ----------
+    y_true : :class:`numpy.ndarray`
+        4D numpy array corresponding to the masked noisy image, plus a array indicating which pixels were masked.
+    y_pred : :class:`numpy.ndarray`
+        4D numpy array containing the Network's prediction.
+    """
+    target, mask = tf.split(y_true, 2, axis=len(y_true.shape)-1)
+    loss = tf.reduce_sum(backend.square(target - y_pred * mask)) / tf.reduce_sum(mask)
+
+    return loss
+
