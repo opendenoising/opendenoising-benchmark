@@ -39,119 +39,42 @@ import tensorflow as tf
 from keras import layers, models, backend
 
 
-class DWT(layers.Layer):
-    """Custom keras layer implementing the Discrete Wavelet Transform
+def DWT(x):
+    dwt_hor = layers.Lambda(lambda x: [x[:, 0::2, :, :] / 2, x[:, 1::2, :, :] / 2])
+    dwt_ver = layers.Lambda(lambda x: [x[0][:, :, 0::2, :], x[1][:, :, 0::2, :], x[0][:, :, 1::2, :], x[1][:, :, 1::2, :]])
+    dwt_precat = layers.Lambda(lambda x:[x[0] + x[1] + x[2] + x[3],
+                                         -x[0] - x[1] + x[2] + x[3],
+                                         -x[0] + x[1] - x[2] + x[3],
+                                         x[0] - x[1] - x[2] + x[3]])
 
-    Parameters
-    ----------
-    output_dim : list
-        Tuple specifying the output array dimension.
-    channels_first : bool
-        Whether inputs are formatted as NCHW or NHWC
-    """
-    def __init__(self, output_dim=None, channels_first=False, **kwargs):
-        self.output_dim = output_dim
-        self.channels_first = channels_first
-        super(DWT, self).__init__(**kwargs)
+    y = dwt_hor(x)
+    y = dwt_ver(y)
+    y = dwt_precat(y)
 
-    def build(self, input_shape):
-        super(DWT, self).build(input_shape)  # Be sure to call this at the end
-
-    def call(self, x):
-        if self.channels_first:
-            x01 = x[:, :, 0::2, :] / 2
-            x02 = x[:, :, 1::2, :] / 2
-            x1 = x01[:, :, :, 0::2]
-            x2 = x02[:, :, :, 0::2]
-            x3 = x01[:, :, :, 1::2]
-            x4 = x02[:, :, :, 1::2]
-            x_ll = x1 + x2 + x3 + x4
-            x_hl = -x1 - x2 + x3 + x4
-            x_lh = -x1 + x2 - x3 + x4
-            x_hh = x1 - x2 - x3 + x4
-
-            return backend.concatenate([x_ll, x_hl, x_lh, x_hh], axis=1)
-        else:
-            x01 = x[:, 0::2, :, :] / 2
-            x02 = x[:, 1::2, :, :] / 2
-            x1 = x01[:, :, 0::2, :]
-            x2 = x02[:, :, 0::2, :]
-            x3 = x01[:, :, 1::2, :]
-            x4 = x02[:, :, 1::2, :]
-            x_ll = x1 + x2 + x3 + x4
-            x_hl = -x1 - x2 + x3 + x4
-            x_lh = -x1 + x2 - x3 + x4
-            x_hh = x1 - x2 - x3 + x4
-
-            return backend.concatenate([x_ll, x_hl, x_lh, x_hh], axis=-1)
-
-    def compute_output_shape(self, input_shape):
-        if None not in input_shape[1:]:
-            return input_shape[0], input_shape[1] // 2, input_shape[2] // 2, input_shape[3] * 4
-        else:
-            return input_shape[0], None, None, 4 * input_shape[-1]
+    return layers.Concatenate(axis=-1)(y)
 
 
-class IDWT(layers.Layer):
-    """Custom keras layer implementing the Inverse Discrete Wavelet Transform
+def IDWT(x):
+    shape = x.shape.as_list()
+    out_channel = shape[-1] // 4
+    
+    idwt1 = layers.Lambda(lambda x: [x[:, :, :, 0 * out_channel: 1 * out_channel] / 2,
+                                     x[:, :, :, 1 * out_channel: 2 * out_channel] / 2,
+                                     x[:, :, :, 2 * out_channel: 3 * out_channel] / 2,
+                                     x[:, :, :, 3 * out_channel: 4 * out_channel] / 2])
+    
+    idwt2 = layers.Lambda(lambda x: [x[0] + x[1] + x[2] + x[3],
+                                     x[0] - x[1] + x[2] - x[3],
+                                     x[0] + x[1] - x[2] + x[3],
+                                     x[0] + x[1] + x[2] + x[3]])
 
-    Parameters
-    ----------
-    output_dim : list
-        Tuple specifying the output array dimension.
-    channels_first : bool
-        Whether inputs are formatted as NCHW or NHWC
-    """
-    def __init__(self, output_dim=None, channels_first=False, **kwargs):
-        self.channels_first = channels_first
-        self.output_dim = output_dim
-        super(IDWT, self).__init__(**kwargs)
+    decomposition_1 = idwt1(x)
+    decomposition_2 = idwt2(decomposition_1)
 
-    def call(self, x):
-        assert (len(x.shape.as_list()) == 4), "Expected a 4D input batch, but got {}".format(len(x.shape.as_list()))
-        if self.channels_first:
-            in_shape = x.shape.as_list()
-            out_channel = 4 * in_shape[-1]
-
-            x1 = x[:, 0:out_channel, :, :] / 2
-            x2 = x[:, out_channel:out_channel * 2, :, :] / 2
-            x3 = x[:, out_channel * 2:out_channel * 3, :, :] / 2
-            x4 = x[:, out_channel * 3:out_channel * 4, :, :] / 2
-
-            h1 = x1 - x2 - x3 + x4
-            h2 = x1 - x2 + x3 - x4
-            h3 = x1 + x2 - x3 - x4
-            h4 = x1 + x2 + x3 + x4
-
-            h_stack_height = backend.stack([h1, h2], axis=2)
-            h_stack_width = backend.stack([h3, h4], axis=2)
-            h = backend.stack([h_stack_height, h_stack_width], axis=3)
-
-            return h
-        else:
-            in_shape = x.shape.as_list()
-            out_channel = in_shape[-1] // 4
-
-            x1 = x[:, :, :, 0: out_channel] / 2
-            x2 = x[:, :, :, out_channel:out_channel * 2] / 2
-            x3 = x[:, :, :, out_channel * 2:out_channel * 3] / 2
-            x4 = x[:, :, :, out_channel * 3:out_channel * 4] / 2
-
-            h1 = x1 - x2 - x3 + x4
-            h2 = x1 - x2 + x3 - x4
-            h3 = x1 + x2 - x3 - x4
-            h4 = x1 + x2 + x3 + x4
-
-            h_stack_height = backend.concatenate([h1, h2], axis=1)
-            h_stack_width = backend.concatenate([h3, h4], axis=1)
-            h = backend.concatenate([h_stack_height, h_stack_width], axis=2)
-            return h
-
-    def compute_output_shape(self, input_shape):
-        if None not in input_shape[1:]:
-            return input_shape[0], input_shape[1] * 2, input_shape[2] * 2, input_shape[3] // 4
-        else:
-            return input_shape[0], None, None, input_shape[-1] // 4
+    hor_cat_1 = layers.Concatenate(axis=1)([decomposition_2[0], decomposition_2[1]])
+    hor_cat_2 = layers.Concatenate(axis=1)([decomposition_2[2], decomposition_2[3]])
+    
+    return layers.Concatenate(axis=2)([hor_cat_1, hor_cat_2])
 
 
 def mwcnn(kernel_size=3, n_conv_blocks=4, n_channels=1):
