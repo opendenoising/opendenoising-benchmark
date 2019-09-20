@@ -38,4 +38,4 @@
 from .corrupt import *
 from .preprocessing import *
 from .download_tools import *
-from .generate_full_dataset import generate_full_dataset
+from .generate_full_dataset import *

@@ -109,7 +109,8 @@ def BM3D(z, sigma=25.0, profile="np"):
         assert (profile in ["np", "lc", "high", "vn", "vn_old"]), "Expected profile to be 'np', 'lc', 'high', 'vn' " \
                                                                   "or 'vn_old' but got {}.".format(profile)
     else:
-        assert (profile in ["np", "lc"]), "Expected profile to be 'np', 'lc' bug got {}".format(profile)
+        assert (profile in ["np", "lc", "high", "vn", "vn_old"]), "Expected profile to be 'np', 'lc', 'high', 'vn' " \
+                                                                  "or 'vn_old' but got {}.".format(profile)
 
     # Convert input arrays to matlab
     m_sigma = matlab.double([sigma])
