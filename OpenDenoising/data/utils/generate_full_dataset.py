@@ -160,7 +160,7 @@ def apply_preprocessing_pipeline(images_folder, output_path, preprocessing, n_ch
     --------
     joint_apply_preprocessing_pipeline : to apply the pipeline jointly to two sets of images.
     """
-    filenames = os.listdir(reference_images_folder)
+    filenames = os.listdir(images_folder)
 
     try:
         os.makedirs(output_path)
@@ -181,7 +181,7 @@ def apply_preprocessing_pipeline(images_folder, output_path, preprocessing, n_ch
         if image.dtype == 'uint8': image = img_as_ubyte(image)
 
         for func in preprocessing:
-            image = preprocessing(image)
+            image = func(image)
 
         if image.ndim > 3:
             for i, patch in enumerate(image):
