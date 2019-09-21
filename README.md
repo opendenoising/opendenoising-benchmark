@@ -30,13 +30,13 @@ For a better visualisation of how the Benchmark classes are organized, we provid
 # Built-in models
 
 __Filtering models__
-* BM3D<sup>1</sup> [Matlab Code](ttp://www.cs.tut.fi/~foi/GCF-BM3D/). By using BM3D you are agreeing with its [license terms](http://www.cs.tut.fi/~foi/GCF-BM3D/legal_notice.html)
+* BM3D<sup>1</sup> [[Matlab Code]](ttp://www.cs.tut.fi/~foi/GCF-BM3D/). By using BM3D you are agreeing with its [license terms](http://www.cs.tut.fi/~foi/GCF-BM3D/legal_notice.html)
 
-__Deep Learning models__
-* DnCNN<sup>2</sup> [Matlab Code](https://github.com/cszn/DnCNN/) [Keras Code](https://github.com/cszn/DnCNN/tree/master/TrainingCodes/dncnn_keras) [Tensorflow Code](https://github.com/wbhu/DnCNN-tensorflow) [Pytorch Code](https://github.com/SaoYan/DnCNN-PyTorch)
-* xDnCNN<sup>3</sup> [Pytorch Code](https://github.com/kligvasser/xUnit)
+__Deep Learning models__]
+* DnCNN<sup>2</sup> [[Matlab Code]](https://github.com/cszn/DnCNN/) [[Keras Code]](https://github.com/cszn/DnCNN/tree/master/TrainingCodes/dncnn_keras) [[Tensorflow Code]](https://github.com/wbhu/DnCNN-tensorflow) [Pytorch Code](https://github.com/SaoYan/DnCNN-PyTorch)
+* xDnCNN<sup>3</sup> [[Pytorch Code]](https://github.com/kligvasser/xUnit)
 * REDNet<sup>4</sup>
-* MWCNN<sup>5, 6</sup> [Matlab Code](https://github.com/lpj0/MWCNN) [Pytorch Code](https://github.com/lpj0/MWCNN_PyTorch)
+* MWCNN<sup>5, 6</sup> [[Matlab Code]](https://github.com/lpj0/MWCNN) [[Pytorch Code]](https://github.com/lpj0/MWCNN_PyTorch)
 
 
 # References
