@@ -168,7 +168,7 @@ class PytorchModel(AbstractDeepLearningModel):
 
         """ Loss """
         if loss is None:
-            loss = nn.MSELoss(reduction="sum")
+            loss = nn.MSELoss(reduction="mean")
 
         min_val_loss = np.inf
         best_epoch = None
@@ -185,6 +185,13 @@ class PytorchModel(AbstractDeepLearningModel):
             callback_logs["LearningRate"] = learning_rate
 
             for _ in pgbar:
+                # Sets model to training
+                self.model.train()
+                # Resets gradients
+                self.model.zero_grad()
+                optimizer.zero_grad()
+
+                # Get image batches
                 x_numpy, y_numpy = next(train_generator)
                 if x_numpy.shape[1] not in [1, 3]:
                     x_numpy = np.transpose(x_numpy, [0, 3, 1, 2])
@@ -214,57 +221,59 @@ class PytorchModel(AbstractDeepLearningModel):
                 log_dict["metrics_val"] = metrics_v
                 log_dict["finish_time"] = time.time()
                 change_pgbar_desc(pgbar, log_dict)
-                # Reset gradients
-                optimizer.zero_grad()
+                
                 # Computes gradients
                 loss_tensor.backward()
                 # Performs optimization
                 optimizer.step()
+
             callback_logs['loss'] = loss_tensor.item()
             for metric_v, metric in zip(metrics_v, metrics):
                 callback_logs[metric.__name__] = metric_v
 
             if do_valid:
+                self.model.eval()
                 loss_m = 0
                 metrics_m = np.zeros((len(metrics)))
                 pgbar = tqdm(range(valid_steps), ncols=150, ascii=True)
                 eval_start = time.time()
                 log_dict["start_time"] = eval_start
-                for _ in pgbar:
-                    x_numpy, y_numpy = next(train_generator)
-                    if x_numpy.shape[1] not in [1, 3]:
-                        x_numpy = np.transpose(x_numpy, [0, 3, 1, 2])
-                    if y_numpy.shape[1] not in [1, 3]:
-                        y_numpy = np.transpose(y_numpy, [0, 3, 1, 2])
-                    # Numpy array to Tensor
-                    x_tensor = torch.from_numpy(x_numpy).float()
-                    y_tensor = torch.from_numpy(y_numpy).float()
-                    if torch.cuda.is_available():
-                        # Pass prediction to CPU
-                        x_tensor = x_tensor.cuda()
-                        y_tensor = y_tensor.cuda()
-                    # Makes prediction based on inputs
-                    y_pred_tensor = self.model(x_tensor)
-                    # Compute loss
-                    loss_tensor = loss(y_pred_tensor, y_tensor)
-                    # Tensor to scalar
-                    log_dict["loss_val"] = loss_tensor.item()
-                    # Computes metrics
-                    if torch.cuda.is_available():
-                        # Pass prediction to CPU
-                        y_pred_tensor = y_pred_tensor.cpu()
-                    y_pred_numpy = y_pred_tensor.detach().numpy()
-                    metrics_v = []
-                    for metric in metrics:
-                        metrics_v.append(metric(y_numpy, y_pred_numpy))
-                    log_dict["metrics_val"] = metrics_v
-                    log_dict["finish_time"] = time.time()
-                    change_pgbar_desc(pgbar, log_dict, train=False)
-                    loss_m = loss_m + loss_tensor.item() / valid_steps
-                    metrics_m = metrics_m + np.array(metrics_v) / valid_steps
-                callback_logs['val_loss'] = loss_m
-                for metric_m, metric in zip(metrics_m, metrics):
-                    callback_logs["val_" + metric.__name__] = metric_m
+                with torch.no_grad():
+                    for _ in pgbar:
+                        x_numpy, y_numpy = next(valid_generator)
+                        if x_numpy.shape[1] not in [1, 3]:
+                            x_numpy = np.transpose(x_numpy, [0, 3, 1, 2])
+                        if y_numpy.shape[1] not in [1, 3]:
+                            y_numpy = np.transpose(y_numpy, [0, 3, 1, 2])
+                        # Numpy array to Tensor
+                        x_tensor = torch.from_numpy(x_numpy).float()
+                        y_tensor = torch.from_numpy(y_numpy).float()
+                        if torch.cuda.is_available():
+                            # Pass prediction to CPU
+                            x_tensor = x_tensor.cuda()
+                            y_tensor = y_tensor.cuda()
+                        # Makes prediction based on inputs
+                        y_pred_tensor = self.model(x_tensor)
+                        # Compute loss
+                        loss_tensor = loss(y_pred_tensor, y_tensor)
+                        # Tensor to scalar
+                        log_dict["loss_val"] = loss_tensor.item()
+                        # Computes metrics
+                        if torch.cuda.is_available():
+                            # Pass prediction to CPU
+                            y_pred_tensor = y_pred_tensor.cpu()
+                        y_pred_numpy = y_pred_tensor.detach().numpy()
+                        metrics_v = []
+                        for metric in metrics:
+                            metrics_v.append(metric(y_numpy, y_pred_numpy))
+                        log_dict["metrics_val"] = metrics_v
+                        log_dict["finish_time"] = time.time()
+                        change_pgbar_desc(pgbar, log_dict, train=False)
+                        loss_m = loss_m + loss_tensor.item() / valid_steps
+                        metrics_m = metrics_m + np.array(metrics_v) / valid_steps
+                    callback_logs['val_loss'] = loss_m
+                    for metric_m, metric in zip(metrics_m, metrics):
+                        callback_logs["val_" + metric.__name__] = metric_m
             else:
                 loss_m = loss_tensor.item()
 
@@ -300,6 +309,7 @@ class PytorchModel(AbstractDeepLearningModel):
             Restored batch of images, with same shape as the input.
 
         """
+        self.model.eval()
         channels_first = True
         if image.shape[1] not in [1, 3]:
             # Pytorch only accepts NCHW input arrays.
