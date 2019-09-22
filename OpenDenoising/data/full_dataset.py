@@ -150,12 +150,6 @@ class FullDatasetGenerator(AbstractDatasetGenerator):
 
         return ref_batch, inp_batch
 
-    def __next__(self):
-        """Returns image batches sequentially."""
-        while True:
-            for input_batch, output_batch in self:
-                return input_batch, output_batch
-
     def __repr__(self):
         return "Dataset name: {}, Dataset type: {}, Path: {}, " \
                "Batch Size: {}, preprocessing: {}".format(self, "Full", self.path, self.batch_size,

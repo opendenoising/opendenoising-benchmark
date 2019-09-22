@@ -142,12 +142,6 @@ class BlindDatasetGenerator(AbstractDatasetGenerator):
         module_logger.debug("Data shape: {}".format(inp_batch.shape))
         return inp_batch, ref_batch
 
-    def __next__(self):
-        """Returns image batches sequentially."""
-        while True:
-            for input_batch in self:
-                return input_batch
-
     def __repr__(self):
         return "Dataset name: {}, Dataset type: {}, Path: {}, " \
                "Batch Size: {}, preprocessing: {}".format(self, "Clean", self.path, self.batch_size,
