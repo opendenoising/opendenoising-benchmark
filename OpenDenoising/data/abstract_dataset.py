@@ -63,10 +63,9 @@ class AbstractDatasetGenerator(keras.utils.Sequence):
         self.batch_size = batch_size
         self.n_channels = n_channels
         self.shuffle = shuffle
-        self.idx = -1
         self.name = name
         self.filenames = None
-        self.idx = None
+        self.idx = -1
 
     def __len__(self):
         """Number of batches per epoch """
