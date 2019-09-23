@@ -173,7 +173,6 @@ class PytorchModel(AbstractDeepLearningModel):
         min_val_loss = np.inf
         best_epoch = None
 
-        start = time.time()
         log_dict = {"n_epochs": n_epochs}
         for i in range(int(n_epochs)):
             pgbar = tqdm(range(n_stages), ncols=150, ascii=True)
