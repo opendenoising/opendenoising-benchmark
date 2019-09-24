@@ -6,16 +6,16 @@ import torch.nn.functional as F
 
 from torch.autograd import Variable
 
-def default_conv(in_channels, out_channels, kernel_size, bias=True):
+def default_conv(in_channels, out_channels, kernel_size, bias=True, dilation=1):
     return nn.Conv2d(
         in_channels, out_channels, kernel_size,
-        padding=(kernel_size//2), bias=bias)
+        padding=(kernel_size//2)+dilation-1, bias=bias, dilation=dilation)
 
 
-def default_conv1(in_channels, out_channels, kernel_size, bias=True):
+def default_conv1(in_channels, out_channels, kernel_size, bias=True, groups=3):
     return nn.Conv2d(
         in_channels,out_channels, kernel_size,
-        padding=(kernel_size//2), bias=bias, groups=1)
+        padding=(kernel_size//2), bias=bias, groups=groups)
 
 
 class BasicBlock(nn.Sequential):
@@ -39,7 +39,7 @@ class BBlock(nn.Module):
         super(BBlock, self).__init__()
         m = []
         m.append(conv(in_channels, out_channels, kernel_size, bias=bias))
-        if bn: m.append(nn.BatchNorm2d(out_channels))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
         m.append(act)
 
 
@@ -48,6 +48,99 @@ class BBlock(nn.Module):
 
     def forward(self, x):
         x = self.body(x).mul(self.res_scale)
+        return x
+
+class DBlock_com(nn.Module):
+    def __init__(
+        self, conv, in_channels, out_channels, kernel_size,
+        bias=True, bn=False, act=nn.ReLU(True), res_scale=1):
+
+        super(DBlock_com, self).__init__()
+        m = []
+
+        m.append(conv(in_channels, out_channels, kernel_size, bias=bias, dilation=2))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
+        m.append(act)
+        m.append(conv(in_channels, out_channels, kernel_size, bias=bias, dilation=3))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
+        m.append(act)
+
+
+        self.body = nn.Sequential(*m)
+        self.res_scale = res_scale
+
+    def forward(self, x):
+        x = self.body(x)
+        return x
+
+
+class DBlock_inv(nn.Module):
+    def __init__(
+        self, conv, in_channels, out_channels, kernel_size,
+        bias=True, bn=False, act=nn.ReLU(True), res_scale=1):
+
+        super(DBlock_inv, self).__init__()
+        m = []
+
+        m.append(conv(in_channels, out_channels, kernel_size, bias=bias, dilation=3))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
+        m.append(act)
+        m.append(conv(in_channels, out_channels, kernel_size, bias=bias, dilation=2))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
+        m.append(act)
+
+
+        self.body = nn.Sequential(*m)
+        self.res_scale = res_scale
+
+    def forward(self, x):
+        x = self.body(x)
+        return x
+
+class DBlock_com1(nn.Module):
+    def __init__(
+        self, conv, in_channels, out_channels, kernel_size,
+        bias=True, bn=False, act=nn.ReLU(True), res_scale=1):
+
+        super(DBlock_com1, self).__init__()
+        m = []
+
+        m.append(conv(in_channels, out_channels, kernel_size, bias=bias, dilation=2))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
+        m.append(act)
+        m.append(conv(in_channels, out_channels, kernel_size, bias=bias, dilation=1))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
+        m.append(act)
+
+
+        self.body = nn.Sequential(*m)
+        self.res_scale = res_scale
+
+    def forward(self, x):
+        x = self.body(x)
+        return x
+
+class DBlock_inv1(nn.Module):
+    def __init__(
+        self, conv, in_channels, out_channels, kernel_size,
+        bias=True, bn=False, act=nn.ReLU(True), res_scale=1):
+
+        super(DBlock_inv1, self).__init__()
+        m = []
+
+        m.append(conv(in_channels, out_channels, kernel_size, bias=bias, dilation=2))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
+        m.append(act)
+        m.append(conv(in_channels, out_channels, kernel_size, bias=bias, dilation=1))
+        if bn: m.append(nn.BatchNorm2d(out_channels, eps=1e-4, momentum=0.95))
+        m.append(act)
+
+
+        self.body = nn.Sequential(*m)
+        self.res_scale = res_scale
+
+    def forward(self, x):
+        x = self.body(x)
         return x
 
 
@@ -109,65 +202,63 @@ class IWT(nn.Module):
 
 
 class MWCNN(nn.Module):
-    """MWCNN Pytorch model. Source code taken from `Github <https://github.com/lpj0/MWCNN_PyTorch>`.
-    """
-    def __init__(self, conv=default_conv):
+    def __init__(self, n_feats=128, n_channels=1, conv=default_conv):
         super(MWCNN, self).__init__()
-        n_resblocks = 32
-        n_feats = 256
+        n_feats = n_feats
         kernel_size = 3
         self.scale_idx = 0
+        nColor = n_channels
 
         act = nn.ReLU(True)
 
         self.DWT = DWT()
         self.IWT = IWT()
 
-        n = 3
-        m_head = [BBlock(conv, 4, 160, 3, act=act)]
-        d_l1 = []
-        for _ in range(n):
-            d_l1.append(BBlock(conv, 160, 160, 3, act=act))
+        m_head = [BBlock(conv, nColor, n_feats, kernel_size, act=act)]
+        d_l0 = []
+        d_l0.append(DBlock_com1(conv, n_feats, n_feats, kernel_size, act=act, bn=False))
 
-        d_l2 = [BBlock(conv, 640, n_feats * 4, 3, act=act)]
-        for _ in range(n):
-            d_l2.append(BBlock(conv, n_feats * 4, n_feats * 4, 3, act=act))
 
-        pro_l3 = [BBlock(conv, n_feats * 16, n_feats * 4, 3, act=act)]
-        for _ in range(n*2):
-            pro_l3.append(BBlock(conv, n_feats * 4, n_feats * 4, 3, act=act))
-        pro_l3.append(BBlock(conv, n_feats * 4, n_feats * 16, 3, act=act))
+        d_l1 = [BBlock(conv, n_feats * 4, n_feats * 2, kernel_size, act=act, bn=False)]
+        d_l1.append(DBlock_com1(conv, n_feats * 2, n_feats * 2, kernel_size, act=act, bn=False))
 
-        i_l2 = []
-        for _ in range(n):
-            i_l2.append(BBlock(conv, n_feats * 4, n_feats * 4, 3, act=act))
-        i_l2.append(BBlock(conv, n_feats * 4,640, 3, act=act))
+        d_l2 = []
+        d_l2.append(BBlock(conv, n_feats * 8, n_feats * 4, kernel_size, act=act, bn=False))
+        d_l2.append(DBlock_com1(conv, n_feats * 4, n_feats * 4, kernel_size, act=act, bn=False))
+        pro_l3 = []
+        pro_l3.append(BBlock(conv, n_feats * 16, n_feats * 8, kernel_size, act=act, bn=False))
+        pro_l3.append(DBlock_com(conv, n_feats * 8, n_feats * 8, kernel_size, act=act, bn=False))
+        pro_l3.append(DBlock_inv(conv, n_feats * 8, n_feats * 8, kernel_size, act=act, bn=False))
+        pro_l3.append(BBlock(conv, n_feats * 8, n_feats * 16, kernel_size, act=act, bn=False))
 
-        i_l1 = []
-        for _ in range(n):
-            i_l1.append((BBlock(conv,160, 160, 3, act=act)))
+        i_l2 = [DBlock_inv1(conv, n_feats * 4, n_feats * 4, kernel_size, act=act, bn=False)]
+        i_l2.append(BBlock(conv, n_feats * 4, n_feats * 8, kernel_size, act=act, bn=False))
 
-        m_tail = [conv(160, 4, 3)]
+        i_l1 = [DBlock_inv1(conv, n_feats * 2, n_feats * 2, kernel_size, act=act, bn=False)]
+        i_l1.append(BBlock(conv, n_feats * 2, n_feats * 4, kernel_size, act=act, bn=False))
+
+        i_l0 = [DBlock_inv1(conv, n_feats, n_feats, kernel_size, act=act, bn=False)]
+
+        m_tail = [conv(n_feats, nColor, kernel_size)]
 
         self.head = nn.Sequential(*m_head)
         self.d_l2 = nn.Sequential(*d_l2)
         self.d_l1 = nn.Sequential(*d_l1)
+        self.d_l0 = nn.Sequential(*d_l0)
         self.pro_l3 = nn.Sequential(*pro_l3)
         self.i_l2 = nn.Sequential(*i_l2)
         self.i_l1 = nn.Sequential(*i_l1)
+        self.i_l0 = nn.Sequential(*i_l0)
         self.tail = nn.Sequential(*m_tail)
 
     def forward(self, x):
-
-        x1 = self.d_l1(self.head(self.DWT(x)))
+        x0 = self.d_l0(self.head(x))
+        x1 = self.d_l1(self.DWT(x0))
         x2 = self.d_l2(self.DWT(x1))
-        # x3 = self.d_l2(self.DWT(x2))
         x_ = self.IWT(self.pro_l3(self.DWT(x2))) + x2
         x_ = self.IWT(self.i_l2(x_)) + x1
-
-        # x = self.i_l0(x) + x0
-        x = self.IWT(self.tail(self.i_l1(x_))) + x
-        # x = self.add_mean(x)
+        x_ = self.IWT(self.i_l1(x_)) + x0
+        x = self.tail(self.i_l0(x_)) + x
 
         return x
 

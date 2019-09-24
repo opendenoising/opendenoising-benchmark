@@ -186,6 +186,8 @@ def apply_preprocessing_pipeline(images_folder, output_path, preprocessing, n_ch
         if image.ndim > 3:
             for i, patch in enumerate(image):
                 imsave(os.path.join(output_path, str(i) + "_" + filename), np.squeeze(patch))
+        elif image.ndim == 1:
+            pass
         else:
             imsave(os.path.join(output_path, filename), np.squeeze(image), check_contrast=False)
 
