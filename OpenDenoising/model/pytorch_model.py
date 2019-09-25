@@ -50,7 +50,7 @@ from OpenDenoising.model import AbstractDeepLearningModel
 
 def change_pgbar_desc(pgbar, log, train=True):
     if train:
-        string = "[Train {}/{}, Best: {}] ".format(log["epoch"], log["n_epochs"], log["best_epoch"])
+        string = "[Train {}/{}] ".format(log["epoch"], log["n_epochs"])
         string += "Loss: {0:.4f}, Metrics: ".format(log["loss_val"])
         for metric in log["metrics_val"]:
             string += "{0:.4f} ".format(metric)
@@ -170,16 +170,12 @@ class PytorchModel(AbstractDeepLearningModel):
         if loss is None:
             loss = nn.MSELoss(reduction="mean")
 
-        min_val_loss = np.inf
-        best_epoch = None
-
         log_dict = {"n_epochs": n_epochs}
         for i in range(int(n_epochs)):
-            pgbar = tqdm(range(n_stages), ncols=150, ascii=True)
+            pgbar = tqdm(range(n_stages), ascii=True)
             epoch_start = time.time()
             log_dict["start_time"] = epoch_start
             log_dict["epoch"] = i
-            log_dict["best_epoch"] = best_epoch
             callback_logs = dict()
             callback_logs["LearningRate"] = learning_rate
 
@@ -232,8 +228,6 @@ class PytorchModel(AbstractDeepLearningModel):
 
             if do_valid:
                 self.model.eval()
-                loss_m = 0
-                metrics_m = np.zeros((len(metrics)))
                 pgbar = tqdm(range(valid_steps), ncols=150, ascii=True)
                 eval_start = time.time()
                 log_dict["start_time"] = eval_start
@@ -268,17 +262,9 @@ class PytorchModel(AbstractDeepLearningModel):
                         log_dict["metrics_val"] = metrics_v
                         log_dict["finish_time"] = time.time()
                         change_pgbar_desc(pgbar, log_dict, train=False)
-                        loss_m = loss_m + loss_tensor.item() / valid_steps
-                        metrics_m = metrics_m + np.array(metrics_v) / valid_steps
-                    callback_logs['val_loss'] = loss_m
-                    for metric_m, metric in zip(metrics_m, metrics):
-                        callback_logs["val_" + metric.__name__] = metric_m
-            else:
-                loss_m = loss_tensor.item()
-
-            if loss_m < min_val_loss:
-                min_val_loss = loss_m
-                best_epoch = i
+                    callback_logs['val_loss'] = loss_tensor.item()
+                    for metric_v, metric in zip(metrics_v, metrics):
+                        callback_logs["val_" + metric.__name__] = metric_v
 
             """ Calls on_epoch_end on callbacks and datasets. """
             train_generator.on_epoch_end()
