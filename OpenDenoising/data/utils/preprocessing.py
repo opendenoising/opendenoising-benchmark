@@ -273,7 +273,7 @@ def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
     patches : :class:`numpy.ndarray`
         Extracted patches from img.
     """
-    height, width = img.shape
+    height, width = img.shape[:2]
     patches = []
     for i in range(0, height - d, sg):
         for j in range(0, width - d, sg):
@@ -312,6 +312,8 @@ def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
                 # If smooth enough, then extracts the noise patch through
                 # noise = patch - mean(patch)
                 patches.append(wg - np.mean(wg))
+    patches = np.clip(np.array(patches), 0, 1)
+    print(patches.shape)
     return patches
 
 
@@ -382,7 +384,7 @@ def n2v_data_generation(noisy_patches, num_pix=64, value_manipulation=None, n_ch
             )
             x_val.append(value_manipulation(X[..., channel][...,np.newaxis], coords[k], 2))
 
-        #Y[..., channel] *= 0
+        Y[..., channel] *= 0
         Y[..., n_channels + channel] *= 0
 
         for k in range(len(coords)):
