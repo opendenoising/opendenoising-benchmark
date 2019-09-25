@@ -202,7 +202,7 @@ class IWT(nn.Module):
 
 
 class MWCNN(nn.Module):
-    def __init__(self, n_feats=128, n_channels=1, conv=default_conv):
+    def __init__(self, n_feats=64, n_channels=1, conv=default_conv):
         super(MWCNN, self).__init__()
         n_feats = n_feats
         kernel_size = 3
