@@ -276,7 +276,7 @@ class KerasModel(AbstractDeepLearningModel):
 
 class Noise2Void(KerasModel):
     def __init__(self, model_name="DeepLearningModel", logdir="./logs/Keras", return_diff=False):
-        super(Noise2Void, self).__init__(model_name, logdir, framework="Keras", return_diff=return_diff)
+        super(Noise2Void, self).__init__(model_name, logdir, return_diff=return_diff)
 
     def charge_model(self, model_function=None, model_path=None, model_weights=None, **kwargs):
         if model_function is None and model_path is None and model_weights is None:
