@@ -9,6 +9,7 @@ First, being on the project's root, you need to import the necessary modules,
 .. code:: python
 
     import cv2
+    import shtuil
     import numpy as np
     import matplotlib.pyplot as plt
 
@@ -30,7 +31,7 @@ CleanDatasetGenerator. For mode details on how you can artificially add noise to
 *Artificial Noising* section.
 
 During this section, we will base our analysis on the dataset used to train `DnCNN
-<https://arxiv.org/pdf/1608.03981.pdf>`_ network. The dataset used is called Berkeley Segmentation Dataset (BSDS),
+<https://arxiv.org/pdf/1608.03981.pdf>`_ [1]_ network. The dataset used is called Berkeley Segmentation Dataset (BSDS) [2]_,
 consisting of 500 images. For training, BSDS consider 400 cropped images, and further uses 68 images not present on
 training data for validation/testing.
 
@@ -69,7 +70,7 @@ To create a Clean Dataset, you can use the DatasetFactory class by specifying th
   patches from the images we just downloaded. We can do this by using the function "data.gen_patches".
 * **name**: we will specify "BSDS_Train" as the dataset's name.
 * **noise_config**: Here we can configure the artificial noise that will be added to each image sample :math:`\mathbf{x}`.
-  For our first example, we will add gaussian noise with intensity $\sigma=25$ (always specified with respect to 0-255 range).
+  For our first example, we will add gaussian noise with intensity :math:`\sigma=25` (always specified with respect to 0-255 range).
 
 These specifications are specified by the following snippet,
 
@@ -351,11 +352,11 @@ was degraded by compressing it using JPEG algorithm. The introduction of JPEG ar
 
 .. code:: python
 
-    y_1 = data.utils.super_resolution_noise(x, noise_level=10)
-    y_2 = data.utils.super_resolution_noise(x, noise_level=20)
-    y_3 = data.utils.super_resolution_noise(x, noise_level=50)
-    y_4 = data.utils.super_resolution_noise(x, noise_level=75)
-    y_5 = data.utils.super_resolution_noise(x, noise_level=90)
+    y_1 = data.utils.jpeg_artifacts(x, noise_level=10)
+    y_2 = data.utils.jpeg_artifacts(x, noise_level=20)
+    y_3 = data.utils.jpeg_artifacts(x, noise_level=50)
+    y_4 = data.utils.jpeg_artifacts(x, noise_level=75)
+    y_5 = data.utils.jpeg_artifacts(x, noise_level=90)
 
     fig, axes = plt.subplots(2, 3, figsize=(15, 10))
 
@@ -444,7 +445,7 @@ to assess model quality. Full Datasets need to have the following folder structu
     |   |-- in
     |   |-- ref
 
-Here we use as example the PolyU real-world denoising dataset. You can either download it from their
+Here we use as example the PolyU real-world denoising dataset [3]_. You can either download it from their
 `Github page <https://github.com/csjunxu/PolyU-Real-World-Noisy-Images-Dataset>`_, or use the data module to
 automatically download it,
 
@@ -479,36 +480,69 @@ the ground_truth, and images in "in" as the noisy samples, as shown bellow,
 .. image:: Figures/DataTutorialOut8.png
     :alt: Summary of PolyU images.
 
-Creating a FullDataset from clean images
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Blind Datasets
+^^^^^^^^^^^^^^
 
-If your preprocessing or corruption functions happen to introduce too much overhead in the batch generation process, you
-may consider using a :class:`OpenDenoising.data.FullDatasetGenrator` instead of a :class:`OpenDenoising.data.CleanDatasetGenrator`.
+We also offer the posibility to specify blind datasets for image denoising. These types of datasets are used, for instance, in algorithms such as `GCBD 
+<http://openaccess.thecvf.com/content_cvpr_2018/papers/Chen_Image_Blind_Denoising_CVPR_2018_paper.pdf>`_ [4]_ and `Noise2Void <https://arxiv.org/abs/1811.10980>`_ [5]_.
 
-To do so, you may use the function :class:`OpenDenoising.data.generate_full_dataset`, which executes the exactly same
-process of CleanDataset during batch generation, except that it saves the generated images into memory.
+These algorithms, however, may or may not rely only on noisy images. For the first case, we consider the unsupervised part of GCBD: a GAN is used to model the noise distribution. In that case, only noisy images are used.
 
-For instance, the following snippet reads data from BSDS train images from "./tmp/BSDS500/Train/ref/", crops
-:math:`40 \times 40` patches from each image file, and saves these patches to "./tmp/Cropped_40_BSDS_Gauss_25/".
+For Noise2Void, however, a pairing still needs to be done. In the specific case of Noise2Void, random pixels are substituted by a random value in order to prohibit a neural network to learn the identity function. In order to generate the pairing, you can specify a **target generation function** (*target\_fcn* parameter), which behaves simillarly to corruption functions in Clean datasets. These functions can be specified, so that neural networks can still perform supervised learning on data.
+
+As an example we use here the Noise2Void pipeline to demonstrate how to use Blind Datasets. We remark that the code provided by our benchmark is a version based on the `author's original code <https://github.com/juglab/n2v>` with few modifications. 
+
+For this example, we generate the noisy images by adding gaussian noise to BSDS500 images, and then saving them to a new folder.
 
 .. code:: python
 
-    from functools import partial
-    from OpenDenoising.data.utils import gaussian_noise
-    from OpenDenoising.data.utils import gen_patches
-    from OpenDenoising.data.utils import generate_full_dataset
-    PATH_TO_IMGS = "./tmp/BSDS500/Train/ref/"
-    PATH_TO_SAVE = "./tmp/Cropped_40_BSDS_Gauss_25/"
-    generate_full_dataset(PATH_TO_IMGS, PATH_TO_SAVE, noise_config={gaussian_noise: [25]},
-                          preprocessing=[partial(gen_patches, patch_size=40)], n_channels=1)
+    PATH_TO_IMGS = '../../tmp/BSDS500/Train/ref'
+    PATH_TO_SAVE = '../../tmp/BlindExample/Train/in'
+    data.generate_full_dataset(PATH_TO_IMGS, PATH_TO_SAVE, noise_config={data.gaussian_noise: [25]},
+                               preprocessing=[])
+    shutil.rmtree('../../tmp/BlindExample/Train/ref')
 
-After running the code, you may notice that the following folder structure has been created,
+To create your dataset, you only need to use the **DatasetFactory** object, while specifying the *target_fcn* function (if you will perform supervised learning).
 
-.. parsed-literal::
+.. code:: python
 
-    ./tmp/BSDS500/Train/
-    |-- Train
-    |   |-- in
-    |   |-- ref
+    blind_dataset = data.DatasetFactory.create(path="../../tmp/BlindExample/Train",
+                                               batch_size=16,
+                                               n_channels=1,
+                                               target_fcn=data.n2v_data_generation,
+                                               name="Noise2VoidDataset")
 
-Hence, you may use DatasetFactory to create a FullDataset by specifying "./tmp/BSDS500/Train/" as the images path.
+Notice that the return of this dataset generator is quite different from other methods. First, the target images are not clean version of input images (since
+they are assumed unavailable), but rather a masked version of the input. For more information, that a look on Noise2Void paper.
+
+.. code:: python
+
+    Ybatch, Xbatch = next(blind_dataset)
+
+    fig, axes = plt.subplots(5, 2, figsize=(10, 15))
+
+    for i in range(5):
+        axes[i, 0].imshow(np.squeeze(Xbatch[i, :, :, 0]), cmap="gray")
+        axes[i, 0].axis("off")
+        axes[i, 0].set_title("Masked target")
+        
+        axes[i, 1].imshow(np.squeeze(Ybatch[i]), cmap="gray")
+        axes[i, 1].axis("off")
+        axes[i, 1].set_title("Noised Image")
+
+.. image:: Figures/DataTutorialOut10.png
+    :alt: Summary of Noise2Void training images.
+
+References
+----------
+
+.. [1] Zhang, K., Zuo, W., Chen, Y., Meng, D., & Zhang, L. (2017). Beyond a gaussian denoiser: Residual learning of deep cnn for image denoising. IEEE Transactions on Image Processing
+
+.. [2] Martin, D., Fowlkes, C., Tal, D., & Malik, J. (2001, July). A database of human segmented natural images and its application to evaluating segmentation algorithms and measuring ecological statistics. Vancouver.
+
+.. [3] Xu, J., Li, H., Liang, Z., Zhang, D., & Zhang, L. (2018). Real-world noisy image denoising: A new benchmark. arXiv preprint arXiv:1804.02603.
+
+.. [4] Chen, J., Chen, J., Chao, H., & Yang, M. (2018). Image blind denoising with generative adversarial network based noise modeling. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition.
+
+.. [5] Krull, A., Buchholz, T. O., & Jug, F. (2019). Noise2void-learning denoising from single noisy images. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition.
+
