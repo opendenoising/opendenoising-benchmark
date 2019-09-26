@@ -69,7 +69,7 @@ class BlindDatasetGenerator(AbstractDatasetGenerator):
     def __init__(self, path, batch_size=32, shuffle=True, name="CleanDataset", n_channels=1, preprocessing=None,
                  target_fcn=None):
         super().__init__(path, batch_size, shuffle, name, n_channels)
-        self.filenames = np.array(os.listdir(os.path.join(self.path, "in")))
+        self.filenames = np.array(os.listdir(os.path.join(self.path)))
         self.preprocessing = [] if preprocessing is None else preprocessing
         self.on_epoch_end()
         self.target_fcn = target_fcn
@@ -134,17 +134,13 @@ class BlindDatasetGenerator(AbstractDatasetGenerator):
                 inp = func(inp)
 
             # Generates target from input
-            ref_batch.append(self.target_fcn(inp))
+            inp, ref = self.target_fcn(inp)
+            ref_batch.append(ref)
             inp_batch.append(inp)
         inp_batch = np.array(inp_batch)
+        ref_batch = np.array(ref_batch)
         module_logger.debug("Data shape: {}".format(inp_batch.shape))
         return inp_batch, ref_batch
-
-    def __next__(self):
-        """Returns image batches sequentially."""
-        while True:
-            for input_batch in self:
-                return input_batch
 
     def __repr__(self):
         return "Dataset name: {}, Dataset type: {}, Path: {}, " \

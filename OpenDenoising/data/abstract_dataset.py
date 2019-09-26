@@ -65,7 +65,7 @@ class AbstractDatasetGenerator(keras.utils.Sequence):
         self.shuffle = shuffle
         self.name = name
         self.filenames = None
-        self.idx = None
+        self.idx = -1
 
     def __len__(self):
         """Number of batches per epoch """
@@ -74,6 +74,11 @@ class AbstractDatasetGenerator(keras.utils.Sequence):
     def on_epoch_end(self):
         """Defines and shuffles indexes on epoch end """
         np.random.shuffle(self.filenames)
+
+    def __next__(self):
+        """Returns image batches sequentially."""
+        self.idx = (self.idx + 1) % len(self)
+        return self.__getitem__(self.idx)
 
     def __str__(self):
         """Returns the dataset name. """

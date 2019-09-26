@@ -44,6 +44,7 @@ from keras import models, optimizers
 from OpenDenoising import evaluation
 from OpenDenoising.model import module_logger
 from OpenDenoising.model import AbstractDeepLearningModel
+from OpenDenoising.model.architectures.keras import unet_CSBDeep
 
 
 def history_to_csv(csv_path, history):

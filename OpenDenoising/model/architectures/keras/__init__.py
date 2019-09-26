@@ -38,7 +38,7 @@
 from .dncnn import dncnn
 from .xunit import xnet as xdncnn
 from .rednet import rednet
-from .mwcnn import mwcnn
+from .unet import unet_CSBDeep
 
 from functools import partial
 

@@ -45,11 +45,6 @@ class DnCNN(nn.Module):
         found on `their Github Page
         <https://github.com/cszn/DnCNN/>`_.
 
-        Notes
-        -----
-        This implementation is based on the following `Github page
-        <https://github.com/SaoYan/DnCNN-PyTorch>`_.
-
         Parameters
         ----------
         depth : int

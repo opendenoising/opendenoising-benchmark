@@ -64,6 +64,11 @@ def clip_batch(inp, ref=None, minrange=0, maxrange=1):
 def normalize_batch(inp, ref=None, minrange=0, maxrange=1):
     """Normalizes each pixel of a 4D batch of images in the range [minrange, maxrange].
 
+    Notes
+    -----
+    This function performs a linear transformation on pixels, which can stretch its histogram. Therefore, we advise you
+    to use this function with caution.
+
     Parameters
     ----------
     inp : :class:`numpy.ndarray`
@@ -88,8 +93,8 @@ def normalize_batch(inp, ref=None, minrange=0, maxrange=1):
         return (maxrange - minrange) * _inp + minrange
 
 
-def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
-    """Data augmentation policy employed on DnCNN
+def dncnn_augmentation(inp, ref=None, aug_times=1):
+    """Data augmentation policy employed on DnCNN [1]_.
 
     Parameters
     ----------
@@ -106,6 +111,11 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         Augmented noised images
     ref : :class:`numpy.ndarray`
         Augmented ground-truth images
+
+    References
+    ----------
+    .. [1] Zhang K, Zuo W, Chen Y, Meng D, Zhang L. Beyond a gaussian denoiser: Residual learning of deep cnn
+           for image denoising. IEEE Transactions on Image Processing. 2017
     """
     _inp = inp.copy()
     _ref = ref.copy() if ref is not None else None
@@ -184,7 +194,7 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
 
 
 
-def gen_patches(inp, ref, patch_size, channels_first=False, mode="sequential", n_patches=-1):
+def gen_patches(inp, ref=None, patch_size=40, mode="sequential", n_patches=-1):
     """Patch generation function.
 
     Parameters
@@ -195,14 +205,12 @@ def gen_patches(inp, ref, patch_size, channels_first=False, mode="sequential", n
         Reference image which patches will be extracted.
     patch_size : int
         Size of patch window (number of pixels in each axis).
-    channels_first : bool
-        Whether data is formatted as NCHW (True) or NHWC (False).
     mode : str
         One between {'sequential', 'random'}. If mode = 'sequential', extracts patches sequentially on each axis.
         If mode = 'random', extracts patches randomly.
     n_patches : int
         Number of patches to be extracted from the image. Should be specified only if mode = 'random'. If not specified,
-        then,
+        or if mode = 'sequential', extracts exactly:
 
         .. math::
 
@@ -218,47 +226,40 @@ def gen_patches(inp, ref, patch_size, channels_first=False, mode="sequential", n
     assert mode in ["random", "sequential"], "Expected mode to be 'random' or 'sequential' but got {}".format(mode)
 
     _inp = inp.copy()
-    _ref = ref.copy()
-    if channels_first:
-        _, h, w = _inp.shape
-    else:
-        h, w = _inp.shape[:2]
+    if ref is not None: _ref = ref.copy()
+    
+    h, w = _inp.shape[:2]
 
     if mode == "random" and n_patches == -1:
         n_patches = h * w / (patch_size ** 2)
 
     inp_patches = []
-    ref_patches = []
+    if ref is not None: ref_patches = []
 
     if mode == "sequential":
         for i in range(0, h - patch_size + 1, patch_size):
             for j in range(0, w - patch_size + 1, patch_size):
-                if channels_first:
-                    inp_patches.append(_inp[:, i: i + patch_size, j: j + patch_size])
-                    ref_patches.append(_ref[:, i: i + patch_size, j: j + patch_size])
-                else:
-                    inp_patches.append(_inp[i: i + patch_size, j: j + patch_size, :])
-                    ref_patches.append(_ref[i: i + patch_size, j: j + patch_size, :])
+                inp_patches.append(_inp[i: i + patch_size, j: j + patch_size, :])
+                if ref is not None: ref_patches.append(_ref[i: i + patch_size, j: j + patch_size, :])
     if mode == "random":
         for _ in range(n_patches):
             i = np.random.randint(0, h - patch_size + 1)
             j = np.random.randint(0, h - patch_size + 1)
-            if channels_first:
-                inp_patches.append(_inp[:, i: i + patch_size, j: j + patch_size])
-                ref_patches.append(_ref[:, i: i + patch_size, j: j + patch_size])
-            else:
-                inp_patches.append(_inp[i: i + patch_size, j: j + patch_size, :])
-                ref_patches.append(_ref[i: i + patch_size, j: j + patch_size, :])
+            inp_patches.append(_inp[i: i + patch_size, j: j + patch_size, :])
+            if ref is not None: ref_patches.append(_ref[i: i + patch_size, j: j + patch_size, :])
 
 
     input_patches = np.array(inp_patches)
-    reference_patches = np.array(ref_patches)
+    if ref is not None: reference_patches = np.array(ref_patches)
 
-    return input_patches, reference_patches
+    if ref is not None:
+        return input_patches, reference_patches
+    else:
+        return input_patches
 
 
 def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
-    """Extract smooth patches for GCBD algorithm.
+    """Extract smooth patches for GCBD [1]_ algorithm.
 
     Parameters
     ----------
@@ -281,8 +282,13 @@ def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
     -------
     patches : :class:`numpy.ndarray`
         Extracted patches from img.
+
+    References
+    ----------
+    .. [1] Chen, J., Chen, J., Chao, H., & Yang, M. (2018). Image blind denoising with generative adversarial network
+           based noise modeling. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition
     """
-    height, width = img.shape
+    height, width = img.shape[:2]
     patches = []
     for i in range(0, height - d, sg):
         for j in range(0, width - d, sg):
@@ -321,44 +327,125 @@ def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
                 # If smooth enough, then extracts the noise patch through
                 # noise = patch - mean(patch)
                 patches.append(wg - np.mean(wg))
+    patches = np.clip(np.array(patches), 0, 1)
+    print(patches.shape)
     return patches
 
 
-def rand_tuple_2D(box_size):
+def __rand_float_coords2D__(boxsize):
     while True:
-        yield (np.random.rand() * box_size, np.random.rand() * box_size)
+        yield (np.random.rand() * boxsize, np.random.rand() * boxsize)
 
 
-def get_stratified_coords(coord_gen, box_size, shape):
+def __get_stratified_coords2D__(coord_gen, box_size, shape):
     coords = []
     box_count_y = int(np.ceil(shape[0] / box_size))
     box_count_x = int(np.ceil(shape[1] / box_size))
-
     for i in range(box_count_y):
         for j in range(box_count_x):
             y, x = next(coord_gen)
             y = int(i * box_size + y)
             x = int(j * box_size + x)
             if (y < shape[0] and x < shape[1]):
-                coords.append(y, x)
-
+                coords.append((y, x))
     return coords
 
 
-def n2v_generate_targets(inp, num_pix=1):
-    _inp = inp.copy()
-    b, h, w, c = inp.shape
-    boxsize = np.round(np.sqrt(h * w / num_pix)).astype('int')
-    coordinate_generator = rand_tuple_2D(boxsize)
+def get_subpatch(patch, coord, local_sub_patch_radius):
+    start = np.maximum(0, np.array(coord) - local_sub_patch_radius)
+    end = start + local_sub_patch_radius*2 + 1
 
-    ref = np.zeros([b, h, w, 2 * c])  # [ref | mask]
-    inp = np.zeros([b, h, w, c]) 
+    start = np.append(start, 0)
+    end = np.append(end, patch.shape[-1])
 
+    shift = np.minimum(0, patch.shape - end)
+
+    start += shift
+    end += shift
+
+    slices = [ slice(s, e) for s, e in zip(start, end)]
+
+    return patch[tuple(slices)]
+
+
+def pm_uniform_withCP(local_sub_patch_radius=5):
+    """Uniform pixel manipulation from Noise2Void [1]_.
+
+    Notes
+    -----
+    This code was reproduced with minor modifications from `Noise2Void Github repository
+    <https://github.com/juglab/n2v>`. By using this function you are agreeing with `author's
+    license <https://github.com/juglab/n2v/blob/master/LICENSE.txt>`_.
+
+    References
+    ----------
+    .. [1] Krull, A., Buchholz, T. O., & Jug, F. (2019). Noise2void-learning denoising from single noisy images. In
+           Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition.
+    """
+    def random_neighbor_withCP_uniform(patch, coord, dims):
+        sub_patch = get_subpatch(patch, coord,local_sub_patch_radius)
+        rand_coords = [np.random.randint(0, s) for s in sub_patch.shape[0:dims]]
+        return sub_patch[tuple(rand_coords)]
+    return random_neighbor_withCP_uniform
+
+
+def n2v_data_generation(noisy_patches, num_pix=64, value_manipulation=None, n_channels=1):
+    """Data generation method for Noise2Void [1]_.
+
+    Notes
+    -----
+    This code was reproduced with minor modifications from `Noise2Void Github repository
+    <https://github.com/juglab/n2v>`. By using this function you are agreeing with `author's
+    license <https://github.com/juglab/n2v/blob/master/LICENSE.txt>`_.
+
+    Parameters
+    ----------
+    noisy_patches : :class:`numpy.ndarray`
+        Numpy array of noisy patches.
+    num_pix : int
+        Number of manipulated pixels. Default is 64 pixels, in accordance with [1]_.
+    value_manipulation : function
+        Function for performing pixel manipulation, that is, creating blind spots on the receptive field. Default
+        function is uniform pixel selection with neighborhood size of 5. For more information, consult [1]_.
+    n_channels : int
+        Number of image channels. 1 for grayscale, 3 for RGB.
+
+    References
+    ----------
+    .. [1] Krull, A., Buchholz, T. O., & Jug, F. (2019). Noise2void-learning denoising from single noisy images. In
+           Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition.
+
+    """
+    assert n_channels in [1, 3], "Expected n_channels to be 1 or 3, but got {}".format(n_channels)
+    if value_manipulation is None:
+        value_manipulation = pm_uniform_withCP(5)
+
+    h, w, c = noisy_patches.shape
+    boxsize = np.round(np.sqrt(h * w / num_pix)).astype(np.int)
+    X = noisy_patches.copy()
+    Y = np.concatenate((X, np.zeros(X.shape, dtype=X.dtype)), axis=-1)
+    coord_gen = __rand_float_coords2D__(boxsize)
 
     for channel in range(c):
-        coords = get_stratified_coords(coordinate_generator, box_size=boxsize, shape=(h, w))
+        coords = __get_stratified_coords2D__(coord_gen, box_size=boxsize, shape=(h, w))
 
+        y_val = []
+        x_val = []
+        for k in range(len(coords)):
+            y_val.append(
+                np.copy(
+                    Y[(*coords[k], channel)]
+                )
+            )
+            x_val.append(value_manipulation(X[..., channel][...,np.newaxis], coords[k], 2))
 
+        Y[..., channel] *= 0
+        Y[..., n_channels + channel] *= 0
 
+        for k in range(len(coords)):
+            Y[(*coords[k], channel)] = y_val[k]
+            Y[(*coords[k], n_channels + channel)] = 1
+            X[(*coords[k], channel)] = x_val[k]
 
+    return X, Y
 

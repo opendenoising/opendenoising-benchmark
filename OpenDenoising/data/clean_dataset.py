@@ -163,11 +163,6 @@ class CleanDatasetGenerator(AbstractDatasetGenerator):
             ref_batch = ref_batch.reshape([-1, *ref_batch.shape[2:]])
         return inp_batch, ref_batch
 
-    def __next__(self):
-        while True:
-            for input_batch, output_batch in self:
-                return input_batch, output_batch
-
     def __str__(self):
         return self.name
 

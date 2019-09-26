@@ -38,8 +38,9 @@
 import os
 import numpy as np
 from tqdm import tqdm
-from skimage.io import imread, imsave
 from skimage import img_as_ubyte
+from skimage.color import rgb2gray
+from skimage.io import imread, imsave
 
 
 def generate_full_dataset(reference_images_folder, output_path, noise_config, preprocessing, n_channels=1):
@@ -100,8 +101,15 @@ def generate_full_dataset(reference_images_folder, output_path, noise_config, pr
     for filename in pgbar:
         filepath = os.path.join(reference_images_folder, filename)
         pgbar.set_description("Processing image from {}".format(filepath))
-        reference_arr = imread(filepath)[0] if n_channels == 3 else imread(filepath)
-        if reference_arr.ndim == 2: reference_arr = np.expand_dims(reference_arr, axis=-1)
+        reference_arr = imread(filepath)
+        
+        if reference_arr.ndim == 2:
+            reference_arr = np.expand_dims(reference_arr, axis=-1)
+        if reference_arr.shape[-1] == 3 and n_channels == 1:
+            reference_arr = rgb2gray(reference_arr)
+        if reference_arr.shape[-1] == 1 and n_channels == 3:
+            raise ValueError("Expected {} to have 3 channels, but got 1.".format(filepath))
+
         if reference_arr.dtype == 'uint8': reference_arr = reference_arr.astype('float64') / 255
         input_arr = reference_arr.copy()
 
@@ -128,3 +136,137 @@ def generate_full_dataset(reference_images_folder, output_path, noise_config, pr
             imsave(os.path.join(output_path, "ref", filename), np.squeeze(reference_arr),
                    check_contrast=False)
 
+
+def apply_preprocessing_pipeline(images_folder, output_path, preprocessing, n_channels=1):
+    """Apply preprocessing pipeline to all images on a folder.
+
+    Notes
+    -----
+    If your preprocessing functions are random, do not use this function, as the patches will potentially
+    be unpaired.
+
+    Parameters
+    ----------
+    images_folder : str
+        String containing the path to the folder where images are located.
+    output_path : str
+        String containing the path to the folder where images will be saved.
+    preprocessing : list
+        List of preprocessing functions.
+    n_channels : int
+        Number of channels on input images.
+
+    See Also
+    --------
+    joint_apply_preprocessing_pipeline : to apply the pipeline jointly to two sets of images.
+    """
+    filenames = os.listdir(images_folder)
+
+    try:
+        os.makedirs(output_path)
+    except FileExistsError:
+        if len(os.listdir(output_path)):
+            raise FileExistsError("Directory {} already exists and is not empty.".format(output_path))
+
+    pgbar = tqdm(filenames, ascii=True)
+    for filename in pgbar:
+        filepath = os.path.join(images_folder, filename)
+        pgbar.set_description("Processing image from {}".format(filepath))
+        image = imread(filepath)
+
+        if image.ndim == 2: image = np.expand_dims(image, axis=-1)
+        if image.shape[-1] == 3 and n_channels == 1: image = rgb2gray(image)
+        if image.shape[-1] == 1 and n_channels == 3:
+            raise ValueError("Expected {} to have 3 channels, but got 1.".format(filepath))
+        if image.dtype == 'uint8': image = img_as_ubyte(image)
+
+        for func in preprocessing:
+            image = func(image)
+
+        if image.ndim > 3:
+            for i, patch in enumerate(image):
+                imsave(os.path.join(output_path, str(i) + "_" + filename), np.squeeze(patch))
+        elif image.ndim == 1:
+            pass
+        else:
+            imsave(os.path.join(output_path, filename), np.squeeze(image), check_contrast=False)
+
+
+def joint_apply_preprocessing_pipeline(in_images_folder, ref_images_folder, in_output_folder, ref_output_folder, 
+                                       preprocessing, n_channels=1):
+    """Apply preprocessing pipeline to all images on a folder.
+
+    Notes
+    -----
+    Applies a preprocessing pipeline jointly to two sets of images. These two sets need to be paired, namely, for each
+    filename on in_images_folder, an image with same name need to be present on ref_images_folder.
+
+    Parameters
+    ----------
+    in_images_folder : str
+        String containing the path to the folder where input images are located.
+    ref_images_folder : str
+        String containing the path to the folder where reference images are located.
+    in_output_folder : str
+        String containing the path to the folder where post-processed input will be saved.
+    ref_output_folder : str
+        String containing the path to the folder where post-processed reference1 will be saved.
+    preprocessing : list
+        List of preprocessing functions.
+    n_channels : int
+        Number of channels on input images.
+    """
+    filenames = os.listdir(in_images_folder)
+
+    try:
+        os.makedirs(in_output_folder)
+    except FileExistsError:
+        if len(os.listdir(in_output_folder)):
+            raise FileExistsError("Directory {} already exists and is not empty.".format(in_output_folder))
+
+    try:
+        os.makedirs(ref_output_folder)
+    except FileExistsError:
+        if len(os.listdir(ref_output_folder)):
+            raise FileExistsError("Directory {} already exists and is not empty.".format(ref_output_folder))
+
+    pgbar = tqdm(filenames, ascii=True)
+    for filename in pgbar:
+        pgbar.set_description("Processing image {}".format(filename))
+        inp = imread(os.path.join(in_images_folder, filename))
+        try:
+            ref = imread(os.path.join(ref_images_folder, filename))
+        except FileNotFoundError:
+            raise FileNotFoundError("Expected file {} to be present on folder {}.".format(filename, ref_images_folder))
+
+
+        if inp.ndim == 2:
+            inp = np.expand_dims(inp, axis=-1)
+        if inp.shape[-1] == 3 and n_channels == 1: 
+            inp = rgb2gray(inp)
+            inp = np.expand_dims(inp, axis=-1)
+        if inp.shape[-1] == 1 and n_channels == 3:
+            raise ValueError("Expected {} to have 3 channels, but got 1.".format(filename))
+        if inp.dtype == 'uint8': inp = img_as_ubyte(inp)
+
+        if ref.ndim == 2:
+            ref = np.expand_dims(ref, axis=-1)
+        if ref.shape[-1] == 3 and n_channels == 1:
+            ref = rgb2gray(ref)
+            ref = np.expand_dims(ref, axis=-1)
+        if ref.shape[-1] == 1 and n_channels == 3:
+            raise ValueError("Expected {} to have 3 channels, but got 1.".format(filename))
+        if ref.dtype == 'uint8': ref = img_as_ubyte(ref)
+
+        for func in preprocessing:
+            inp, ref = func(inp, ref)
+
+        if inp.ndim > 3:
+            for i, (in_patch, ref_patch) in enumerate(zip(inp, ref)):
+                imsave(os.path.join(in_output_folder, str(i) + "_" + filename), np.squeeze(in_patch),
+                       check_contrast=False)
+                imsave(os.path.join(ref_output_folder, str(i) + "_" + filename), np.squeeze(ref_patch),
+                       check_contrast=False)
+        else:
+            imsave(os.path.join(in_output_folder, filename), np.squeeze(inp), check_contrast=False)
+            imsave(os.path.join(ref_output_folder, filename), np.squeeze(ref), check_contrast=False)
