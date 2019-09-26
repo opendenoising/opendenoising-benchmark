@@ -64,6 +64,11 @@ def clip_batch(inp, ref=None, minrange=0, maxrange=1):
 def normalize_batch(inp, ref=None, minrange=0, maxrange=1):
     """Normalizes each pixel of a 4D batch of images in the range [minrange, maxrange].
 
+    Notes
+    -----
+    This function performs a linear transformation on pixels, which can stretch its histogram. Therefore, we advise you
+    to use this function with caution.
+
     Parameters
     ----------
     inp : :class:`numpy.ndarray`
@@ -88,8 +93,8 @@ def normalize_batch(inp, ref=None, minrange=0, maxrange=1):
         return (maxrange - minrange) * _inp + minrange
 
 
-def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
-    """Data augmentation policy employed on DnCNN
+def dncnn_augmentation(inp, ref=None, aug_times=1):
+    """Data augmentation policy employed on DnCNN [1]_.
 
     Parameters
     ----------
@@ -106,6 +111,11 @@ def dncnn_augmentation(inp, ref=None, aug_times=1, channels_first=False):
         Augmented noised images
     ref : :class:`numpy.ndarray`
         Augmented ground-truth images
+
+    References
+    ----------
+    .. [1] Zhang K, Zuo W, Chen Y, Meng D, Zhang L. Beyond a gaussian denoiser: Residual learning of deep cnn
+           for image denoising. IEEE Transactions on Image Processing. 2017
     """
     _inp = inp.copy()
     _ref = ref.copy() if ref is not None else None
@@ -200,7 +210,7 @@ def gen_patches(inp, ref=None, patch_size=40, mode="sequential", n_patches=-1):
         If mode = 'random', extracts patches randomly.
     n_patches : int
         Number of patches to be extracted from the image. Should be specified only if mode = 'random'. If not specified,
-        then,
+        or if mode = 'sequential', extracts exactly:
 
         .. math::
 
@@ -249,7 +259,7 @@ def gen_patches(inp, ref=None, patch_size=40, mode="sequential", n_patches=-1):
 
 
 def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
-    """Extract smooth patches for GCBD algorithm.
+    """Extract smooth patches for GCBD [1]_ algorithm.
 
     Parameters
     ----------
@@ -272,6 +282,11 @@ def smooth_patches(img, d=64, h=32, sg=32, sl=16, mu=0.1, gamma=0.25):
     -------
     patches : :class:`numpy.ndarray`
         Extracted patches from img.
+
+    References
+    ----------
+    .. [1] Chen, J., Chen, J., Chao, H., & Yang, M. (2018). Image blind denoising with generative adversarial network
+           based noise modeling. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition
     """
     height, width = img.shape[:2]
     patches = []
@@ -354,6 +369,19 @@ def get_subpatch(patch, coord, local_sub_patch_radius):
 
 
 def pm_uniform_withCP(local_sub_patch_radius=5):
+    """Uniform pixel manipulation from Noise2Void [1]_.
+
+    Notes
+    -----
+    This code was reproduced with minor modifications from `Noise2Void Github repository
+    <https://github.com/juglab/n2v>`. By using this function you are agreeing with `author's
+    license <https://github.com/juglab/n2v/blob/master/LICENSE.txt>`_.
+
+    References
+    ----------
+    .. [1] Krull, A., Buchholz, T. O., & Jug, F. (2019). Noise2void-learning denoising from single noisy images. In
+           Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition.
+    """
     def random_neighbor_withCP_uniform(patch, coord, dims):
         sub_patch = get_subpatch(patch, coord,local_sub_patch_radius)
         rand_coords = [np.random.randint(0, s) for s in sub_patch.shape[0:dims]]
@@ -362,6 +390,33 @@ def pm_uniform_withCP(local_sub_patch_radius=5):
 
 
 def n2v_data_generation(noisy_patches, num_pix=64, value_manipulation=None, n_channels=1):
+    """Data generation method for Noise2Void [1]_.
+
+    Notes
+    -----
+    This code was reproduced with minor modifications from `Noise2Void Github repository
+    <https://github.com/juglab/n2v>`. By using this function you are agreeing with `author's
+    license <https://github.com/juglab/n2v/blob/master/LICENSE.txt>`_.
+
+    Parameters
+    ----------
+    noisy_patches : :class:`numpy.ndarray`
+        Numpy array of noisy patches.
+    num_pix : int
+        Number of manipulated pixels. Default is 64 pixels, in accordance with [1]_.
+    value_manipulation : function
+        Function for performing pixel manipulation, that is, creating blind spots on the receptive field. Default
+        function is uniform pixel selection with neighborhood size of 5. For more information, consult [1]_.
+    n_channels : int
+        Number of image channels. 1 for grayscale, 3 for RGB.
+
+    References
+    ----------
+    .. [1] Krull, A., Buchholz, T. O., & Jug, F. (2019). Noise2void-learning denoising from single noisy images. In
+           Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition.
+
+    """
+    assert n_channels in [1, 3], "Expected n_channels to be 1 or 3, but got {}".format(n_channels)
     if value_manipulation is None:
         value_manipulation = pm_uniform_withCP(5)
 

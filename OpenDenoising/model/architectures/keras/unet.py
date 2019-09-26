@@ -6,7 +6,7 @@ def unet_CSBDeep(depth=2, n_conv_per_depth=2, n_filters_base=16, kernel_size=(3,
                  use_bnorm=False, dropout=0.0, pool=(2, 2), residual=True, prob_out=False,
                  eps_scale=1e-3):
     """Noise2void [1]_ uses this U-Net [2]_ network for image denoising. The architecture for denoising is also
-    outlined on [3]_.
+    described on [3]_.
 
     Notes
     -----

@@ -202,10 +202,31 @@ class IWT(nn.Module):
 
 
 class MWCNN(nn.Module):
-    def __init__(self, n_feats=64, n_channels=1, conv=default_conv):
+    """Pytorch implementation of MWCNN [1]_.
+
+    Notes
+    -----
+    This class was taken from authors `Github repository <https://github.com/lpj-github-io/MWCNNv2>`_ with minor
+    modifications.
+
+    Attributes
+    ----------
+    n_feats : int
+        Number of filters on the first convolutional block. Default used by [1]_ is 64. The number of filters doubles
+        after each Discrete Wavelet Transform application.
+    n_channels : int
+        Number of channels. 1 for Grayscale, 3 for RGB.
+    kernel_size : int
+        Size of convolution filters.
+
+    References
+    ----------
+    .. [1] Liu, P., Zhang, H., Lian, W., & Zuo, W. Multi-Level Wavelet Convolutional Neural Networks. IEEE Access
+    """
+    def __init__(self, n_feats=64, n_channels=1, kernel_size=3):
         super(MWCNN, self).__init__()
+        conv = default_conv
         n_feats = n_feats
-        kernel_size = 3
         self.scale_idx = 0
         nColor = n_channels
 
