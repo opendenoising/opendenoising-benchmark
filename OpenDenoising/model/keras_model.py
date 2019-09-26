@@ -272,19 +272,3 @@ class KerasModel(AbstractDeepLearningModel):
             Number of parameters in the network.
         """
         return self.model.count_params()
-
-
-class Noise2Void(KerasModel):
-    def __init__(self, model_name="DeepLearningModel", logdir="./logs/Keras", return_diff=False):
-        super(Noise2Void, self).__init__(model_name, logdir, return_diff=return_diff)
-
-    def charge_model(self, model_function=None, model_path=None, model_weights=None, **kwargs):
-        if model_function is None and model_path is None and model_weights is None:
-            self.model = unet_CSBDeep(**kwargs)
-        else:
-            super().charge_model(model_function, model_path, model_weights, **kwargs)
-
-    def train(self, train_generator, valid_generator=None, n_epochs=1e+2, n_stages=5e+2, learning_rate=1e-3,
-              optimizer_name=None, metrics=None, kcallbacks=None, loss=None, valid_steps=10, **kwargs):
-        super().train(train_generator, valid_generator, n_epochs, n_stages, learning_rate, optimizer_name,
-                      metrics, kcallbacks, loss, valid_steps, **kwargs)

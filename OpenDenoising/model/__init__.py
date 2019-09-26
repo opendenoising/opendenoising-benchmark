@@ -54,7 +54,7 @@ from .abstract_deep_learning_model import AbstractDeepLearningModel
 # Wrapper classes
 from .tf_model import TfModel
 from .onnx_model import OnnxModel
-from .keras_model import KerasModel, Noise2Void
+from .keras_model import KerasModel
 from .pytorch_model import PytorchModel
 from .filtering_model import FilteringModel
 
