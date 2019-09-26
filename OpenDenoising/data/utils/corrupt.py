@@ -192,7 +192,7 @@ def jpeg_artifacts(ref, compression_rate=50):
     # Converts image to uint8
     _img = (ref * 255).astype('uint8')
     # Performs compression
-    result, encimg = cv2.imencode('.jpg', _img, [int(cv2.IMWRITE_JPEG_QUALITY), 100 - compression_rate])
+    result, encimg = cv2.imencode('.jpg', _img, [int(cv2.IMWRITE_JPEG_QUALITY), compression_rate])
     # Decodes image
     decimg = cv2.imdecode(encimg, 1)
     # Converts decimg to float

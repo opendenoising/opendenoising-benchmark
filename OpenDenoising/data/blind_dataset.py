@@ -69,11 +69,11 @@ class BlindDatasetGenerator(AbstractDatasetGenerator):
     def __init__(self, path, batch_size=32, shuffle=True, name="CleanDataset", n_channels=1, preprocessing=None,
                  target_fcn=None):
         super().__init__(path, batch_size, shuffle, name, n_channels)
-        self.filenames = np.array(os.listdir(os.path.join(self.path)))
+        self.filenames = np.array(os.listdir(os.path.join(self.path, 'in')))
         self.preprocessing = [] if preprocessing is None else preprocessing
         self.on_epoch_end()
         self.target_fcn = target_fcn
-        module_logger.info("Generating data from {}".format(os.path.join(self.path)))
+        module_logger.info("Generating data from {}".format(os.path.join(self.path, 'in')))
 
     def __getitem__(self, i):
         """Generates image batches from filenames.
@@ -115,7 +115,7 @@ class BlindDatasetGenerator(AbstractDatasetGenerator):
         ref_batch = []
 
         for filename in batch_filenames:
-            filepath = os.path.join(self.path, filename)
+            filepath = os.path.join(self.path, 'in', filename)
             module_logger.debug("Loading image located on {}".format(filepath))
             inp = imread(filepath)
             inp = img_as_float32(inp)

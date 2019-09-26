@@ -44,7 +44,8 @@ class DatasetFactory:
         pass
 
     @staticmethod
-    def create(path, batch_size=32, n_channels=1, preprocessing=None, name="Dataset", noise_config=None):
+    def create(path, batch_size=32, n_channels=1, preprocessing=None, target_fcn=None, name="Dataset",
+               noise_config=None):
         """Creates a BlindDatasetGenerator, CleanDatasetGenerator or FullDatasetGenerator
 
         Parameters
@@ -55,10 +56,12 @@ class DatasetFactory:
             Size of image batches.
         preprocessing : list
             List of preprocessing functions, which will be applied to each image.
+        target_fcn : function
+            For Blind datasets only. Generates targets from noisy input images.
         name : str
             String containing the dataset's name.
         noise_config : dict
-            Dictionary whose keys are corruption functions (see :mod:`data.utils`) and the value
+            For CleanDatasets only. Dictionary whose keys are corruption functions (see :mod:`data.utils`) and the value
             corresponds to a list of function arguments.
         """
         dirs = [folder for folder in os.listdir(path) if os.path.isdir(path)]
@@ -69,7 +72,7 @@ class DatasetFactory:
         if 'in' in dirs and 'ref' not in dirs:
             # Blind dataset
             return BlindDatasetGenerator(path=path, batch_size=batch_size, n_channels=n_channels, shuffle=True,
-                                         name=name, preprocessing=preprocessing)
+                                         name=name, preprocessing=preprocessing, target_fcn=target_fcn)
         elif 'in' in dirs and 'ref' in dirs:
             # Full dataset
             return FullDatasetGenerator(path=path, batch_size=batch_size, n_channels=n_channels, shuffle=True,
