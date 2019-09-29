@@ -55,7 +55,7 @@ Built-in Architectures
 Keras Architectures
 ^^^^^^^^^^^^^^^^^^^
 .. automodule:: model.architectures.keras
-  :members: dncnn, rednet, mwcnn_1
+  :members: dncnn, rednet, xdncnn, unet_CSBDeep
 
 Tensorflow Architectures
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -65,7 +65,7 @@ Tensorflow Architectures
 Pytorch Architectures
 ^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: model.architectures.pytorch
-  :members: DnCNN
+  :members: DnCNN, MWCNN
   :special-members:
 
 Filtering functions

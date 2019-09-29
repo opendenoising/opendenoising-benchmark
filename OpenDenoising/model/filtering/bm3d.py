@@ -42,8 +42,8 @@ try:
     import matlab.engine
     MATLAB_IMPORTED = True
 except ImportError as err:
-    module_logger.warning("Matlab engine was not installed correctly. Take a look on the documentation's tutorial for \
-                           its installation.")
+    module_logger.warning("Matlab engine was not installed correctly. Take a look on the documentation's tutorial for"
+                          "its installation.")
     err_import = err
     MATLAB_IMPORTED = False
 

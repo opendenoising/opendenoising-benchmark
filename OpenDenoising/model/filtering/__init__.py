@@ -36,9 +36,7 @@
 
 
 import pkg_resources
+from .bm3d import BM3D
 from .median_filter import median_filter
 
 dists = [str(dist).split(" ")[0] for dist in pkg_resources.working_set]
-
-if 'matlabengineforpython' in dists:
-    from .bm3d import BM3D
