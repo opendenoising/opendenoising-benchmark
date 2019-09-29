@@ -32,11 +32,12 @@ For a better visualisation of how the Benchmark classes are organized, we provid
 __Filtering models__
 * BM3D<sup>1</sup> [[Matlab Code]](ttp://www.cs.tut.fi/~foi/GCF-BM3D/). By using BM3D you are agreeing with its [license terms](http://www.cs.tut.fi/~foi/GCF-BM3D/legal_notice.html)
 
-__Deep Learning models__]
-* DnCNN<sup>2</sup> [[Matlab Code]](https://github.com/cszn/DnCNN/) [[Keras Code]](https://github.com/cszn/DnCNN/tree/master/TrainingCodes/dncnn_keras) [[Tensorflow Code]](https://github.com/wbhu/DnCNN-tensorflow) [Pytorch Code](https://github.com/SaoYan/DnCNN-PyTorch)
+__Deep Learning models__
+* DnCNN<sup>2</sup> [[Matlab Code]](https://github.com/cszn/DnCNN/) [[Keras Code]](https://github.com/cszn/DnCNN/tree/master/TrainingCodes/dncnn_keras) [[Tensorflow Code]](https://github.com/wbhu/DnCNN-tensorflow) [[Pytorch Code]](https://github.com/SaoYan/DnCNN-PyTorch)
 * xDnCNN<sup>3</sup> [[Pytorch Code]](https://github.com/kligvasser/xUnit)
 * REDNet<sup>4</sup>
 * MWCNN<sup>5, 6</sup> [[Matlab Code]](https://github.com/lpj0/MWCNN) [[Pytorch Code]](https://github.com/lpj0/MWCNN_PyTorch)
+* Noise2Void<sup>7</sup>[[Python code]](https://github.com/juglab/n2v)
 
 
 # References
@@ -52,6 +53,7 @@ __Deep Learning models__]
 5. Liu P, Zhang H, Lian W, Zuo W. Multi-Level Wavelet Convolutional Neural Networks. IEEE Access. 2019
 6. Liu P, Zhang H, Zhang K, Lin L, Zuo W. Multi-level wavelet-CNN for image restoration. InProceedings of the IEEE
    Conference on Computer Vision and Pattern Recognition Workshops 2018
+7. Krull, A., Buchholz, T. O., & Jug, F. (2019). Noise2void-learning denoising from single noisy images. In Proceedings of      the IEEE Conference on Computer Vision and Pattern Recognition.
 
 
 # Contributing
