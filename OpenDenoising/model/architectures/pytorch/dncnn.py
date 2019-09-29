@@ -62,8 +62,8 @@ class DnCNN(nn.Module):
         .. [1] Zhang K, Zuo W, Chen Y, Meng D, Zhang L. Beyond a gaussian denoiser: Residual learning of deep cnn
                for image denoising. IEEE Transactions on Image Processing. 2017
 
-        Example
-        -------
+        Examples
+        --------
         >>> from OpenDenoising.model.architectures.pytorch import DnCNN
         >>> dncnn_s = DnCNN(depth=17)
         >>> dncnn_b = DnCNN(depth=20)
