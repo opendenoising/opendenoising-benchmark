@@ -40,6 +40,8 @@ import time
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+from tqdm import tqdm
 from OpenDenoising import data, model, evaluation
 
 
@@ -218,7 +220,9 @@ class Benchmark:
             metric["Mean"] = -1.0
             metric["Variance"] = -1.0
 
-        for i in range(len(test_generator)):
+        pgbar = tqdm(range(len(test_generator)))
+        for i in pgbar:
+            pgbar.set_description("Inferencing on image {}".format(test_generator.filenames[i]))
             # Draws batch from test_generator
             image_noised, image_clean = test_generator[i]
             # Denoises image_noised
