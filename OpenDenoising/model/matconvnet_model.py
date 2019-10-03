@@ -137,9 +137,9 @@ class MatconvnetModel(AbstractDeepLearningModel):
             predicted_image.append(np.asarray(m_img_res))
         predicted_image = np.asarray(predicted_image)
         if self.return_diff:
-            return image - predicted_image
+            return np.clip(image - predicted_image, 0, 1)
         else:
-            return predicted_image
+            return np.clip(predicted_image, 0, 1)
 
     def __len__(self):
         """Counts the number of parameters in the networks.

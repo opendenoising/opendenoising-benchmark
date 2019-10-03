@@ -219,7 +219,7 @@ class MatlabModel(AbstractDeepLearningModel):
         if not self.return_diff:
             # Returns difference between predicted image and input image.
             self.engine.evalc("predicted_image = Xbatch - predicted_image;")
-        return np.transpose(np.array(self.engine.workspace['predicted_image']), [3, 0, 1, 2])
+        return np.clip(np.transpose(np.array(self.engine.workspace['predicted_image']), [3, 0, 1, 2]), 0, 1)
 
     def __len__(self):
         """Counts the number of parameters in the networks.

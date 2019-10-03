@@ -38,6 +38,7 @@
 import os
 import json
 import time
+import numpy as np
 import pandas as pd
 
 from keras import models, optimizers
@@ -259,9 +260,9 @@ class KerasModel(AbstractDeepLearningModel):
         """
         predicted_image = self.model.predict(image)
         if self.return_diff:
-            return image - predicted_image
+            return np.clip(image - predicted_image, 0, 1)
         else:
-            return predicted_image
+            return np.clip(predicted_image, 0, 1)
 
     def __len__(self):
         """Counts the number of parameters in the networks.

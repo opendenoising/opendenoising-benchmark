@@ -313,9 +313,9 @@ class PytorchModel(AbstractDeepLearningModel):
             # Note: output dimension should agree with input dimension.
             denoised_numpy = np.transpose(denoised_numpy, [0, 2, 3, 1])
         if self.return_diff:
-            return image - denoised_numpy
+            return np.clip(image - denoised_numpy, 0, 1)
         else:
-            return denoised_numpy
+            return np.clip(denoised_numpy, 0, 1)
 
     def __len__(self):
         """Counts the number of parameters in the network.

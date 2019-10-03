@@ -119,9 +119,9 @@ class OnnxModel(AbstractDeepLearningModel):
         feed_dict = {self.model_input.name: image}
         predicted_image = self.runtime_session.run([self.model_output.name], feed_dict)[0]
         if self.return_diff:
-            return image - predicted_image
+            return np.clip(image - predicted_image, 0, 1)
         else:
-            return predicted_image
+            return np.clip(predicted_image, 0, 1)
 
     def __len__(self):
         """Counts the number of parameters in the networks.
