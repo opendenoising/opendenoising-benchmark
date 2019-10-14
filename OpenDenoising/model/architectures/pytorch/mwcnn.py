@@ -50,6 +50,7 @@ class BBlock(nn.Module):
         x = self.body(x).mul(self.res_scale)
         return x
 
+
 class DBlock_com(nn.Module):
     def __init__(
         self, conv, in_channels, out_channels, kernel_size,
@@ -97,6 +98,7 @@ class DBlock_inv(nn.Module):
         x = self.body(x)
         return x
 
+
 class DBlock_com1(nn.Module):
     def __init__(
         self, conv, in_channels, out_channels, kernel_size,
@@ -119,6 +121,7 @@ class DBlock_com1(nn.Module):
     def forward(self, x):
         x = self.body(x)
         return x
+
 
 class DBlock_inv1(nn.Module):
     def __init__(
@@ -182,7 +185,6 @@ def iwt_init(x):
     return h
 
 
-
 class DWT(nn.Module):
     def __init__(self):
         super(DWT, self).__init__()
@@ -191,6 +193,7 @@ class DWT(nn.Module):
     def forward(self, x):
         return dwt_init(x)
 
+
 class IWT(nn.Module):
     def __init__(self):
         super(IWT, self).__init__()
@@ -198,7 +201,6 @@ class IWT(nn.Module):
 
     def forward(self, x):
         return iwt_init(x)
-
 
 
 class MWCNN(nn.Module):
