@@ -405,9 +405,9 @@ class TfModel(AbstractDeepLearningModel):
         predicted_image = self.tf_session.run(self.model_output, feed_dict={self.model_input: image,
                                                                             self.is_training: False})
         if self.return_diff:
-            return image - predicted_image
+            return np.clip(image - predicted_image, 0, 1)
         else:
-            return predicted_image
+            return np.clip(predicted_image, 0, 1)
 
     def __len__(self):
         """Counts the number of parameters in the networks.
