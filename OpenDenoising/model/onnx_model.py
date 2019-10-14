@@ -36,7 +36,7 @@
 
 
 import onnx
-import onnxruntime
+# import onnxruntime
 import numpy as np
 
 from OpenDenoising.model import module_logger
