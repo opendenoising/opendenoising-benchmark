@@ -137,6 +137,38 @@ class DnCNNSchedule(LrSchedulerCallback):
         return np.asarray(lr, dtype='float64')
 
 
+class MWCNNSchedule(LrSchedulerCallback):
+    """MWCNN learning rate decay scheduler as specified in the original paper.
+
+    Decay exponentially the learning rate from 0.001 to 0.0001 in 30 epochs
+
+    Attributes
+    ----------
+    initial_lr : float
+        Initial learning rate value.
+    """
+    def __init__(self, initial_lr=1e-3):
+        self.initial_lr = initial_lr
+
+    @timeit
+    def __call__(self, epoch, logs=None):
+        """Calculates the current Learning Rate.
+
+        Parameters
+        ----------
+        epoch : int
+            Current epoch.
+
+        Returns
+        -------
+        lr : float
+            Learning rate value.
+        """
+        k = 0.0575
+        lrate = self.initial_lr * np.exp(-k * epoch)
+        return np.asarray(lrate, dtype='float64')
+
+
 class StepSchedule(LrSchedulerCallback):
     """Drops the learning rate at each 'dropEvery' iterations by a factor of 'factor'.
 
