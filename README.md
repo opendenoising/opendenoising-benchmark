@@ -1,6 +1,5 @@
 # Open Denoising: An Open Benchmark for Image Denoising Methods
-
-This repository contains the code developped by Eduardo Montesuma, under the advisorship of Florian Lemarchand and Maxime Pelcat at IETR.
+This repository stores the code of OpenDenoising. A comparative study built using OpenDenoising can be found in: _OpenDenoising: an Extensible Benchmark for Building Comparative Studies of Image Denoisers, F. Lemarchand, E. Fernandes-Montesuma, M. Pelcat and E. Nogues_ https://arxiv.org/abs/1910.08328
 
 # Contributors <a name="Contributors"></a>
 - Eduardo Fernandes-Montesuma eduardo.fernandes-montesuma@insa-rennes.fr (2019)
