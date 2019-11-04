@@ -59,3 +59,14 @@ __Deep Learning models__
 
 If you want to contribute or make a suggestion to this Benchmark, you can either do so by [contacting us](#Contributors),
 or by using git pull requests/issues tools.
+
+# Giving Credit
+If using material of this repository for publication please cite us using this bibtex:
+@article{lemarchand2019opendenoising,
+  title={OpenDenoising: an Extensible Benchmark for Building Comparative Studies of Image Denoisers},
+  author={Lemarchand, Florian and Montesuma, Eduardo Fernandes and Pelcat, Maxime and Nogues, Erwan},
+  journal={arXiv preprint arXiv:1910.08328},
+  year={2019}
+}
+
+
